@@ -1,0 +1,40 @@
+import { Metadata } from "next";
+import DedicatedPackagesPageClient from "../../StatePackagesPageClient";
+
+interface PageProps {
+    params: Promise<{
+        country: string;
+    }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+    const resolvedParams = await params;
+    const country = decodeURIComponent(resolvedParams.country).replace(/-/g, ' ');
+    const formattedCountry = country.charAt(0).toUpperCase() + country.slice(1);
+
+    return {
+        title: `${formattedCountry} Tour Packages | Paradise Yatra`,
+        description: `Explore the best tour packages for ${formattedCountry}. Premium travel experiences curated by Paradise Yatra.`,
+        keywords: [`${country} tour packages`, `${country} tours`, `${country} holiday`, 'Paradise Yatra', country],
+        alternates: {
+            canonical: `/package/international/${resolvedParams.country}`,
+        },
+        openGraph: {
+            title: `${formattedCountry} Tour Packages | Paradise Yatra`,
+            description: `Book your vacation in ${formattedCountry} with Paradise Yatra.`,
+            url: `/package/international/${resolvedParams.country}`,
+            type: 'website',
+        },
+    };
+}
+
+export default async function InternationalCountryPage({ params }: PageProps) {
+    const resolvedParams = await params;
+
+    return (
+        <DedicatedPackagesPageClient
+            tourType="international"
+            country={decodeURIComponent(resolvedParams.country)}
+        />
+    );
+}

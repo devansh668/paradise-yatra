@@ -1,0 +1,425 @@
+"use client";
+
+import { Search, Mountain, Sparkles, Compass } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { getDestinationWebp } from "@/lib/utils";
+import SearchSuggestions from "./SearchSuggestions";
+
+interface FeaturedDestinationCard {
+  name: string;
+  image: string | null;
+  size: "normal" | "tall";
+  href: string;
+}
+
+const slugifyLocation = (value: string) => value.toLowerCase().replace(/\s+/g, "-");
+
+const HeroSection = () => {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [typingText, setTypingText] = useState("");
+  const [currentTextIndex, setCurrentTextIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [shouldShowVideo, setShouldShowVideo] = useState(false);
+  const [videoSrc, setVideoSrc] = useState<string | null>(null);
+  const [animatePlaceholder, setAnimatePlaceholder] = useState(true);
+  const [featuredDestinations, setFeaturedDestinations] = useState<FeaturedDestinationCard[]>([]);
+  const router = useRouter();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const mobileQuery = window.matchMedia("(max-width: 640px)");
+    const connection = (navigator as Navigator & { connection?: { saveData?: boolean } })
+      .connection;
+
+    const update = () => {
+      const isMobile = mobileQuery.matches;
+      const allowVideo = !motionQuery.matches && !connection?.saveData;
+      const allowTyping = !motionQuery.matches && !connection?.saveData;
+      setShouldShowVideo(allowVideo);
+      setAnimatePlaceholder(allowTyping);
+    };
+
+    update();
+    const addListener = (query: MediaQueryList, handler: () => void) => {
+      if (query.addEventListener) {
+        query.addEventListener("change", handler);
+      } else {
+        query.addListener(handler);
+      }
+    };
+    const removeListener = (query: MediaQueryList, handler: () => void) => {
+      if (query.removeEventListener) {
+        query.removeEventListener("change", handler);
+      } else {
+        query.removeListener(handler);
+      }
+    };
+
+    addListener(motionQuery, update);
+    addListener(mobileQuery, update);
+
+    return () => {
+      removeListener(motionQuery, update);
+      removeListener(mobileQuery, update);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!shouldShowVideo) {
+      setVideoSrc(null);
+      return;
+    }
+
+    let cancelled = false;
+    const loadVideo = () => {
+      if (!cancelled) {
+        setVideoSrc("/Home/Hero/Hero%20Background.mp4");
+      }
+    };
+
+    if ("requestIdleCallback" in window) {
+      const id = (window as Window & { requestIdleCallback: Function }).requestIdleCallback(
+        loadVideo,
+        { timeout: 2000 }
+      );
+      return () => {
+        cancelled = true;
+        (window as Window & { cancelIdleCallback: Function }).cancelIdleCallback(id);
+      };
+    }
+
+    const timeoutId = setTimeout(loadVideo, 1200);
+    return () => {
+      cancelled = true;
+      clearTimeout(timeoutId);
+    };
+  }, [shouldShowVideo]);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const backgroundImage = new window.Image();
+    backgroundImage.src = "/Home/Seach Lightbox/Background.jpg";
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const buildFeaturedDestinations = async () => {
+      try {
+        const [indiaResponse, internationalResponse] = await Promise.all([
+          fetch("/api/all-packages?tourType=india&limit=200&isActive=true&minimal=true", { cache: "no-store" }),
+          fetch("/api/all-packages?tourType=international&limit=200&isActive=true&minimal=true", { cache: "no-store" }),
+        ]);
+
+        const indiaPackages = indiaResponse.ok ? ((await indiaResponse.json()).packages || []) : [];
+        const internationalPackages = internationalResponse.ok ? ((await internationalResponse.json()).packages || []) : [];
+
+        const mapPackagesToCards = (
+          packages: any[],
+          key: "state" | "country",
+          tourType: "india" | "international"
+        ) => {
+          const uniqueCards = new Map<string, FeaturedDestinationCard>();
+
+          packages.forEach((pkg: any) => {
+            const locationName = typeof pkg[key] === "string" ? pkg[key].trim() : "";
+            if (!locationName || uniqueCards.has(locationName)) return;
+
+            const image = getDestinationWebp(locationName);
+            if (!image) return;
+
+            uniqueCards.set(locationName, {
+              name: locationName,
+              image,
+              size: "normal",
+              href: `/package/${tourType}/${slugifyLocation(locationName)}`,
+            });
+          });
+
+          return Array.from(uniqueCards.values());
+        };
+
+        const indiaCards = mapPackagesToCards(indiaPackages, "state", "india");
+        const internationalCards = mapPackagesToCards(internationalPackages, "country", "international");
+
+        const mixedCards: FeaturedDestinationCard[] = [];
+        const maxCards = Math.min(10, indiaCards.length + internationalCards.length);
+
+        for (let i = 0; mixedCards.length < maxCards; i += 1) {
+          if (i < indiaCards.length) mixedCards.push(indiaCards[i]);
+          if (mixedCards.length >= maxCards) break;
+          if (i < internationalCards.length) mixedCards.push(internationalCards[i]);
+        }
+
+        const sizedCards = mixedCards.map((card) => ({
+          ...card,
+          size: "normal" as const,
+        }));
+
+        if (isMounted) {
+          setFeaturedDestinations(sizedCards);
+        }
+      } catch (error) {
+        console.error("Error preloading featured destinations:", error);
+      }
+    };
+
+    buildFeaturedDestinations();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const heroTypingTargets = featuredDestinations.length > 0
+    ? featuredDestinations.map((destination) => destination.name)
+    : ["Ladakh", "Kerala", "Kashmir", "Himachal Pradesh"];
+
+  useEffect(() => {
+    if (!animatePlaceholder || searchQuery.trim() || heroTypingTargets.length === 0) {
+      setTypingText("");
+      setIsDeleting(false);
+      setCurrentTextIndex(0);
+      return;
+    }
+
+    const currentText = heroTypingTargets[currentTextIndex % heroTypingTargets.length];
+    let timer: number;
+
+    if (!isDeleting && typingText.length < currentText.length) {
+      timer = window.setTimeout(() => {
+        setTypingText(currentText.slice(0, typingText.length + 1));
+      }, 58);
+    } else if (!isDeleting && typingText.length === currentText.length) {
+      timer = window.setTimeout(() => {
+        setIsDeleting(true);
+      }, 700);
+    } else if (isDeleting && typingText.length > 0) {
+      timer = window.setTimeout(() => {
+        setTypingText(currentText.slice(0, typingText.length - 1));
+      }, 26);
+    } else {
+      timer = window.setTimeout(() => {
+        setIsDeleting(false);
+        setCurrentTextIndex((prev) => (prev + 1) % heroTypingTargets.length);
+      }, 24);
+    }
+
+    return () => window.clearTimeout(timer);
+  }, [animatePlaceholder, searchQuery, heroTypingTargets, currentTextIndex, isDeleting, typingText]);
+
+  const handleSearchSelect = (suggestion: {
+    slug: string;
+    category?: string;
+    type?: string;
+  }) => {
+    setSearchQuery("");
+    setIsSearchOpen(false);
+
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
+
+    if (
+      suggestion.category === "destination" ||
+      suggestion.type === "destination"
+    ) {
+      router.push(`/destinations/${suggestion.slug}`);
+    } else if (suggestion.category === "holiday-type") {
+      router.push(`/holiday-types/${suggestion.slug}`);
+    } else if (suggestion.category === "fixed-departure") {
+      router.push(`/fixed-departures/${suggestion.slug}`);
+    } else {
+      router.push(`/package/${suggestion.slug}`);
+    }
+  };
+
+  const handleSearchClose = () => {
+    setIsSearchOpen(false);
+  };
+
+  return (
+    <div className="relative min-h-[100dvh] flex flex-col font-plus-jakarta-sans">
+      {/* Hero background with video or image fallback */}
+      <div className="absolute inset-0">
+        <Image
+          src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80"
+          alt="Beautiful travel destination"
+          fill
+          priority
+          className="object-cover object-center md:object-[center_20%]"
+        />
+        {shouldShowVideo && (
+          <video
+            className="absolute inset-0 h-full w-full bg-transparent object-cover object-center md:object-[center_20%]"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="none"
+            aria-hidden="true"
+          >
+            {videoSrc && <source src={videoSrc} type="video/mp4" />}
+          </video>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/40 to-black/20"></div>
+      </div>
+
+      {/* Hero content */}
+      <main className="relative z-10 flex flex-col flex-1 items-center justify-end pb-0 text-center min-h-[90dvh] md:min-h-[110vh] pt-100 md:pt-86">
+        <div className="mb-auto"></div>
+        <h1 className="max-w-4xl !text-2xl !font-unbounded !font-bold leading-tight tracking-tight md:!text-4xl  text-white px-4">
+          Because Travel Should Feel Effortless
+        </h1>
+        <p className="mt-3 max-w-3xl font-medium !text-white/90 text-md md:text-lg px-4">
+          Discover amazing destinations and create unforgettable memories.
+        </p>
+        <div className="mt-6 w-full relative">
+          {/* Search bar overlapping hero and panel */}
+          <div className="relative z-20 mx-auto max-w-3xl px-6">
+            <button
+              onClick={() => setIsSearchOpen(true)}
+              className="w-full min-h-[52px] flex items-center gap-3 rounded-full bg-white px-6 py-3 text-gray-800 border-4 border-blue-500/90 shadow-[0_0_40px_10px_rgba(59,130,246,0.45)] hover:shadow-[0_0_50px_15px_rgba(59,130,246,0.55)] transition-all duration-300 group cursor-pointer"
+            >
+              <Search className="w-6 h-6 text-[#212B40] group-hover:scale-110 transition-transform duration-300" />
+              <div className="flex-1 text-left min-h-[1.25rem]">
+                <span className="flex items-center truncate !text-sm text-[#212B40] font-semibold opacity-80">
+                  <span className="truncate">{typingText}</span>
+                  {animatePlaceholder && !searchQuery && (
+                    <span className="ml-0.5 inline-block h-4 w-[2px] animate-pulse rounded-full bg-[#212B40]" />
+                  )}
+                </span>
+              </div>
+              <div className="hidden md:flex items-center gap-2 px-4 py-1.5 bg-blue-50 rounded-full">
+                <span className="text-xs font-bold text-blue-600">Search Destinations</span>
+              </div>
+            </button>
+
+            {isSearchOpen && (
+              <SearchSuggestions
+                query={searchQuery}
+                onQueryChange={setSearchQuery}
+                onSelect={handleSearchSelect}
+                isOpen={isSearchOpen}
+                onClose={handleSearchClose}
+                variant="hero"
+                featuredDestinations={featuredDestinations}
+              />
+            )}
+          </div>
+
+          {/* Integrated hero lower panel */}
+          <div
+            className="-mt-8 w-full rounded-none border-white px-4 pb-24 pt-20 shadow-2xl border-2 border-dashed border-b-0 backdrop-blur-sm md:px-8 md:pb-32 md:pt-24 sm:rounded-t-[80px] sm:rounded-b-none rounded-t-2xl relative overflow-hidden"
+            style={{ boxShadow: "0 -20px 50px 0px rgba(0, 0, 0, 0.65)" }}
+          >
+            <Image
+              src="/Home/Hero/Pick%20Your%20Style%20Background.jpg"
+              alt=""
+              fill
+              sizes="100vw"
+              quality={70}
+              priority
+              fetchPriority="high"
+              className="object-cover object-center"
+            />
+            <div className="relative z-10 mx-auto max-w-6xl">
+              <h2 className="text-center !font-bold text-xl md:!text-3xl text-white mb-2">
+                Pick your travel style
+              </h2>
+
+              <div className="mt-6 grid gap-4 grid-cols-2 md:grid-cols-4">
+                {/* Spiritual */}
+                <div
+                  className="group flex flex-col items-center justify-center gap-2 md:gap-3 px-2 py-4 md:px-6 md:py-8 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                  onClick={() => router.push("/coming-soon")}
+                >
+                  <div className="w-16 h-16 md:w-24 md:h-24 flex items-center justify-center rounded-full bg-blue-600 p-3 md:p-4">
+                    <svg viewBox="0 0 72 72" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+                      <g>
+                        <rect x="17" y="43.4583" width="38" height="9.3003" fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                        <rect x="17" y="52.7586" width="38" height="10.6997" fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                        <polyline fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" points="43.5 38.436 51.124 38.436 51.124 43.458 21.129 43.458 21.129 38.436 28.178 38.436" />
+                        <rect x="27" y="24.4079" width="18" height="4.0504" fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                        <polyline fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" points="25 32.613 25 28.487 47 28.487 47 32.613" />
+                        <polyline fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" points="37.517 32.947 50 32.947 50 37.969 42.63 37.969" />
+                        <rect x="29.0923" y="20.3439" width="13.8425" height="4.0504" fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                        <polyline fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" points="25.311 42.651 36.062 31.899 46.814 42.651" />
+                        <polyline fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" points="29.485 37.969 22.587 37.969 22.587 32.947 34.524 32.947" />
+                        <polygon fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" points="41.5 63.458 30.5 63.458 30.5 56.458 34.125 56.458 41.5 56.458 41.5 63.458" />
+                        <polyline fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" points="34.062 63.458 34.062 56.458 38.062 56.458 38.062 63.458" />
+                        <circle cx="36.0625" cy="12.3806" r="5" fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                        <line x1="36.0625" x2="36.0625" y1="17.6693" y2="20.0553" fill="none" stroke="white" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" />
+                      </g>
+                    </svg>
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className="text-lg md:text-xl font-bold !text-white tracking-wide relative group-hover:text-blue-200 transition-colors duration-300">
+                      Spiritual
+                      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Hill Escapes */}
+                <div
+                  className="group flex flex-col items-center justify-center gap-2 md:gap-3 px-2 py-4 md:px-6 md:py-8 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                  onClick={() => router.push("/coming-soon")}
+                >
+                  <div className="w-16 h-16 md:w-24 md:h-24 flex items-center justify-center rounded-full bg-blue-600 p-3 md:p-4">
+                    <Mountain className="w-full h-full text-white" strokeWidth={1.5} />
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className="text-lg md:text-xl font-bold !text-white tracking-wide relative group-hover:text-blue-200 transition-colors duration-300 text-center">
+                      Hill Escapes
+                      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Seasonal */}
+                <div
+                  className="group flex flex-col items-center justify-center gap-2 md:gap-3 px-2 py-4 md:px-6 md:py-8 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                  onClick={() => router.push("/coming-soon")}
+                >
+                  <div className="w-16 h-16 md:w-24 md:h-24 flex items-center justify-center rounded-full bg-blue-600 p-3 md:p-4">
+                    <Sparkles className="w-full h-full text-white" strokeWidth={1.5} />
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className="text-lg md:text-xl font-bold !text-white tracking-wide relative group-hover:text-blue-200 transition-colors duration-300">
+                      Seasonal
+                      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Adventure */}
+                <div
+                  className="group flex flex-col items-center justify-center gap-2 md:gap-3 px-2 py-4 md:px-6 md:py-8 hover:-translate-y-1 transition-all duration-300 cursor-pointer"
+                  onClick={() => router.push("/coming-soon")}
+                >
+                  <div className="w-16 h-16 md:w-24 md:h-24 flex items-center justify-center rounded-full bg-blue-600 p-3 md:p-4">
+                    <Compass className="w-full h-full text-white" strokeWidth={1.5} />
+                  </div>
+                  <div className="flex flex-col items-center">
+                    <span className="text-lg md:text-xl font-bold !text-white tracking-wide relative group-hover:text-blue-200 transition-colors duration-300">
+                      Adventure
+                      <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-400 group-hover:w-full transition-all duration-300"></span>
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  );
+};
+
+export default HeroSection;
