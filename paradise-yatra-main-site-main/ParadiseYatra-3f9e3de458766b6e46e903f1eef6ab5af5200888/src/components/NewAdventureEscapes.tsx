@@ -392,12 +392,6 @@ const NewAdventureEscapes = () => {
 
                       <div className="mt-auto flex items-center justify-between pt-4">
                         <div className="flex flex-col">
-                          <span className="text-xl font-bold text-slate-900">
-                            ₹{pkg.price.toLocaleString()}
-                          </span>
-                          {pkg.originalPrice && (
-                            <span className="text-xs text-slate-400 line-through">
-                              ₹{pkg.originalPrice.toLocaleString()}
                           <span className="text-xl font-bold text-blue-600">
                             ₹{pkg.price.toLocaleString()}
                           </span>

@@ -245,29 +245,16 @@ const HeroSection = () => {
 
   return (
     <div className="relative min-h-[100dvh] flex flex-col font-plus-jakarta-sans">
-      {/* Hero background with video or image fallback */}
-      <div className="absolute inset-0">
+      {/* Hero background with image */}
+      <div className="absolute inset-0 bg-slate-900">
         <Image
           src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80"
           alt="Beautiful travel destination"
           fill
           priority
-          className="object-cover object-center md:object-[center_20%]"
+          className="object-cover object-center md:object-[center_20%] opacity-80"
         />
-        {shouldShowVideo && (
-          <video
-            className="absolute inset-0 h-full w-full bg-transparent object-cover object-center md:object-[center_20%]"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="none"
-            aria-hidden="true"
-          >
-            {videoSrc && <source src={videoSrc} type="video/mp4" />}
-          </video>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/40 to-black/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80"></div>
       </div>
 
       {/* Hero content */}
