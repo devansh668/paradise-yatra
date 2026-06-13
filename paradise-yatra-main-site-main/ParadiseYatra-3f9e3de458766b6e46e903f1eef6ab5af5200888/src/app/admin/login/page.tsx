@@ -109,6 +109,7 @@ const AdminLoginPage = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@example.com"
                   required
+                  autoComplete="email"
                   className="h-12 bg-white text-gray-900 border-2 border-gray-300 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 text-base font-medium placeholder-gray-500"
                 />
               </div>
@@ -127,6 +128,7 @@ const AdminLoginPage = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   required
+                  autoComplete="current-password"
                   className="h-12 text-gray-900 bg-white border-2 border-gray-300 focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:border-indigo-500 text-base font-medium placeholder-gray-500"
                 />
               </div>
