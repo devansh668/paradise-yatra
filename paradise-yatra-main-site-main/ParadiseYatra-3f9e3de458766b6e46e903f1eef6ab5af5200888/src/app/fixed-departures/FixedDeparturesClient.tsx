@@ -5,8 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import {
     Calendar, MapPin, Users, Clock, ArrowRight, Star,
-    CheckCircle2, ShieldCheck, Zap, Bell, Search, Filter,
-    ChevronRight, TrendingUp, X, SlidersHorizontal, Heart
+    CheckCircle2, ShieldCheck, Zap, Search, Filter,
+    TrendingUp, X, SlidersHorizontal, Heart, Ticket, Plane
 } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import Header from '@/components/Header';
@@ -64,6 +64,24 @@ export default function FixedDeparturesClient({ departures }: FixedDeparturesCli
     const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
     const [isMounted, setIsMounted] = useState(false);
 
+    // Image error handling component
+    const DepartureImage = ({ src, alt }: { src: string, alt: string }) => {
+        const [imgSrc, setImgSrc] = useState(src || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+        
+        useEffect(() => {
+            setImgSrc(src || 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');
+        }, [src]);
+
+        return (
+            <img
+                src={imgSrc}
+                alt={alt}
+                onError={() => setImgSrc('https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80')}
+                className="absolute inset-0 w-full h-full object-cover text-transparent group-hover:scale-105 transition-transform duration-700"
+            />
+        );
+    };
+
     // Wishlist states
     const { user, toggleWishlist: contextToggleWishlist, isInWishlist } = useAuth();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -80,7 +98,6 @@ export default function FixedDeparturesClient({ departures }: FixedDeparturesCli
         contextToggleWishlist(pkgId);
     };
 
-    // Extract unique categories from departures
     // Extract unique categories from departures, excluding "Fixed Departure"
     const categories = ['All Departures', ...Array.from(new Set(departures.map(d => d.tag).filter(t => t && t !== 'Fixed Departure')))];
 
@@ -153,7 +170,7 @@ export default function FixedDeparturesClient({ departures }: FixedDeparturesCli
         if (!dateString) return '';
         try {
             return new Date(dateString).toLocaleDateString('en-IN', {
-                day: 'numeric',
+                day: '2-digit',
                 month: 'short',
                 year: 'numeric'
             });
@@ -180,9 +197,7 @@ export default function FixedDeparturesClient({ departures }: FixedDeparturesCli
         hidden: { opacity: 0 },
         visible: {
             opacity: 1,
-            transition: {
-                staggerChildren: 0.1
-            }
+            transition: { staggerChildren: 0.1 }
         }
     };
 
@@ -191,251 +206,173 @@ export default function FixedDeparturesClient({ departures }: FixedDeparturesCli
         visible: {
             y: 0,
             opacity: 1,
-            transition: {
-                duration: 0.5,
-                ease: "easeOut"
-            }
+            transition: { duration: 0.5, ease: "easeOut" }
         }
     };
 
-
-    const sidebarContent = (isMobile: boolean, hideSearch = false) => (
-        <div className={`${isMobile ? 'space-y-6' : 'space-y-8'}`}>
+    const topFilterBar = (isMobile: boolean, hideSearch = false) => (
+        <div className={`flex ${isMobile ? 'flex-col space-y-6' : 'flex-row items-center justify-between gap-6 w-full'}`}>
             {/* Search Input */}
             {!hideSearch && (
-                <div className="space-y-4 ">
-                    <h3 className="!text-[11px] !font-black uppercase tracking-[0.2em] text-slate-400 !font-plus-jakarta-sans">Search Tours</h3>
-                    <form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            (document.activeElement as HTMLElement)?.blur();
-                        }}
-                        className="relative group"
-                    >
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 !text-slate-400 group-focus-within:!text-blue-500 transition-colors" />
-                        <input
-                            type="text"
-                            placeholder="Search destination..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border-2 border-transparent rounded-2xl focus:border-blue-500 focus:bg-white focus:outline-none transition-all !font-bold !text-slate-900 !text-sm"
-                        />
-                    </form>
+                <div className={`${isMobile ? 'w-full' : 'flex-1 max-w-sm'} relative group`}>
+                    <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 !text-slate-400 group-focus-within:!text-blue-600 transition-colors" />
+                    <input
+                        type="text"
+                        placeholder="Search destination..."
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="w-full pl-11 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 focus:outline-none transition-all !font-bold !text-slate-900 !text-sm shadow-sm"
+                    />
                 </div>
             )}
 
-            {/* Reset Button */}
-            {(filter !== 'all' || selectedPrice !== 'all' || selectedDuration !== 'all' || searchQuery !== '') && (
-                <button
-                    onClick={clearFilters}
-                    className="w-full py-3 px-4 bg-red-50 !text-red-600 rounded-xl !text-[11px] !font-black uppercase tracking-widest hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
+            <div className={`flex ${isMobile ? 'flex-col space-y-4' : 'flex-row items-center gap-4 flex-wrap'}`}>
+                {/* Price Filter */}
+                <select
+                    value={selectedPrice}
+                    onChange={(e) => {
+                        setSelectedPrice(e.target.value);
+                        if (isMobile) setIsMobileFilterOpen(false);
+                    }}
+                    className="py-3 px-4 bg-white border border-slate-200 rounded-xl !font-bold !text-sm !text-slate-700 shadow-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none cursor-pointer"
                 >
-                    <Zap className="w-3 h-3" />
-                    Reset All Filters
-                </button>
-            )}
+                    <option value="all">Any Price</option>
+                    <option value="under_15k">Under ₹15,000</option>
+                    <option value="15k_25k">₹15,000 - ₹25,000</option>
+                    <option value="above_25k">Above ₹25,000</option>
+                </select>
 
+                {/* Duration Filter */}
+                <select
+                    value={selectedDuration}
+                    onChange={(e) => {
+                        setSelectedDuration(e.target.value);
+                        if (isMobile) setIsMobileFilterOpen(false);
+                    }}
+                    className="py-3 px-4 bg-white border border-slate-200 rounded-xl !font-bold !text-sm !text-slate-700 shadow-sm focus:border-blue-500 focus:ring-4 focus:ring-blue-500/10 outline-none cursor-pointer"
+                >
+                    <option value="all">Any Duration</option>
+                    <option value="short">Short (1-5 Days)</option>
+                    <option value="medium">Medium (6-10 Days)</option>
+                    <option value="long">Long (11+ Days)</option>
+                </select>
 
-
-            {/* Price Filter */}
-            <div className="space-y-4">
-                <h3 className="!text-[11px] !font-black uppercase tracking-[0.2em] !text-slate-400 !font-plus-jakarta-sans">Price Range</h3>
-                <div className="grid grid-cols-1 gap-2">
-                    {[
-                        { label: 'Any Price', val: 'all' },
-                        { label: 'Under ₹15,000', val: 'under_15k' },
-                        { label: '₹15,000 - ₹25,000', val: '15k_25k' },
-                        { label: 'Above ₹25,000', val: 'above_25k' }
-                    ].map((p) => (
-                        <button
-                            key={p.val}
-                            onClick={() => {
-                                setSelectedPrice(p.val);
-                                if (isMobile) setIsMobileFilterOpen(false);
-                            }}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left ${selectedPrice === p.val ? 'bg-blue-50 !text-blue-700 border-2 border-blue-200 shadow-sm' : 'bg-white border-2 border-slate-50 !text-slate-600 hover:border-slate-200'}`}
-                        >
-                            <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${selectedPrice === p.val ? 'border-blue-600 bg-blue-600' : 'border-slate-300'}`}>
-                                {selectedPrice === p.val && <div className="w-1.5 h-1.5 bg-white rounded-full" />}
-                            </div>
-                            <span className="!text-[12px] !font-bold uppercase tracking-tight">{p.label}</span>
-                        </button>
-                    ))}
+                {/* Sort Filter */}
+                <div className={`flex items-center gap-2 px-4 py-3 bg-white border border-slate-200 rounded-xl shadow-sm ${isMobile ? 'w-full' : ''}`}>
+                    <Filter className="w-4 h-4 !text-slate-400" />
+                    <select
+                        value={sortBy}
+                        onChange={(e) => setSortBy(e.target.value)}
+                        className="bg-transparent border-none focus:ring-0 !font-bold !text-sm !text-slate-700 outline-none cursor-pointer w-full"
+                    >
+                        <option value="default">Sort: Recommended</option>
+                        <option value="price_low">Price: Low to High</option>
+                        <option value="price_high">Price: High to Low</option>
+                        <option value="duration_short">Duration: Shortest First</option>
+                    </select>
                 </div>
-            </div>
 
-            {/* Duration Filter */}
-            <div className="space-y-4">
-                <h3 className="!text-[11px] !font-black uppercase tracking-[0.2em] !text-slate-400 !font-plus-jakarta-sans">Duration</h3>
-                <div className="grid grid-cols-1 gap-2">
-                    {[
-                        { label: 'Any Duration', val: 'all', icon: Clock },
-                        { label: 'Short (1-5 Days)', val: 'short', icon: Zap },
-                        { label: 'Medium (6-10 Days)', val: 'medium', icon: Calendar },
-                        { label: 'Long (11+ Days)', val: 'long', icon: MapPin }
-                    ].map((d) => (
-                        <button
-                            key={d.val}
-                            onClick={() => {
-                                setSelectedDuration(d.val);
-                                if (isMobile) setIsMobileFilterOpen(false);
-                            }}
-                            className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all text-left ${selectedDuration === d.val ? 'bg-blue-50 !text-blue-700 border-2 border-blue-200 shadow-sm' : 'bg-white border-2 border-slate-50 !text-slate-600 hover:border-slate-200'}`}
-                        >
-                            <d.icon className={`w-4 h-4 ${selectedDuration === d.val ? '!text-blue-600' : '!text-slate-400'}`} />
-                            <span className="!text-[12px] !font-bold uppercase tracking-tight">{d.label}</span>
-                        </button>
-                    ))}
-                </div>
+                {/* Reset Button */}
+                {(filter !== 'all' || selectedPrice !== 'all' || selectedDuration !== 'all' || searchQuery !== '') && (
+                    <button
+                        onClick={clearFilters}
+                        className="py-3 px-4 bg-red-50 !text-red-600 border border-red-100 rounded-xl !font-bold !text-sm hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
+                    >
+                        <X className="w-4 h-4" />
+                        <span className={isMobile ? 'inline' : 'hidden md:inline'}>Clear</span>
+                    </button>
+                )}
             </div>
         </div>
     );
-
 
     return (
         <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
-            className="font-plus-jakarta-sans bg-slate-50"
+            className="font-plus-jakarta-sans bg-slate-50 min-h-screen"
         >
-
-
-            {/* Header */}
             <Header />
 
-            {/* Hero Section - Optimized Premium */}
-            <section className="relative min-h-[450px] md:min-h-[500px] flex items-center bg-[#0B1120] overflow-hidden">
-                {/* Dynamic Background */}
-                <div className="absolute inset-0 z-0">
+            {/* Vibrant Interactive Hero */}
+            <section className="relative min-h-[400px] md:min-h-[500px] flex items-center justify-center overflow-hidden bg-gradient-to-br from-indigo-950 via-blue-900 to-indigo-900 pt-20">
+                {/* Dynamic Background Patterns */}
+                <div className="absolute inset-0 z-0 overflow-hidden">
+                    <div className="absolute w-[800px] h-[800px] bg-blue-500/20 blur-[120px] rounded-full top-[-200px] left-[-200px] animate-pulse" />
+                    <div className="absolute w-[600px] h-[600px] bg-purple-500/20 blur-[100px] rounded-full bottom-[-100px] right-[-100px]" style={{ animationDuration: '4s' }} />
+                    <div className="absolute inset-0 bg-[radial-gradient(#ffffff22_1px,transparent_1px)] [background-size:24px_24px] opacity-30"></div>
+                </div>
+
+                <div className="max-w-6xl mx-auto px-4 md:px-8 relative z-10 w-full text-center space-y-8">
                     <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 0.6 }}
-                        transition={{ duration: 1 }}
-                        className="absolute inset-0"
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, ease: "easeOut" }}
+                        className="space-y-6 flex flex-col items-center"
                     >
-                        <Image
-                            src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80"
-                            alt="Mountain Landscape"
-                            fill
-                            className="object-cover"
-                            priority
-                        />
+                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/10 border border-white/20 backdrop-blur-md shadow-2xl">
+                            <Ticket className="w-4 h-4 text-blue-300" />
+                            <span className="text-[12px] font-black uppercase tracking-[0.2em] text-white">Curated Group Journeys</span>
+                        </div>
+
+                        <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white leading-[1.1] tracking-tight max-w-4xl mx-auto drop-shadow-2xl">
+                            The World is Waiting. <br />
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-indigo-200 to-blue-300">
+                                Your Seat is Reserved.
+                            </span>
+                        </h1>
+                        <p className="text-lg md:text-xl text-blue-100/90 font-medium leading-relaxed max-w-2xl mx-auto">
+                            Experience premium group travel with guaranteed departure dates. Lock in your adventure, pack your bags, and leave the planning to us.
+                        </p>
                     </motion.div>
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#0B1120] via-[#0B1120]/80 to-transparent" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B1120] via-transparent to-transparent" />
 
-                    {/* Subtle Particles */}
-                    <div className="absolute inset-0 opacity-20">
-                        {isMounted && [...Array(15)].map((_, i) => (
-                            <motion.div
-                                key={i}
-                                className="absolute w-1 h-1 bg-blue-400 rounded-full"
-                                initial={{
-                                    x: Math.random() * 100 + "%",
-                                    y: Math.random() * 100 + "%",
-                                    opacity: Math.random()
-                                }}
-                                animate={{
-                                    y: [null, "-15px", "15px"],
-                                    opacity: [0.1, 0.4, 0.1]
-                                }}
-                                transition={{
-                                    duration: 4 + Math.random() * 3,
-                                    repeat: Infinity,
-                                    ease: "easeInOut"
-                                }}
-                            />
+                    {/* Premium Stats Bar */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                        className="flex flex-wrap justify-center gap-4 md:gap-12 pt-8"
+                    >
+                        {[
+                            { label: 'Confirmed Batches', count: '45+', icon: CheckCircle2 },
+                            { label: 'Happy Travelers', count: '1,000+', icon: Users },
+                            { label: 'Expert Guides', count: '100%', icon: ShieldCheck },
+                        ].map((stat, i) => (
+                            <div key={i} className="flex flex-col items-center gap-2">
+                                <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md mb-1">
+                                    <stat.icon className="w-5 h-5 text-blue-300" />
+                                </div>
+                                <div className="text-white font-black text-2xl tracking-tight">{stat.count}</div>
+                                <div className="text-[10px] text-blue-200 uppercase font-bold tracking-[0.2em]">{stat.label}</div>
+                            </div>
                         ))}
-                    </div>
+                    </motion.div>
                 </div>
-
-                <div className="max-w-6xl mx-auto px-4 md:px-8 relative z-10 w-full py-12 md:py-20">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-                        <motion.div
-                            initial={{ opacity: 0, x: -50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 1, ease: "easeOut" }}
-                            className="space-y-8"
-                        >
-                            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 backdrop-blur-md">
-                                <span className="flex h-2 w-2 rounded-full bg-blue-500 animate-pulse" />
-                                <span className="text-[11px] font-black uppercase tracking-widest text-blue-400">Live Fixed Departures 2026</span>
-                            </div>
-
-                            <div className="space-y-4">
-                                <h1 className="!text-3xl md:!text-6xl font-black text-white leading-[1.05] tracking-tight">
-                                    Guaranteed <br />
-                                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-400 to-blue-400 bg-[length:200%_auto] animate-gradient-x">
-                                        Memories.
-                                    </span>
-                                </h1>
-                                <p className="text-xl !text-slate-200 font-medium leading-relaxed max-w-xl">
-                                    Join our curated group journeys designed for the discerning traveler. Professional planning, premium stays, and guaranteed departures.
-                                </p>
-                            </div>
-
-                            <div className="flex flex-wrap gap-6 pt-4">
-                                {[
-                                    { label: 'Confirmed Batches', count: '45+', icon: TrendingUp },
-                                    { label: 'Happy Travelers', count: '1k+', icon: Users },
-                                    { label: 'Expert Guides', count: '100%', icon: ShieldCheck },
-                                ].map((stat, i) => (
-                                    <div
-                                        key={i}
-                                        className="space-y-1"
-                                    >
-                                        <div className="flex items-center gap-2 text-white font-black text-xl">
-                                            <stat.icon className="w-5 h-5 text-blue-500" />
-                                            {stat.count}
-                                        </div>
-                                        <div className="text-[11px] !text-slate-300 uppercase font-black tracking-widest">{stat.label}</div>
-                                    </div>
-                                ))}
-                            </div>
-
-
-                        </motion.div>
-
-
-                    </div>
-                </div>
-
             </section>
 
-            {/* Filter & Listing Section */}
-            <main id="departures-list" className="max-w-6xl mx-auto px-4 md:px-8 py-10 md:py-20">
+            {/* Main Content Area */}
+            <main id="departures-list" className="max-w-6xl mx-auto px-4 md:px-8 py-8 md:py-16 -mt-10 relative z-20">
+                
+                {/* Top Filter Bar (Desktop) */}
+                <div className="hidden lg:block bg-white/80 backdrop-blur-xl border border-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-2xl p-4 mb-12 relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+                    {topFilterBar(false)}
+                </div>
 
                 {/* Mobile Search & Filter Trigger */}
-                <div className="lg:hidden space-y-6 mb-8 pb-6 border-b border-slate-100">
-                    <form
-                        onSubmit={(e) => {
-                            e.preventDefault();
-                            (document.activeElement as HTMLElement)?.blur();
-                        }}
-                        className="relative group"
-                    >
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 !text-slate-400 group-focused-within:!text-blue-500 transition-colors" />
-                        <input
-                            type="text"
-                            placeholder="Search tours or destinations..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="w-full pl-11 pr-4 py-4 bg-slate-50 border-2 border-transparent rounded-2xl focus:border-blue-500 focus:bg-white focus:outline-none transition-all !font-bold !text-slate-900 !text-sm shadow-sm"
-                        />
-                    </form>
-
-                    <div className="flex items-center justify-between">
+                <div className="lg:hidden space-y-4 mb-8">
+                    <div className="flex items-center justify-between bg-white rounded-2xl p-4 shadow-sm border border-slate-100">
                         <div>
-                            <h2 className="!text-xl !font-black text-slate-900">Explore Tours</h2>
-                            <p className="!text-[11px] !font-bold text-slate-500 uppercase tracking-widest">{filteredDepartures.length} Batches Found</p>
+                            <p className="text-xs font-bold text-slate-500 uppercase tracking-widest">{filteredDepartures.length} Departures</p>
+                            <h2 className="text-lg font-black text-slate-900">Explore Tours</h2>
                         </div>
                         <button
                             onClick={() => setIsMobileFilterOpen(true)}
-                            className="flex items-center gap-2 px-5 py-3 bg-slate-900 text-white rounded-2xl text-[11px] font-black uppercase tracking-widest shadow-lg shadow-slate-900/20 active:scale-95 transition-all"
+                            className="flex items-center gap-2 px-5 py-3 bg-blue-600 text-white rounded-xl text-xs font-black uppercase tracking-widest shadow-lg shadow-blue-600/20 active:scale-95 transition-all"
                         >
-                            <SlidersHorizontal className="w-3.5 h-3.5" />
-                            Filter
+                            <SlidersHorizontal className="w-4 h-4" />
+                            Filters
                         </button>
                     </div>
                 </div>
@@ -456,24 +393,24 @@ export default function FixedDeparturesClient({ departures }: FixedDeparturesCli
                                 animate={{ y: 0 }}
                                 exit={{ y: "100%" }}
                                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                                className="fixed inset-x-0 bottom-0 bg-white rounded-t-[2.5rem] z-[101] lg:hidden max-h-[90vh] overflow-y-auto"
+                                className="fixed inset-x-0 bottom-0 bg-slate-50 rounded-t-[2.5rem] z-[101] lg:hidden max-h-[90vh] overflow-y-auto"
                             >
-                                <div className="sticky top-0 bg-white/80 backdrop-blur-md px-6 py-5 border-b border-slate-50 flex items-center justify-between z-10">
-                                    <h2 className="!text-lg !font-black text-slate-900">Filters</h2>
+                                <div className="sticky top-0 bg-white/90 backdrop-blur-xl px-6 py-5 border-b border-slate-100 flex items-center justify-between z-10 shadow-sm">
+                                    <h2 className="text-xl font-black text-slate-900">Filters</h2>
                                     <button
                                         onClick={() => setIsMobileFilterOpen(false)}
-                                        className="w-10 h-10 bg-slate-50 rounded-full flex items-center justify-center text-slate-400 hover:text-slate-900 transition-colors"
+                                        className="w-10 h-10 bg-slate-100 rounded-full flex items-center justify-center text-slate-500 hover:bg-slate-200 transition-colors"
                                     >
                                         <X className="w-5 h-5" />
                                     </button>
                                 </div>
                                 <div className="p-6">
-                                    {sidebarContent(true, true)}
+                                    {topFilterBar(true)}
                                 </div>
-                                <div className="p-6 pt-0 sticky bottom-0 bg-white/80 backdrop-blur-md">
+                                <div className="p-6 pt-0 sticky bottom-0 bg-gradient-to-t from-slate-50 via-slate-50 to-transparent">
                                     <button
                                         onClick={() => setIsMobileFilterOpen(false)}
-                                        className="w-full py-4 bg-blue-600 text-white rounded-2xl text-[11px] font-black uppercase tracking-[0.2em] shadow-xl shadow-blue-600/20"
+                                        className="w-full py-4 bg-blue-600 text-white rounded-2xl text-sm font-black uppercase tracking-widest shadow-xl shadow-blue-600/20"
                                     >
                                         Show {filteredDepartures.length} Results
                                     </button>
@@ -483,161 +420,152 @@ export default function FixedDeparturesClient({ departures }: FixedDeparturesCli
                     )}
                 </AnimatePresence>
 
-                {/* Modern Sidebar and List Layout */}
-                <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
+                {/* Departures Ticket List */}
+                <div>
+                    <motion.div
+                        variants={containerVariants}
+                        initial="hidden"
+                        animate="visible"
+                        className="space-y-6"
+                    >
+                        <AnimatePresence mode='popLayout'>
+                            {filteredDepartures.map((item) => (
+                                <motion.div
+                                    key={item._id}
+                                    layout
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    transition={{ duration: 0.4 }}
+                                    className="group relative"
+                                >
+                                    <Link href={`/fixed-departures/${item.slug}`}>
+                                        {/* Ticket Container */}
+                                        <div className="flex flex-col md:flex-row bg-white rounded-2xl shadow-sm hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-300 overflow-hidden border border-slate-100 group-hover:border-indigo-100">
+                                            
+                                            {/* Left: Image Area */}
+                                            <div className="relative w-full md:w-[320px] h-64 md:h-auto flex-shrink-0 bg-slate-200 overflow-hidden">
+                                                <DepartureImage
+                                                    src={item.image}
+                                                    alt={item.title}
+                                                />
+                                                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent"></div>
+                                                
+                                                {/* Location Tag */}
+                                                <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1.5 rounded-xl text-xs font-black uppercase tracking-widest text-indigo-700 flex items-center gap-1.5 shadow-sm">
+                                                    <MapPin className="w-3.5 h-3.5" />
+                                                    {item.destination}
+                                                </div>
 
-                    {/* Desktop Sidebar */}
-                    <aside className="hidden lg:block lg:col-span-1">
-                        {sidebarContent(false)}
-                    </aside>
-
-                    {/* Departures List */}
-                    <div className="lg:col-span-3">
-                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
-                            <div>
-                                <h2 className="!text-2xl !font-black !text-slate-900 mb-1">Available Departures</h2>
-                                <p className="!text-sm !text-slate-500 !font-semibold">
-                                    Total {filteredDepartures.length} confirmed batches available
-                                </p>
-                            </div>
-                            <div className="flex items-center gap-3">
-                                <div className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-slate-100 rounded-xl">
-                                    <Filter className="w-3.5 h-3.5 !text-slate-400" />
-                                    <select
-                                        value={sortBy}
-                                        onChange={(e) => setSortBy(e.target.value)}
-                                        className="bg-transparent border-none focus:ring-0 !text-[11px] !font-black uppercase tracking-wider !text-slate-700 outline-none cursor-pointer"
-                                    >
-                                        <option value="default">Sort By: Default</option>
-                                        <option value="price_low">Price: Low to High</option>
-                                        <option value="price_high">Price: High to Low</option>
-                                        <option value="duration_short">Duration: Shortest First</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <motion.div
-                            variants={containerVariants}
-                            initial="hidden"
-                            animate="visible"
-                            className="space-y-8"
-                        >
-                            <AnimatePresence mode='popLayout'>
-                                {filteredDepartures.map((item) => {
-                                    const typeColorClass = 'bg-blue-600';
-
-                                    return (
-                                        <motion.div
-                                            key={item._id}
-                                            layout
-                                            initial={{ opacity: 0, scale: 0.9 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.9 }}
-                                            transition={{ duration: 0.3 }}
-                                            variants={itemVariants}
-                                            className="group bg-white rounded-lg border border-slate-100 shadow-sm hover:shadow-xl hover:shadow-blue-900/5 transition-all duration-300 overflow-hidden"
-                                        >
-                                            <Link href={`/fixed-departures/${item.slug}`} className="flex flex-col md:flex-row h-full">
-                                                {/* Image Area */}
-                                                <div className="relative w-full md:w-72 lg:w-80 h-64 md:h-auto flex-shrink-0 overflow-hidden">
-                                                    <Image
-                                                        src={item.image}
-                                                        alt={item.title}
-                                                        fill
-                                                        className="object-cover group-hover:scale-110 transition-transform duration-700"
+                                                {/* Wishlist Heart */}
+                                                <div
+                                                    role="button"
+                                                    tabIndex={0}
+                                                    onClick={(e) => handleWishlistToggle(e, item._id)}
+                                                    onKeyDown={(e) => {
+                                                        if (e.key === 'Enter' || e.key === ' ') {
+                                                            handleWishlistToggle(e as any, item._id);
+                                                        }
+                                                    }}
+                                                    className="absolute top-4 right-4 z-20 p-2.5 bg-white/20 backdrop-blur-md rounded-full shadow-sm hover:bg-white transition-all group/wishlist border border-white/30 cursor-pointer"
+                                                >
+                                                    <Heart
+                                                        className={`w-4 h-4 transition-colors ${isInWishlist(item._id)
+                                                            ? 'fill-red-500 text-red-500'
+                                                            : 'text-white group-hover/wishlist:text-red-500'
+                                                            }`}
                                                     />
-
-                                                    {/* Location Badge */}
-                                                    <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-blue-600 flex items-center gap-1.5 shadow-sm border border-blue-50/50">
-                                                        <MapPin className="w-3.5 h-3.5" />
-                                                        {item.destination}
-                                                    </div>
-
-                                                    {/* Wishlist Toggle Button */}
-                                                    <button
-                                                        onClick={(e) => handleWishlistToggle(e, item._id)}
-                                                        className="absolute top-4 right-4 z-20 p-2 bg-white/95 backdrop-blur-sm rounded-full shadow-sm hover:bg-white transition-all group/wishlist border border-slate-100"
-                                                    >
-                                                        <Heart
-                                                            className={`w-4 h-4 transition-colors ${isInWishlist(item._id)
-                                                                ? 'fill-red-500 text-red-500'
-                                                                : 'text-slate-400 group-hover/wishlist:text-red-500'
-                                                                }`}
-                                                        />
-                                                    </button>
                                                 </div>
+                                                
+                                                <div className="absolute bottom-4 left-4 right-4">
+                                                    <h3 className="text-xl md:text-2xl font-black text-white leading-tight drop-shadow-md">
+                                                        {item.title}
+                                                    </h3>
+                                                </div>
+                                            </div>
 
-                                                {/* Content Area */}
-                                                <div className="flex-1 p-6 md:py-8 md:px-8 flex flex-col justify-between">
+                                            {/* Middle: Details Area */}
+                                            <div className="flex-1 p-6 md:p-8 flex flex-col justify-between bg-white relative">
+                                                <div className="space-y-6">
+
+
+                                                    <p className="text-slate-500 font-medium text-sm leading-relaxed line-clamp-2">
+                                                        {stripHtmlTags(item.subtitle || item.shortDescription)}
+                                                    </p>
+
+                                                    <div className="flex flex-wrap gap-3">
+                                                        <div className="flex items-center gap-1.5 bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+                                                            <Clock className="w-4 h-4 text-slate-400" />
+                                                            <span className="text-xs font-bold text-slate-700">{item.duration}</span>
+                                                        </div>
+                                                        <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border ${item.availableSeats < 10 ? 'bg-red-50 border-red-100 text-red-600' : 'bg-green-50 border-green-100 text-green-700'}`}>
+                                                            <Users className="w-4 h-4" />
+                                                            <span className="text-xs font-bold">{item.availableSeats} Seats Left</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            {/* Dashed Divider with Cutouts */}
+                                            <div className="hidden md:flex flex-col items-center justify-center relative bg-white w-8">
+                                                <div className="absolute top-[-10px] w-6 h-6 bg-slate-50 rounded-full border border-slate-100 border-t-0 border-l-0 -rotate-45 shadow-[inset_-2px_-2px_4px_rgba(0,0,0,0.02)]"></div>
+                                                <div className="h-full w-[2px] border-l-2 border-dashed border-slate-200"></div>
+                                                <div className="absolute bottom-[-10px] w-6 h-6 bg-slate-50 rounded-full border border-slate-100 border-b-0 border-r-0 -rotate-45 shadow-[inset_2px_2px_4px_rgba(0,0,0,0.02)]"></div>
+                                            </div>
+
+                                            {/* Mobile Divider */}
+                                            <div className="md:hidden flex items-center justify-center relative bg-white h-8 w-full">
+                                                <div className="absolute left-[-10px] w-6 h-6 bg-slate-50 rounded-full border border-slate-100 border-l-0 border-b-0 rotate-45"></div>
+                                                <div className="w-full h-[2px] border-t-2 border-dashed border-slate-200"></div>
+                                                <div className="absolute right-[-10px] w-6 h-6 bg-slate-50 rounded-full border border-slate-100 border-r-0 border-t-0 rotate-45"></div>
+                                            </div>
+
+                                            {/* Right: Pricing & Action */}
+                                            <div className="p-6 md:p-8 md:w-[280px] flex flex-col justify-center bg-slate-50/50 group-hover:bg-indigo-50/30 transition-colors">
+                                                <div className="flex flex-row md:flex-col items-center md:items-start justify-between md:justify-center gap-4">
                                                     <div>
-                                                        {/* Duration Badge */}
-                                                        <div className="flex items-center flex-wrap gap-2 text-xs font-semibold text-slate-500 mb-4">
-                                                            <span className="flex items-center gap-1.5 bg-slate-50 px-2.5 py-1 rounded-md text-slate-600 border border-slate-100">
-                                                                <Clock className="w-3.5 h-3.5 text-blue-500" />
-                                                                {item.duration}
-                                                            </span>
-                                                        </div>
-
-                                                        {/* Title */}
-                                                        <h3 className="!text-xl !font-bold text-slate-900 mb-1 group-hover:text-blue-600 transition-colors leading-tight">
-                                                            {item.title}
-                                                        </h3>
-
-                                                        {/* Description */}
-                                                        <p className="!text-slate-600 !font-semibold !text-sm leading-relaxed line-clamp-2 mb-6">
-                                                            {stripHtmlTags(item.subtitle || item.shortDescription)}
-                                                        </p>
-
-                                                        {/* Info Grid */}
-                                                        <div className="grid grid-cols-2 gap-4 mb-4">
-                                                            <div className="flex items-center gap-2">
-                                                                <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center border border-blue-100">
-                                                                    <Calendar className="w-4 h-4 text-blue-600" />
-                                                                </div>
-                                                                <div>
-                                                                    <p className="!text-xs !font-bold !text-slate-500 uppercase tracking-wide">Departure</p>
-                                                                    <p className="!text-sm !font-semibold !text-slate-800">{formatDate(item.departureDate)}</p>
-                                                                </div>
-                                                            </div>
-                                                            <div className="flex items-center gap-2">
-                                                                <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center border border-blue-100">
-                                                                    <Users className="w-4 h-4 text-blue-600" />
-                                                                </div>
-                                                                <div>
-                                                                    <p className="!text-xs !font-bold !text-slate-500 uppercase tracking-wide">Seats Left</p>
-                                                                    <p className={`!text-sm !font-semibold ${item.availableSeats < 10 ? '!text-red-500' : '!text-green-600'}`}>
-                                                                        {item.availableSeats} Available
-                                                                    </p>
-                                                                </div>
-                                                            </div>
+                                                        <p className="text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">Per Person From</p>
+                                                        <div className="flex items-baseline gap-2">
+                                                            <span className="text-3xl font-black text-slate-900 tracking-tight">₹{item.price.toLocaleString()}</span>
                                                         </div>
                                                     </div>
-
-                                                    {/* Price and CTA */}
-                                                    <div className="flex items-end justify-between pt-2 border-t border-dashed border-slate-200">
-                                                        <div className="flex flex-col">
-                                                            <span className="text-xs font-bold !text-slate-600 uppercase tracking-wider mb-1">Starting From</span>
-                                                            <span className="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">
-                                                                ₹ {item.price.toLocaleString()}
-                                                            </span>
-                                                        </div>
-                                                        <div className="flex items-center gap-2 text-sm font-bold text-slate-900 group-hover:translate-x-1 transition-transform">
-                                                            View Details
-                                                            <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white p-2 rounded-full shadow-md shadow-blue-500/20">
-                                                                <ArrowRight className="w-4 h-4" />
-                                                            </div>
+                                                    <div className="w-full flex md:justify-start justify-end">
+                                                        <div className="flex items-center gap-2 px-6 py-3.5 bg-indigo-600 text-white rounded-xl text-sm font-black uppercase tracking-widest shadow-lg shadow-indigo-600/20 group-hover:bg-indigo-700 hover:scale-105 transition-all">
+                                                            Book Now
+                                                            <ArrowRight className="w-4 h-4" />
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </Link>
-                                        </motion.div>
-                                    );
+                                                
 
-                                })}
-                            </AnimatePresence>
+                                            </div>
+
+                                        </div>
+                                    </Link>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </motion.div>
+
+                    {filteredDepartures.length === 0 && (
+                        <motion.div 
+                            initial={{ opacity: 0 }} 
+                            animate={{ opacity: 1 }} 
+                            className="text-center py-20 bg-white rounded-2xl border border-slate-100 shadow-sm"
+                        >
+                            <div className="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                                <Search className="w-8 h-8 text-slate-400" />
+                            </div>
+                            <h3 className="text-xl font-black text-slate-900 mb-2">No departures found</h3>
+                            <p className="text-slate-500 font-medium">Try adjusting your filters or searching for a different destination.</p>
+                            <button 
+                                onClick={clearFilters}
+                                className="mt-6 px-6 py-3 bg-blue-50 text-blue-600 rounded-xl font-bold hover:bg-blue-100 transition-colors"
+                            >
+                                Clear All Filters
+                            </button>
                         </motion.div>
-                    </div>
+                    )}
                 </div>
             </main>
 
@@ -647,7 +575,7 @@ export default function FixedDeparturesClient({ departures }: FixedDeparturesCli
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.8 }}
-                className="bg-slate-50 py-12 md:py-24 border-t border-slate-100"
+                className="bg-white py-12 md:py-24 border-t border-slate-100 mt-12"
             >
                 <div className="max-w-6xl mx-auto px-4 md:px-8">
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
@@ -668,13 +596,13 @@ export default function FixedDeparturesClient({ departures }: FixedDeparturesCli
                                 icon: Star
                             }
                         ].map((feature, i) => (
-                            <div key={i} className="flex gap-6">
-                                <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-sm border border-slate-100 flex-shrink-0">
-                                    <feature.icon className="w-7 h-7 !text-blue-600" />
+                            <div key={i} className="flex gap-6 group cursor-default">
+                                <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center shadow-sm border border-slate-100 flex-shrink-0 group-hover:scale-110 group-hover:bg-blue-50 transition-all duration-300">
+                                    <feature.icon className="w-7 h-7 text-indigo-500" />
                                 </div>
                                 <div>
-                                    <h4 className="!text-lg !font-black !text-slate-900 mb-2">{feature.title}</h4>
-                                    <p className="!text-slate-500 !font-medium !text-sm leading-relaxed">{feature.desc}</p>
+                                    <h4 className="text-lg font-black text-slate-900 mb-2">{feature.title}</h4>
+                                    <p className="text-slate-500 font-medium text-sm leading-relaxed">{feature.desc}</p>
                                 </div>
                             </div>
                         ))}

@@ -263,6 +263,7 @@ const sendOTP = async (req, res) => {
 
     // Generate 6 digit OTP
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    console.log(`[DEBUG] Generated OTP for ${email}: ${otp}`);
 
     // Save/Update OTP in DB
     await OTP.findOneAndUpdate(

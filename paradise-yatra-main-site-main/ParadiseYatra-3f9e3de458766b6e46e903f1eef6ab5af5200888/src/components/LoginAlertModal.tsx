@@ -98,8 +98,8 @@ const LoginAlertModal = ({ isOpen, onClose, theme = "blue" }: LoginAlertModalPro
                         <Image
                             src="/favicon.png"
                             alt="Paradise Yatra Logo"
-                            width={36}
-                            height={36}
+                            fill
+                            sizes="48px"
                             className="object-contain"
                         />
                     </div>

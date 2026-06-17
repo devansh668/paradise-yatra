@@ -421,7 +421,7 @@ const HolidayTypePage = () => {
                         <Card className="overflow-hidden h-full hover:shadow-lg transition-shadow">
                           <div className="relative h-48">
                             <OptimizedImage
-                              src={pkg.images[0] || "https://images.unsplash.com/photo-1578662996442-48f60103fc96?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"}
+                              src={pkg.images[0] || "https://images.unsplash.com/photo-1469474968028-56623f02e42e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"}
                               alt={pkg.title}
                               width={400}
                               height={300}

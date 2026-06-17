@@ -157,9 +157,10 @@ export default function FAQSection({ destination, tourType, faqs: faqsOverride }
                 <div className="hidden lg:block w-full lg:w-1/2 relative h-[539.2px] rounded-[6px] overflow-hidden">
                     <Image
                         src="/Destination Pages/Faq/Image.webp"
-                        alt="Paradise Yatra Travel"
+                        alt="FAQ Illustration"
                         fill
-                        className="object-cover"
+                        sizes="(max-width: 768px) 100vw, 50vw"
+                        className="object-cover rounded-2xl"
                     />
                     <div className="absolute inset-0 bg-transparent" />
                 </div>

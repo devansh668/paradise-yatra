@@ -243,17 +243,46 @@ const HeroSection = () => {
     setIsSearchOpen(false);
   };
 
+  const BACKGROUND_IMAGES = [
+    "https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1548013146-72479768bada?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1534351590666-13e3e96b5017?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1513326738677-b964603b136d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80",
+    "https://images.unsplash.com/photo-1504150558240-0b4fd8946624?ixlib=rb-4.0.3&auto=format&fit=crop&w=1600&q=80"
+  ];
+
+  const [currentBgIndex, setCurrentBgIndex] = useState(0);
+
+  useEffect(() => {
+    const bgTimer = setInterval(() => {
+      setCurrentBgIndex((prev) => (prev + 1) % BACKGROUND_IMAGES.length);
+    }, 5000); // Change every 5 seconds
+    return () => clearInterval(bgTimer);
+  }, []);
+
   return (
     <div className="relative min-h-[100dvh] flex flex-col font-plus-jakarta-sans">
-      {/* Hero background with image */}
-      <div className="absolute inset-0 bg-slate-900">
-        <Image
-          src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80"
-          alt="Beautiful travel destination"
-          fill
-          priority
-          className="object-cover object-center md:object-[center_20%] opacity-80"
-        />
+      {/* Hero background with image slider */}
+      <div className="absolute inset-0 bg-slate-900 overflow-hidden">
+        {BACKGROUND_IMAGES.map((src, index) => (
+          <div
+            key={src}
+            className={`absolute inset-0 transition-opacity duration-[2000ms] ease-in-out ${
+              index === currentBgIndex ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            <Image
+              src={src}
+              alt={`Travel destination ${index + 1}`}
+              fill
+              priority={index === 0}
+              className="object-cover object-center md:object-[center_20%] opacity-80"
+            />
+          </div>
+        ))}
         <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80"></div>
       </div>
 

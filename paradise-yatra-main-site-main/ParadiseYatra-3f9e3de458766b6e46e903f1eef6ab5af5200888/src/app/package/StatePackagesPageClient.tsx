@@ -350,14 +350,24 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
 
                 {/* Hero Section */}
                 <section className="relative flex flex-col md:flex-row w-full md:h-[496px] md:overflow-hidden items-center justify-center bg-white md:bg-transparent">
-                    <div className="md:hidden w-full px-4 pt-6 pb-2 bg-white text-left z-10 flex-shrink-0">
-                        <h1 className="!text-[28px] !font-black text-slate-800 font-plus-jakarta-sans tracking-tight leading-tight">
-                            {tourTypeLabel} Packages in <span className="text-[#000945]">{formattedLocation}</span>
+                    <motion.div 
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, ease: "easeOut" }}
+                        className="md:hidden w-full px-4 pt-6 pb-2 bg-white text-left z-10 flex-shrink-0"
+                    >
+                        <h1 className="!text-[32px] !font-black text-slate-900 font-plus-jakarta-sans tracking-tight leading-tight">
+                            {tourTypeLabel} Packages in <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#155dfc] to-[#000945]">{formattedLocation}</span>
                         </h1>
-                    </div>
+                    </motion.div>
 
                     {/* Image Container */}
-                    <div className="relative w-full h-[230.4px] md:absolute md:inset-0 md:h-auto flex-shrink-0">
+                    <motion.div 
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.8 }}
+                        className="relative w-full h-[230.4px] md:absolute md:inset-0 md:h-auto flex-shrink-0"
+                    >
                         <Image
                             src={(state?.toLowerCase().replace(/-/g, ' ').includes('sikkim') ||
                                 state?.toLowerCase().replace(/-/g, ' ').includes('gangtok') ||
@@ -470,63 +480,60 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                                                                                                     : "https://images.unsplash.com/photo-1544735716-a9ff2824d7c1?q=80&w=2070&auto=format&fit=crop"}
                             alt={`${formattedLocation} Tourism`}
                             fill
-                            className="object-cover"
+                            className="object-cover transition-transform duration-1000 hover:scale-105"
                             sizes="(max-width: 768px) 100vw, 100vw"
-                            quality={70}
                             fetchPriority="high"
                             priority
                         />
-                        <div className="absolute inset-0 bg-black/20" />
-                    </div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#000945]/90 via-[#000945]/40 to-transparent mix-blend-multiply" />
+                    </motion.div>
 
                     {/* Centered Hub (Hidden on mobile since highlights are hidden) */}
                     <div className="hidden md:block max-w-6xl w-full mx-auto px-4 md:px-8 relative z-30">
-                        <div className="flex flex-col items-center max-w-5xl mx-auto w-full">
-                            <Card className="bg-white rounded-[6px] shadow-none border border-slate-100 overflow-hidden w-full md:h-[150px] flex items-center">
-                                <CardContent className="p-0 md:p-6 w-full h-full flex flex-col justify-center items-center">
+                        <motion.div 
+                            initial={{ opacity: 0, y: 30 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.6, delay: 0.2 }}
+                            className="flex flex-col items-center max-w-5xl mx-auto w-full"
+                        >
+                            <Card className="bg-white/80 backdrop-blur-xl rounded-[20px] shadow-2xl border border-white/40 overflow-hidden w-full md:h-[160px] flex items-center transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(0,9,69,0.3)] hover:bg-white/90">
+                                <CardContent className="p-0 md:p-8 w-full h-full flex flex-col justify-center items-center">
                                     {/* Desktop Heading */}
-                                    <h2 className="hidden md:block !text-xl md:!text-[44px] !font-black text-slate-800 mb-4 text-center font-plus-jakarta-sans tracking-tight leading-tight">
-                                        {tourTypeLabel} Packages in <span className="text-[#000945]">{formattedLocation}</span>
+                                    <h2 className="hidden md:block !text-xl md:!text-[48px] !font-black text-slate-900 mb-6 text-center font-plus-jakarta-sans tracking-tight leading-tight drop-shadow-sm">
+                                        {tourTypeLabel} Packages in <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#155dfc] to-[#000945]">{formattedLocation}</span>
                                     </h2>
 
                                     <div className="hidden md:flex flex-nowrap items-center justify-center gap-x-6 lg:gap-x-12 w-full px-2 md:px-4 overflow-x-auto no-scrollbar">
-                                        <div className="flex items-center gap-3 group flex-shrink-0">
-                                            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-50 text-blue-600 border border-blue-100 flex-shrink-0">
-                                                <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-                                            </div>
-                                            <span className="text-[#000945] font-medium text-[12px] md:text-[15px] tracking-tight whitespace-nowrap">Best pricing</span>
-                                        </div>
-
-                                        <div className="flex items-center gap-3 group flex-shrink-0">
-                                            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-50 text-blue-600 border border-blue-100 flex-shrink-0">
-                                                <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-                                            </div>
-                                            <span className="text-[#000945] font-medium text-[12px] md:text-[15px] tracking-tight whitespace-nowrap">Private cab included</span>
-                                        </div>
-
-                                        <div className="flex items-center gap-3 group flex-shrink-0">
-                                            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-50 text-blue-600 border border-blue-100 flex-shrink-0">
-                                                <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-                                            </div>
-                                            <span className="text-[#000945] font-medium text-[12px] md:text-[15px] tracking-tight whitespace-nowrap">Handpicked hotels</span>
-                                        </div>
-
-                                        <div className="flex items-center gap-3 group flex-shrink-0">
-                                            <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-50 text-blue-600 border border-blue-100 flex-shrink-0">
-                                                <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-                                            </div>
-                                            <span className="text-[#000945] font-medium text-[12px] md:text-[15px] tracking-tight whitespace-nowrap">Local expert support</span>
-                                        </div>
+                                        {[
+                                            { text: 'Best pricing' },
+                                            { text: 'Private cab included' },
+                                            { text: 'Handpicked hotels' },
+                                            { text: 'Local expert support' }
+                                        ].map((highlight, idx) => (
+                                            <motion.div 
+                                                key={idx}
+                                                whileHover={{ scale: 1.05 }}
+                                                className="flex items-center gap-3 group flex-shrink-0 cursor-pointer"
+                                            >
+                                                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-50/80 text-[#155dfc] border border-blue-100/50 flex-shrink-0 shadow-sm transition-colors group-hover:bg-[#155dfc] group-hover:text-white">
+                                                    <Check className="w-4 h-4 stroke-[2.5]" />
+                                                </div>
+                                                <span className="text-slate-800 font-bold text-[12px] md:text-[15px] tracking-tight whitespace-nowrap group-hover:text-[#155dfc] transition-colors">{highlight.text}</span>
+                                            </motion.div>
+                                        ))}
                                     </div>
                                 </CardContent>
                             </Card>
-                        </div>
+                        </motion.div>
                     </div>
                 </section>
 
                 {/* Main Content Area */}
-                <section className="py-8 md:py-16 px-4 md:px-8 bg-white">
-                    <div className="max-w-6xl mx-auto">
+                <section className="py-8 md:py-16 px-4 md:px-8 bg-gradient-to-br from-[#e8f1fc] via-[#f4f7fc] to-[#eef2f9] relative">
+                    {/* Premium Dot Pattern Background */}
+                    <div className="absolute inset-0 bg-[radial-gradient(#b8c9e0_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none"></div>
+                    
+                    <div className="max-w-6xl mx-auto relative z-10">
                 <div className="mb-6 text-left">
                     <h2 className="!text-[24px] md:!text-[36px] !font-bold text-[#000945] mb-2">
                         Handpicked Curated Journeys
@@ -541,7 +548,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                         <aside className="hidden lg:block lg:w-80 flex-shrink-0">
                             <div className="lg:sticky lg:top-32 lg:mt-0.5">
 
-                                <Card className="hidden lg:block border border-[#dfe1df] shadow-none overflow-hidden p-0 bg-white rounded-[24px]">
+                                <Card className="hidden lg:block border border-[#dfe1df] shadow-[0_10px_30px_-15px_rgba(0,9,69,0.1)] overflow-hidden p-0 bg-white rounded-[24px]">
                                     <SearchFilterSidebar
                                         durationFilter={durationFilter}
                                         setDurationFilter={setDurationFilter}
@@ -604,6 +611,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                                             price={item.price}
                                             priceLabel={getPackagePriceLabel(item.priceType)}
                                             image={item.image}
+                                            images={item.images || item.gallery}
                                             imageAlt={item.imageAlt || item.name}
                                             detailUrl={`/package/${item.slug || item._id}`}
                                             isInWishlist={isInWishlist(item._id)}
@@ -657,7 +665,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="!bg-white px-4 py-6 text-gray-900 md:px-8 relative z-20"
+                        className="bg-gradient-to-b from-white to-slate-50 px-4 py-12 text-gray-900 md:px-8 relative z-20 border-t border-slate-100"
                     >
                         <div className="mx-auto flex max-w-6xl flex-col gap-6 relative z-10">
                             <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between mb-2">

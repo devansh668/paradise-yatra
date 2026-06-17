@@ -6,12 +6,12 @@ const path = require("path");
 const fs = require("fs");
 
 // Load environment variables
-dotenv.config({ path: path.join(__dirname, ".env") });
+dotenv.config({ path: path.join(__dirname, "../.env") });
 
 const app = express();
 
 // Create uploads directory if it doesn't exist
-const uploadsDir = path.join(__dirname, "uploads");
+const uploadsDir = path.join(__dirname, "../uploads");
 if (!fs.existsSync(uploadsDir)) {
   fs.mkdirSync(uploadsDir, { recursive: true });
 }
@@ -81,7 +81,7 @@ app.use((req, res, next) => {
 });
 
 // Serve uploaded files
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 // MongoDB Connection
 const MONGODB_URI = process.env.MONGODB_URI;

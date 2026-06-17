@@ -2,7 +2,6 @@
 
 import React from "react";
 import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Button } from "@/components/ui/button";
 
 interface SearchFilterSidebarProps {
@@ -40,57 +39,69 @@ const SearchFilterSidebar: React.FC<SearchFilterSidebarProps> = ({
             </div>
             <div className="flex-1 overflow-y-auto px-6">
                 {/* Duration Filter */}
-                <div className="mb-6">
-                    <div className="flex items-center gap-2 mb-3">
-                        <div className="w-1 h-4 bg-[#314594] rounded"></div>
-                        <Label className="!text-sm !font-bold !text-[#000945] !tracking-wider">Duration</Label>
+                <div className="mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                        <div className="w-1.5 h-5 bg-gradient-to-b from-[#155dfc] to-[#000945] rounded-full"></div>
+                        <Label className="!text-base !font-bold !text-slate-800 !tracking-wide">Duration</Label>
                     </div>
-                    <RadioGroup value={durationFilter} onValueChange={(value) => setDurationFilter(value)}>
-                        <div className="space-y-2">
-                            {[
-                                { id: "any", value: "all", label: "Any" },
-                                { id: "1-3", value: "1-3", label: "1-3 Days" },
-                                { id: "4-6", value: "4-6", label: "4-6 Days" },
-                                { id: "7-9", value: "7-9", label: "7-9 Days" },
-                                { id: "10-12", value: "10-12", label: "10-12 Days" },
-                                { id: "13+", value: "13+", label: "13+ Days" },
-                            ].map((opt) => (
-                                <div key={opt.id} className="flex items-center space-x-2">
-                                    <RadioGroupItem value={opt.value} id={`duration-${opt.id}`} />
-                                    <Label htmlFor={`duration-${opt.id}`} className="!text-sm !font-semibold !text-slate-600 !cursor-pointer">
-                                        {opt.label}
-                                    </Label>
-                                </div>
-                            ))}
-                        </div>
-                    </RadioGroup>
+                    <div className="flex flex-wrap gap-2">
+                        {[
+                            { id: "any", value: "all", label: "Any" },
+                            { id: "1-3", value: "1-3", label: "1-3 Days" },
+                            { id: "4-6", value: "4-6", label: "4-6 Days" },
+                            { id: "7-9", value: "7-9", label: "7-9 Days" },
+                            { id: "10-12", value: "10-12", label: "10-12 Days" },
+                            { id: "13+", value: "13+", label: "13+ Days" },
+                        ].map((opt) => {
+                            const isActive = durationFilter === opt.value;
+                            return (
+                                <button
+                                    key={opt.id}
+                                    onClick={() => setDurationFilter(opt.value)}
+                                    className={`px-4 py-2 rounded-full text-[13px] font-bold transition-all duration-300 border ${
+                                        isActive 
+                                            ? 'bg-gradient-to-r from-[#155dfc] to-[#005beb] text-white border-transparent shadow-md shadow-[#155dfc]/30' 
+                                            : 'bg-white text-slate-600 border-slate-200 hover:border-[#155dfc] hover:text-[#155dfc] hover:bg-blue-50/50'
+                                    }`}
+                                >
+                                    {opt.label}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
 
                 {/* Price Filter */}
-                <div className="mb-6">
-                    <div className="flex items-center gap-2 mb-3">
-                        <div className="w-1 h-4 bg-[#314594] rounded"></div>
-                        <Label className="!text-sm !font-bold !text-[#000945] !tracking-wider">Price</Label>
+                <div className="mb-8">
+                    <div className="flex items-center gap-2 mb-4">
+                        <div className="w-1.5 h-5 bg-gradient-to-b from-[#155dfc] to-[#000945] rounded-full"></div>
+                        <Label className="!text-base !font-bold !text-slate-800 !tracking-wide">Price</Label>
                     </div>
-                    <RadioGroup value={priceFilter} onValueChange={(value) => setPriceFilter(value)}>
-                        <div className="space-y-2">
-                            {[
-                                { id: "any", value: "all", label: "Any" },
-                                { id: "0-10000", value: "0-10000", label: "₹ 0 - ₹ 10,000" },
-                                { id: "10000-20000", value: "10000-20000", label: "₹ 10,000 - ₹ 20,000" },
-                                { id: "20000-35000", value: "20000-35000", label: "₹ 20,000 - ₹ 35,000" },
-                                { id: "35000-50000", value: "35000-50000", label: "₹ 35,000 - ₹ 50,000" },
-                                { id: "50000+", value: "50000+", label: "₹ 50,000+" },
-                            ].map((opt) => (
-                                <div key={opt.id} className="flex items-center space-x-2">
-                                    <RadioGroupItem value={opt.value} id={`price-${opt.id}`} />
-                                    <Label htmlFor={`price-${opt.id}`} className="!text-sm !font-semibold !text-slate-600 !cursor-pointer">
-                                        {opt.label}
-                                    </Label>
-                                </div>
-                            ))}
-                        </div>
-                    </RadioGroup>
+                    <div className="flex flex-col gap-2">
+                        {[
+                            { id: "any", value: "all", label: "Any" },
+                            { id: "0-10000", value: "0-10000", label: "₹ 0 - ₹ 10,000" },
+                            { id: "10000-20000", value: "10000-20000", label: "₹ 10,000 - ₹ 20,000" },
+                            { id: "20000-35000", value: "20000-35000", label: "₹ 20,000 - ₹ 35,000" },
+                            { id: "35000-50000", value: "35000-50000", label: "₹ 35,000 - ₹ 50,000" },
+                            { id: "50000+", value: "50000+", label: "₹ 50,000+" },
+                        ].map((opt) => {
+                            const isActive = priceFilter === opt.value;
+                            return (
+                                <button
+                                    key={opt.id}
+                                    onClick={() => setPriceFilter(opt.value)}
+                                    className={`px-5 py-2.5 rounded-xl text-left text-[13px] font-bold transition-all duration-300 border ${
+                                        isActive 
+                                            ? 'bg-gradient-to-r from-[#155dfc] to-[#005beb] text-white border-transparent shadow-md shadow-[#155dfc]/30 pl-6' 
+                                            : 'bg-white text-slate-600 border-slate-200 hover:border-[#155dfc] hover:text-[#155dfc] hover:bg-blue-50/50 hover:pl-6'
+                                    }`}
+                                >
+                                    {opt.label}
+                                </button>
+                            );
+                        })}
+                    </div>
                 </div>
             </div>
             <div className="p-6 pt-4 flex-shrink-0 border-t border-slate-200 flex flex-col gap-3">

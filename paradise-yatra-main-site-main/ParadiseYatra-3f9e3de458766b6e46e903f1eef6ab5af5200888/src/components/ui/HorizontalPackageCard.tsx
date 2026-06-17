@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Clock, Heart, ArrowRight, Hotel, Utensils, Car, Camera } from "lucide-react";
+import { MapPin, Clock, Heart, ArrowRight, Hotel, Utensils, Car, Camera, ChevronLeft, ChevronRight } from "lucide-react";
 import { getImageUrl } from "@/lib/utils";
-import React from "react";
+import React, { useState } from "react";
 
 interface HorizontalPackageCardProps {
     id: string;
@@ -14,7 +14,8 @@ interface HorizontalPackageCardProps {
     description: string;
     price: number;
     priceLabel?: string;
-    image: string;
+    image?: string;
+    images?: string[];
     imageAlt?: string;
     detailUrl: string;
     isInWishlist: boolean;
@@ -53,34 +54,81 @@ const HorizontalPackageCard: React.FC<HorizontalPackageCardProps> = ({
     price,
     priceLabel = "Starting From",
     image,
+    images = [],
     imageAlt,
     detailUrl,
     isInWishlist,
     onWishlistToggle,
 }) => {
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const plainDescription = stripHtmlTags(description);
     const unitLabel = /couple/i.test(priceLabel) ? "per couple" : "per person";
-    const optimizedImageUrl = getImageUrl(image, {
+    const altText = imageAlt?.trim() || title || destination || "Package image";
+
+    const allImages = images && images.length > 0 ? images : image ? [image] : [];
+
+    const handlePrevImage = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setCurrentImageIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1));
+    };
+
+    const handleNextImage = (e: React.MouseEvent) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setCurrentImageIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1));
+    };
+
+    const optimizedImageUrl = getImageUrl(allImages[currentImageIndex], {
         width: "auto",
         height: 640,
         crop: "fill",
         gravity: "auto",
         quality: "good",
     });
-    const altText = imageAlt?.trim() || title || destination || "Package image";
 
     return (
-        <div className="group relative bg-white rounded-[6px] border border-[#dfe1df] transition-all duration-300 overflow-hidden h-auto sm:h-64 flex flex-col sm:flex-row">
+        <div className="group relative bg-white rounded-[20px] border border-[#dfe1df] transition-all duration-500 hover:shadow-[0_20px_40px_-15px_rgba(0,9,69,0.15)] hover:-translate-y-1 overflow-hidden h-auto sm:h-64 flex flex-col sm:flex-row">
             {/* Image Placeholder or Optimized Image */}
-            <div className="relative w-full h-48 sm:w-2/5 sm:h-full overflow-hidden shrink-0">
+            <div className="relative w-full h-48 sm:w-2/5 sm:h-full overflow-hidden shrink-0 group/slider">
                 {optimizedImageUrl ? (
-                    <Image
-                        src={optimizedImageUrl}
-                        alt={altText}
-                        fill
-                        className="object-cover"
-                        unoptimized={true}
-                    />
+                    <>
+                        <Image
+                            key={currentImageIndex} // force re-render for smooth transition or just let it swap src
+                            src={optimizedImageUrl}
+                            alt={altText}
+                            fill
+                            className="object-cover transition-transform duration-700 group-hover:scale-110"
+                            unoptimized={true}
+                        />
+                        {/* Slider Controls */}
+                        {allImages.length > 1 && (
+                            <>
+                                <button
+                                    onClick={handlePrevImage}
+                                    className="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/70 hover:bg-white text-slate-800 flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity z-10 shadow-md"
+                                >
+                                    <ChevronLeft className="w-5 h-5" />
+                                </button>
+                                <button
+                                    onClick={handleNextImage}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-white/70 hover:bg-white text-slate-800 flex items-center justify-center opacity-0 group-hover/slider:opacity-100 transition-opacity z-10 shadow-md"
+                                >
+                                    <ChevronRight className="w-5 h-5" />
+                                </button>
+                                
+                                {/* Pagination Dots */}
+                                <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
+                                    {allImages.map((_, idx) => (
+                                        <div 
+                                            key={idx} 
+                                            className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentImageIndex ? 'w-4 bg-white' : 'w-1.5 bg-white/50'}`}
+                                        />
+                                    ))}
+                                </div>
+                            </>
+                        )}
+                    </>
                 ) : (
                     <div className="w-full h-full bg-slate-50 flex items-center justify-center">
                         <MapPin className="w-8 h-8 text-slate-200" />
@@ -149,10 +197,10 @@ const HorizontalPackageCard: React.FC<HorizontalPackageCardProps> = ({
 
                     <Link
                         href={detailUrl}
-                        className="bg-[#314594] hover:bg-[#253675] text-white text-[11px] font-bold py-2 px-4 rounded-[6px] transition-all duration-300 flex items-center gap-2 group/btn shadow-md shadow-slate-200/50"
+                        className="bg-gradient-to-r from-[#155dfc] to-[#000945] hover:opacity-90 text-white text-[12px] font-bold py-2.5 px-6 rounded-[10px] transition-all duration-300 flex items-center gap-2 group/btn shadow-md shadow-[#155dfc]/30"
                     >
                         View Details
-                        <ArrowRight className="w-3.5 h-3.5 transform group-hover/btn:translate-x-0.5 transition-transform" />
+                        <ArrowRight className="w-4 h-4 transform group-hover/btn:translate-x-1 transition-transform" />
                     </Link>
                 </div>
             </div>

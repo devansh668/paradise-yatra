@@ -160,505 +160,438 @@ const AboutPage = memo(() => {
     >
       <LazyHeader />
 
-      <section className="bg-white pt-8 md:pt-10">
-        <div className="mx-auto max-w-[1220px] px-4 md:px-8">
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-12">
-            <motion.h1
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="font-unbounded flex flex-col gap-0 text-[42px] leading-[0.88] font-extrabold tracking-tight text-[#000945] sm:text-[48px] md:text-[72px]"
-            >
-              <span className="block whitespace-nowrap">Crafted For</span>
-              <span className="block whitespace-nowrap">Curious Travelers</span>
-            </motion.h1>
-
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.15 }}
-              className="md:justify-self-end md:max-w-[440px]"
-            >
-              <p className="!text-[15px] leading-[1.45] !text-[#000945] md:!text-[17px]">
-                Paradise Yatra is a modern travel company that helps explorers discover extraordinary destinations with
-                curated itineraries, expert planning, and reliable on-ground support from start to finish.
-              </p>
-              <button
-                type="button"
-                onClick={() => setShowLeadCaptureForm(true)}
-                className="mt-6 inline-flex cursor-pointer items-center gap-2 rounded-[6px] bg-[#155dfc] px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#0f4de0]"
-              >
-                Start Planning Your Journey
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </motion.div>
-          </div>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 22 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.25 }}
-          className="mt-8 md:mt-10 w-full overflow-hidden"
-        >
+      {/* Hero Section */}
+      <section className="relative h-[90vh] min-h-[600px] w-full flex items-center justify-center overflow-hidden">
+        <div className="absolute inset-0 z-0">
           <Image
             src="/About/Hero/Untitled design.png"
             alt="Paradise Yatra hero"
-            width={1920}
-            height={900}
+            fill
             sizes="100vw"
-            className="h-[220px] w-full object-cover object-center sm:h-[280px] md:h-[640px]"
+            className="object-cover object-center"
             priority
           />
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-white to-transparent"></div>
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-[1220px] px-4 md:px-8 text-center flex flex-col items-center mt-20">
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="font-unbounded flex flex-col gap-2 text-[48px] leading-[1.1] font-extrabold tracking-tight text-white drop-shadow-lg sm:text-[64px] md:text-[88px]"
+          >
+            <span>Crafted For</span>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 to-emerald-300 drop-shadow-sm">Curious Travelers</span>
+          </motion.h1>
+
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="mt-6 max-w-2xl text-[16px] leading-[1.6] !text-white !opacity-100 font-semibold drop-shadow-md md:text-[20px] bg-black/40 backdrop-blur-md p-5 rounded-2xl border border-white/20"
+          >
+            Paradise Yatra is a modern travel company that helps explorers discover extraordinary destinations with
+            curated itineraries, expert planning, and reliable on-ground support from start to finish.
+          </motion.p>
+          
+          <motion.button
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
+            type="button"
+            onClick={() => setShowLeadCaptureForm(true)}
+            className="mt-10 inline-flex cursor-pointer items-center gap-3 rounded-full bg-white px-8 py-4 text-base font-bold text-[#000945] shadow-[0_8px_30px_rgb(0,0,0,0.12)] transition-all hover:scale-105 hover:bg-blue-50 hover:shadow-[0_8px_40px_rgba(21,93,252,0.3)]"
+          >
+            Start Planning Your Journey
+            <ChevronRight className="h-5 w-5 text-[#155dfc]" />
+          </motion.button>
+        </div>
+        
+        {/* Scroll Indicator */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1, delay: 1 }}
+          className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
+        >
+          <span className="text-xs font-semibold uppercase tracking-widest text-slate-800">Scroll to explore</span>
+          <motion.div 
+            animate={{ y: [0, 10, 0] }}
+            transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}
+            className="h-10 w-6 rounded-full border-2 border-slate-800 flex justify-center p-1"
+          >
+            <div className="h-2 w-2 rounded-full bg-slate-800" />
+          </motion.div>
         </motion.div>
       </section>
 
-      <section className="bg-white py-10 md:py-14">
-        <div className="mx-auto max-w-[1220px] px-4 md:px-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-[190px_1fr] md:gap-14">
-            <motion.div
-              initial={{ opacity: 0, x: -12 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45 }}
-              className="grid grid-cols-2 gap-2 md:flex md:flex-col md:gap-3 md:pt-1"
-            >
-              {missionStates.map((state, index) => {
-                const isActive = activeMissionIndex === index;
-                return (
-                  <button
-                    key={state.label}
-                    type="button"
-                    onClick={() => setActiveMissionIndex(index)}
-                    className={`w-full cursor-pointer rounded-[6px] px-4 py-2.5 text-left text-[15px] font-semibold leading-none transition-colors md:w-fit md:text-[16px] ${
-                      isActive
-                        ? "bg-[#155dfc] text-white"
-                        : "bg-white text-[#000945]"
-                    }`}
-                  >
-                    {state.label}
-                  </button>
-                );
-              })}
-            </motion.div>
-
-            <motion.div
-              key={activeMission.label}
-              initial={{ opacity: 0, y: 10 }}
+      {/* Core Values / Missions Section */}
+      <section className="bg-slate-50 py-20 md:py-32 relative">
+        <div className="mx-auto max-w-[1220px] px-4 md:px-8 relative z-10">
+          <div className="text-center mb-16 md:mb-24">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.45 }}
-              className="max-w-[780px] !text-[#000945]"
+              className="font-unbounded text-[36px] font-extrabold tracking-tight text-[#000945] md:text-[52px]"
             >
-              <h2 className="about-section-heading tracking-tight text-[#000945]" style={{ fontWeight: 700 }}>
-                {activeMission.label}
-              </h2>
-              <p className="mt-3 text-[18px] !text-[#000945] md:text-[20px]">{activeMission.subtitle}</p>
+              Our Core <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500">Values</span>
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="mt-4 text-[18px] text-slate-600 max-w-2xl mx-auto"
+            >
+              We believe in creating journeys that matter, built on a foundation of trust, authenticity, and personalized care.
+            </motion.p>
+          </div>
 
-              <p className="mt-8 text-[15px] leading-7 !text-[#000945]">{activeMission.intro}</p>
-              <p className="mt-8 text-[15px] leading-7 !text-[#000945]">{activeMission.detail}</p>
-
-              <div className="mt-8 space-y-5">
-                {activeMission.points.map((point) => (
-                  <p key={point.title} className="text-[15px] leading-7 !text-[#000945]">
-                    <span className="font-bold">{point.title}:</span> {point.text}
-                  </p>
-                ))}
-              </div>
-            </motion.div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+            {missionStates.map((state, index) => (
+              <motion.div
+                key={state.label}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                className={`group relative overflow-hidden rounded-3xl bg-white p-8 shadow-sm transition-all hover:shadow-2xl hover:-translate-y-1 ${index === 0 || index === 3 || index === 4 ? 'lg:col-span-2' : ''}`}
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="relative z-10 flex flex-col h-full">
+                  <h3 className="text-[24px] font-bold text-[#000945]">{state.label}</h3>
+                  <p className="mt-3 text-[16px] font-medium text-blue-600">{state.subtitle}</p>
+                  <p className="mt-4 text-[15px] leading-relaxed text-slate-600">{state.intro}</p>
+                  
+                  <div className="mt-8 pt-6 border-t border-slate-100 flex-grow">
+                    <ul className="space-y-4">
+                      {state.points.slice(0, 2).map((point) => (
+                        <li key={point.title} className="flex gap-3">
+                          <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600">
+                            <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                              <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                            </svg>
+                          </div>
+                          <span className="text-[14px] text-slate-700">
+                            <strong className="font-semibold text-slate-900">{point.title}:</strong> {point.text}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
 
-      <section ref={lifeSectionRef} className="bg-white py-12 md:py-16">
+      {/* Life At Paradise Yatra Section */}
+      <section ref={lifeSectionRef} className="bg-white py-20 md:py-32">
         <div className="mx-auto max-w-[1220px] px-4 md:px-8">
-          <div className="mb-8 md:mb-10">
-            <h2
-              className="about-section-heading mt-2 tracking-tight text-[#000945]"
-              style={{ fontWeight: 700 }}
+          <div className="mb-12 md:mb-16 text-center">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="font-unbounded text-[36px] font-extrabold tracking-tight text-[#000945] md:text-[52px]"
             >
               Life At Paradise Yatra
-            </h2>
+            </motion.h2>
+            <p className="mt-4 text-[18px] text-slate-600 max-w-2xl mx-auto">
+              Every frame here is a glimpse of the energy, creativity, and teamwork behind our journeys.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-5 lg:grid-cols-12">
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:col-span-7">
-              <div className="h-[250px] w-full overflow-hidden rounded-[6px] sm:col-span-2 md:h-[360px]">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            {/* Column 1 */}
+            <div className="flex flex-col gap-4 md:gap-6">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="group relative overflow-hidden rounded-3xl aspect-[4/5] bg-slate-100"
+              >
                 <Image
                   src="/About/Life At Paradise Yatra/Image 1.jpeg"
-                  alt="Paradise Yatra team collaborating"
-                  width={1200}
-                  height={800}
-                  loading="lazy"
-                  className="block h-full w-full object-cover"
+                  alt="Team collaborating"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-              </div>
-
-              <div className="grid grid-cols-2 gap-5 md:hidden sm:col-span-2">
-                <div className="aspect-[9/16] w-full overflow-hidden rounded-[6px]">
-                  <video
-                    data-life-reel="true"
-                    className="h-full w-full object-cover"
-                    muted
-                    loop
-                    playsInline
-                    preload={loadLifeVideos ? "metadata" : "none"}
-                  >
-                    {loadLifeVideos ? (
-                      <source src="/About/Life At Paradise Yatra/Reel 1.mp4" type="video/mp4" />
-                    ) : null}
-                  </video>
-                </div>
-
-                <div className="aspect-[9/16] w-full overflow-hidden rounded-[6px]">
-                  <video
-                    data-life-reel="true"
-                    className="h-full w-full object-cover"
-                    muted
-                    loop
-                    playsInline
-                    preload={loadLifeVideos ? "metadata" : "none"}
-                  >
-                    {loadLifeVideos ? (
-                      <source src="/About/Life At Paradise Yatra/Reel 2.mp4" type="video/mp4" />
-                    ) : null}
-                  </video>
-                </div>
-              </div>
-
-              <div className="h-[260px] w-full overflow-hidden rounded-[6px]">
-                <Image
-                  src="/About/Life At Paradise Yatra/Image 2.jpg"
-                  alt="Paradise Yatra field experience"
-                  width={700}
-                  height={900}
-                  loading="lazy"
-                  className="block h-full w-full object-cover"
-                />
-              </div>
-
-              <div className="h-[260px] w-full overflow-hidden rounded-[6px]">
-                <Image
-                  src="/About/Life At Paradise Yatra/Image 3.jpg"
-                  alt="Paradise Yatra travel moments"
-                  width={700}
-                  height={900}
-                  loading="lazy"
-                  className="block h-full w-full object-cover"
-                />
-              </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.1 }}
+                className="group relative overflow-hidden rounded-3xl aspect-square bg-slate-100"
+              >
+                <video
+                  data-life-reel="true"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  muted
+                  loop
+                  playsInline
+                  preload={loadLifeVideos ? "metadata" : "none"}
+                >
+                  {loadLifeVideos && <source src="/About/Life At Paradise Yatra/Reel 1.mp4" type="video/mp4" />}
+                </video>
+              </motion.div>
             </div>
 
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:col-span-5">
-              <div className="hidden h-[250px] w-full overflow-hidden rounded-[6px] md:block md:h-[360px]">
+            {/* Column 2 */}
+            <div className="flex flex-col gap-4 md:gap-6 md:mt-12">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.2 }}
+                className="group relative overflow-hidden rounded-3xl aspect-square bg-slate-100"
+              >
                 <video
                   data-life-reel="true"
-                  className="h-full w-full object-cover"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                   muted
                   loop
                   playsInline
                   preload={loadLifeVideos ? "metadata" : "none"}
                 >
-                  {loadLifeVideos ? (
-                    <source src="/About/Life At Paradise Yatra/Reel 1.mp4" type="video/mp4" />
-                  ) : null}
+                  {loadLifeVideos && <source src="/About/Life At Paradise Yatra/Reel 2.mp4" type="video/mp4" />}
                 </video>
-              </div>
+              </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.3 }}
+                className="group relative overflow-hidden rounded-3xl aspect-[4/5] bg-slate-100"
+              >
+                <Image
+                  src="/About/Life At Paradise Yatra/Image 2.jpg"
+                  alt="Field experience"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                />
+              </motion.div>
+            </div>
 
-              <div className="hidden h-[250px] w-full overflow-hidden rounded-[6px] md:block md:h-[360px]">
-                <video
-                  data-life-reel="true"
-                  className="h-full w-full object-cover"
-                  muted
-                  loop
-                  playsInline
-                  preload={loadLifeVideos ? "metadata" : "none"}
-                >
-                  {loadLifeVideos ? (
-                    <source src="/About/Life At Paradise Yatra/Reel 2.mp4" type="video/mp4" />
-                  ) : null}
-                </video>
-              </div>
-
-              <div className="relative h-[260px] sm:col-span-2 overflow-hidden rounded-[6px] border border-[#1b2f5f] bg-black p-5 md:p-7">
-                <motion.div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -left-20 -top-24 h-64 w-64 rounded-full blur-2xl"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 35% 35%, rgba(56,189,248,0.95), rgba(56,189,248,0) 65%)",
-                  }}
-                  animate={{ x: [0, 120, -70, 0], y: [0, 65, -35, 0], scale: [1, 1.35, 0.82, 1], rotate: [0, 12, -8, 0] }}
-                  transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}
+            {/* Column 3 */}
+            <div className="flex flex-col gap-4 md:gap-6">
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.4 }}
+                className="group relative overflow-hidden rounded-3xl aspect-[4/5] bg-slate-100"
+              >
+                <Image
+                  src="/About/Life At Paradise Yatra/Image 3.jpg"
+                  alt="Travel moments"
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
                 />
-                <motion.div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -right-24 top-8 h-72 w-72 rounded-full blur-2xl"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 60% 40%, rgba(59,130,246,0.95), rgba(59,130,246,0) 65%)",
-                  }}
-                  animate={{ x: [0, -95, 45, 0], y: [0, 70, -25, 0], scale: [1, 0.85, 1.25, 1], rotate: [0, -10, 7, 0] }}
-                  transition={{ duration: 7.1, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute -bottom-28 left-1/3 h-72 w-72 rounded-full blur-2xl"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 45% 45%, rgba(21,93,252,0.9), rgba(21,93,252,0) 65%)",
-                  }}
-                  animate={{ x: [0, -70, 60, 0], y: [0, -55, 30, 0], scale: [1, 1.2, 0.88, 1], rotate: [0, 8, -6, 0] }}
-                  transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 blur-2xl"
-                  style={{
-                    background:
-                      "linear-gradient(120deg, rgba(6,182,212,0.22) 0%, rgba(14,165,233,0.3) 30%, rgba(21,93,252,0.26) 56%, rgba(59,130,246,0.28) 78%, rgba(125,211,252,0.24) 100%)",
-                    backgroundSize: "220% 220%",
-                    backgroundPosition: "0% 50%",
-                  }}
-                  animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"], x: [-24, 18, -12], y: [0, 10, -8] }}
-                  transition={{ duration: 8.5, repeat: Infinity, ease: "easeInOut" }}
-                />
-                <motion.div
-                  aria-hidden="true"
-                  className="pointer-events-none absolute inset-0 opacity-55 mix-blend-soft-light"
-                  style={{
-                    backgroundImage:
-                      'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27160%27 height=%27160%27 viewBox=%270 0 160 160%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%271.15%27 numOctaves=%274%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27160%27 height=%27160%27 filter=%27url(%23n)%27 opacity=%270.95%27/%3E%3C/svg%3E")',
-                    backgroundSize: "220px 220px",
-                    backgroundPosition: "0 0",
-                  }}
-                  animate={{ backgroundPosition: ["0 0", "220px 220px", "0 0"] }}
-                  transition={{ duration: 4.2, repeat: Infinity, ease: "linear" }}
-                />
-                <div className="relative z-10 flex h-full items-center">
-                  <p className="font-unbounded text-[18px] leading-[1.4] !text-white md:text-[22px]" style={{ color: "#ffffff" }}>
-                    Every frame here is a glimpse of the energy, creativity, and teamwork behind Paradise Yatra.
-                  </p>
-                </div>
-              </div>
+              </motion.div>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: 0.5 }}
+                className="group relative overflow-hidden rounded-3xl aspect-square bg-blue-600 flex items-center justify-center p-8 text-center"
+              >
+                <div className="absolute inset-0 bg-[url('/noise.png')] opacity-20 mix-blend-overlay"></div>
+                <h3 className="relative z-10 text-[24px] md:text-[32px] font-bold text-white leading-tight">
+                  More than just a team, we are a family of explorers.
+                </h3>
+              </motion.div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="relative overflow-hidden bg-white py-14 md:py-20">
-        <div className="relative mx-auto max-w-[1220px] px-4 md:px-8">
-          <div className="mb-10 max-w-[760px]">
-            <h2 className="about-section-heading mt-2 tracking-tight text-[#000945]" style={{ fontWeight: 700 }}>
-              The Vision Behind Paradise Yatra
-            </h2>
-          </div>
+      {/* The Vision Behind Paradise Yatra Section */}
+      <section className="relative overflow-hidden bg-slate-50 py-20 md:py-32">
+        <div className="absolute -left-40 top-20 h-96 w-96 rounded-full bg-blue-200/40 blur-3xl" />
+        <div className="absolute right-0 bottom-20 h-96 w-96 rounded-full bg-emerald-200/30 blur-3xl" />
 
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-12 md:gap-10">
+        <div className="relative mx-auto max-w-[1220px] px-4 md:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-8 items-center">
+            
             <motion.div
-              initial={{ opacity: 0, x: -18 }}
+              initial={{ opacity: 0, x: -30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="md:col-span-5"
+              transition={{ duration: 0.7 }}
+              className="relative"
             >
-              <div className="relative overflow-hidden rounded-[6px] border border-[#dfe1df] bg-white">
-                <div className="relative overflow-hidden">
-                  <Image
-                    src="/Male Profile (1).png"
-                    alt="Dikshant Sharma - Founder, Paradise Yatra"
-                    width={680}
-                    height={820}
-                    className="h-[420px] w-full object-cover object-top md:h-[560px]"
-                  />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 to-transparent px-5 pb-5 pt-12">
-                    <p className="text-[13px] font-semibold uppercase tracking-[0.16em] !text-white" style={{ color: "#ffffff" }}>
-                      Founder & CEO
-                    </p>
-                    <p className="mt-1 text-[30px] font-extrabold tracking-tight !text-white md:text-[38px]" style={{ color: "#ffffff" }}>
-                      Dikshant Sharma
-                    </p>
-                  </div>
+              <div className="relative z-10 rounded-3xl overflow-hidden aspect-[4/5] lg:max-w-md ml-auto lg:ml-0 shadow-2xl">
+                <Image
+                  src="/Male Profile (1).png"
+                  alt="Dikshant Sharma - Founder, Paradise Yatra"
+                  fill
+                  className="object-cover object-top"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                <div className="absolute bottom-8 left-8 right-8 text-white">
+                  <p className="text-[14px] font-bold uppercase tracking-[0.2em] text-blue-300 mb-2">
+                    Founder & CEO
+                  </p>
+                  <p className="text-[36px] font-extrabold tracking-tight">
+                    Dikshant Sharma
+                  </p>
                 </div>
-
               </div>
+              
+              <motion.div 
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7, delay: 0.3 }}
+                className="absolute -bottom-12 -left-6 lg:left-auto lg:-right-12 z-20 bg-white p-8 rounded-3xl shadow-xl max-w-[280px]"
+              >
+                <div className="flex gap-2 text-yellow-400 mb-3">
+                  {[...Array(5)].map((_, i) => (
+                    <svg key={i} className="w-5 h-5 fill-current" viewBox="0 0 20 20">
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <p className="text-slate-700 italic font-medium leading-relaxed">
+                  "Our goal is simple: make every journey meaningful, and every traveler feel taken care of."
+                </p>
+              </motion.div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, x: 18 }}
+              initial={{ opacity: 0, x: 30 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: 0.08 }}
-              className="md:col-span-7"
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="lg:pl-16"
             >
-              <div className="p-0 md:pl-2">
-                <p className="text-[17px] leading-8 !text-[#000945] md:text-[19px]" style={{ color: "#000945" }}>
+              <h2 className="font-unbounded text-[36px] font-extrabold tracking-tight text-[#000945] md:text-[48px] mb-8">
+                The Vision
+              </h2>
+              
+              <div className="space-y-6 text-[18px] text-slate-600 leading-relaxed">
+                <p>
                   Dikshant Sharma built Paradise Yatra with one clear promise: travel should feel personal, seamless,
-                  and unforgettable. From early route planning to scaling a trusted travel brand, his leadership combines
-                  local insight with world-class service standards.
+                  and unforgettable. 
+                </p>
+                <p>
+                  From early route planning to scaling a trusted travel brand, his leadership combines
+                  local insight with world-class service standards. Every itinerary is a reflection of this commitment to quality.
+                </p>
+              </div>
+
+              <div className="mt-12 grid grid-cols-3 gap-6 pt-10 border-t border-slate-200">
+                <div>
+                  <p className="text-[36px] font-extrabold text-[#155dfc]">10+</p>
+                  <p className="text-[14px] font-bold uppercase tracking-wider text-slate-500 mt-1">Years</p>
+                </div>
+                <div>
+                  <p className="text-[36px] font-extrabold text-[#155dfc]">25+</p>
+                  <p className="text-[14px] font-bold uppercase tracking-wider text-slate-500 mt-1">Places</p>
+                </div>
+                <div>
+                  <p className="text-[36px] font-extrabold text-[#155dfc]">1k+</p>
+                  <p className="text-[14px] font-bold uppercase tracking-wider text-slate-500 mt-1">Clients</p>
+                </div>
+              </div>
+
+              <div className="mt-12">
+                <a
+                  href="mailto:dikshant@paradiseyatra.com"
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#000945] px-8 py-4 text-[16px] font-bold text-white transition-all hover:bg-[#155dfc] hover:shadow-lg hover:shadow-blue-500/30"
+                >
+                  Connect with the Founder
+                  <ChevronRight className="h-5 w-5" />
+                </a>
+              </div>
+            </motion.div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Contact Section */}
+      <section className="bg-white py-20 md:py-32">
+        <div className="mx-auto max-w-[1220px] px-4 md:px-8">
+          <div className="mb-12 md:mb-16">
+            <motion.h2 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="font-unbounded text-[36px] font-extrabold tracking-tight text-[#000945] md:text-[52px]"
+            >
+              Meet Us <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-emerald-500">At</span>
+            </motion.h2>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="lg:col-span-5 space-y-8"
+            >
+              <div className="rounded-3xl bg-slate-50 p-8 md:p-10 transition-transform hover:scale-[1.02]">
+                <h3 className="text-[28px] font-bold text-[#000945]">Our Office</h3>
+                <p className="mt-4 text-[16px] leading-relaxed text-slate-600">
+                  108, Tagore Villa, Chakrata Road, <br/>Dehradun, Uttarakhand - 248001
                 </p>
 
-                <div className="relative mt-6 overflow-hidden rounded-[6px] bg-black p-5 md:p-6">
-                  <motion.div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute -left-20 -top-24 h-64 w-64 rounded-full blur-2xl"
-                    style={{
-                      background:
-                        "radial-gradient(circle at 35% 35%, rgba(56,189,248,0.95), rgba(56,189,248,0) 65%)",
-                    }}
-                    animate={{ x: [0, 120, -70, 0], y: [0, 65, -35, 0], scale: [1, 1.35, 0.82, 1], rotate: [0, 12, -8, 0] }}
-                    transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  <motion.div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute -right-24 top-8 h-72 w-72 rounded-full blur-2xl"
-                    style={{
-                      background:
-                        "radial-gradient(circle at 60% 40%, rgba(59,130,246,0.95), rgba(59,130,246,0) 65%)",
-                    }}
-                    animate={{ x: [0, -95, 45, 0], y: [0, 70, -25, 0], scale: [1, 0.85, 1.25, 1], rotate: [0, -10, 7, 0] }}
-                    transition={{ duration: 7.1, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  <motion.div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute -bottom-28 left-1/3 h-72 w-72 rounded-full blur-2xl"
-                    style={{
-                      background:
-                        "radial-gradient(circle at 45% 45%, rgba(21,93,252,0.9), rgba(21,93,252,0) 65%)",
-                    }}
-                    animate={{ x: [0, -70, 60, 0], y: [0, -55, 30, 0], scale: [1, 1.2, 0.88, 1], rotate: [0, 8, -6, 0] }}
-                    transition={{ duration: 5.8, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  <motion.div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 blur-2xl"
-                    style={{
-                      background:
-                        "linear-gradient(120deg, rgba(6,182,212,0.22) 0%, rgba(14,165,233,0.3) 30%, rgba(21,93,252,0.26) 56%, rgba(59,130,246,0.28) 78%, rgba(125,211,252,0.24) 100%)",
-                      backgroundSize: "220% 220%",
-                      backgroundPosition: "0% 50%",
-                    }}
-                    animate={{ backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"], x: [-24, 18, -12], y: [0, 10, -8] }}
-                    transition={{ duration: 8.5, repeat: Infinity, ease: "easeInOut" }}
-                  />
-                  <motion.div
-                    aria-hidden="true"
-                    className="pointer-events-none absolute inset-0 opacity-55 mix-blend-soft-light"
-                    style={{
-                      backgroundImage:
-                        'url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%27160%27 height=%27160%27 viewBox=%270 0 160 160%27%3E%3Cfilter id=%27n%27%3E%3CfeTurbulence type=%27fractalNoise%27 baseFrequency=%271.15%27 numOctaves=%274%27 stitchTiles=%27stitch%27/%3E%3C/filter%3E%3Crect width=%27160%27 height=%27160%27 filter=%27url(%23n)%27 opacity=%270.95%27/%3E%3C/svg%3E")',
-                      backgroundSize: "220px 220px",
-                      backgroundPosition: "0 0",
-                    }}
-                    animate={{ backgroundPosition: ["0 0", "220px 220px", "0 0"] }}
-                    transition={{ duration: 4.2, repeat: Infinity, ease: "linear" }}
-                  />
-                  <div className="relative z-10">
-                    <p className="text-[18px] font-semibold leading-8 !text-white md:text-[20px]" style={{ color: "#ffffff" }}>
-                      "Our goal is simple: make every journey meaningful, and every traveler feel taken care of from
-                      the first call to the final memory."
-                    </p>
-                  </div>
-                </div>
-
-                <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  <div className="p-1">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] !text-[#000945]" style={{ color: "#000945" }}>Experience</p>
-                    <p className="mt-1 text-[28px] font-extrabold !text-[#000945]" style={{ color: "#000945" }}>10+</p>
-                    <p className="text-sm !text-[#000945]" style={{ color: "#000945" }}>Years in Travel</p>
-                  </div>
-                  <div className="p-1">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] !text-[#000945]" style={{ color: "#000945" }}>Coverage</p>
-                    <p className="mt-1 text-[28px] font-extrabold !text-[#000945]" style={{ color: "#000945" }}>25+</p>
-                    <p className="text-sm !text-[#000945]" style={{ color: "#000945" }}>Destinations</p>
-                  </div>
-                  <div className="p-1">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.14em] !text-[#000945]" style={{ color: "#000945" }}>Trust</p>
-                    <p className="mt-1 text-[28px] font-extrabold !text-[#000945]" style={{ color: "#000945" }}>1000+</p>
-                    <p className="text-sm !text-[#000945]" style={{ color: "#000945" }}>Happy Travelers</p>
-                  </div>
-                </div>
-
-                <div className="mt-7">
+                <div className="mt-8 space-y-4">
                   <a
-                    href="mailto:dikshant@paradiseyatra.com"
-                    className="inline-flex items-center gap-2 rounded-[6px] border border-[#dfe1df] bg-white px-6 py-2.5 text-sm font-semibold !text-[#000945] transition-colors hover:bg-[#ecf3ff]"
-                    style={{ color: "#000945" }}
+                    href="tel:+918979396413"
+                    className="flex items-center gap-4 text-slate-700 transition-colors hover:text-[#155dfc] group"
                   >
-                    Connect with the Founder
-                    <ChevronRight className="h-4 w-4" />
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-blue-100 text-[#155dfc] group-hover:bg-[#155dfc] group-hover:text-white transition-colors">
+                      <Phone className="h-5 w-5" />
+                    </div>
+                    <span className="text-[18px] font-semibold">+91 8979396413</span>
+                  </a>
+                  <a
+                    href="mailto:info@paradiseyatra.com"
+                    className="flex items-center gap-4 text-slate-700 transition-colors hover:text-[#155dfc] group"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                      <Mail className="h-5 w-5" />
+                    </div>
+                    <span className="text-[18px] font-semibold">info@paradiseyatra.com</span>
                   </a>
                 </div>
               </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
 
-      <section className="bg-white py-14 md:py-20">
-        <div className="mx-auto max-w-[1220px] px-4 md:px-8">
-          <div className="mb-9 md:mb-12">
-            <h2 className="about-section-heading mt-2 tracking-tight text-[#000945]" style={{ fontWeight: 700 }}>
-              Meet Us At
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-12 md:gap-8">
-            <motion.div
-              initial={{ opacity: 0, y: 18 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.45 }}
-              className="md:col-span-4"
-            >
-              <div className="space-y-4">
-                <div className="rounded-[6px] border border-[#dfe1df] bg-white p-5 md:p-6">
-                  <h3 className="text-[30px] !font-[600] tracking-tight text-[#000945]" style={{ fontWeight: 600 }}>Our Office</h3>
-                  <p className="mt-2 text-[15px] leading-7 !text-[#000945]" style={{ color: "#000945" }}>
-                    108, Tagore Villa, Chakrata Road, Dehradun, Uttarakhand - 248001
-                  </p>
-
-                  <div className="mt-4 space-y-2.5">
-                    <a
-                      href="tel:+918979396413"
-                      className="inline-flex items-center gap-2 text-[#000945] transition-colors hover:text-[#155dfc]"
-                    >
-                      <Phone className="h-4 w-4 text-[#155dfc]" />
-                      <span className="text-sm font-semibold">+91 8979396413</span>
-                    </a>
-                    <br />
-                    <a
-                      href="mailto:info@paradiseyatra.com"
-                      className="inline-flex items-center gap-2 text-[#000945] transition-colors hover:text-[#155dfc]"
-                    >
-                      <Mail className="h-4 w-4 text-[#155dfc]" />
-                      <span className="text-sm font-semibold">info@paradiseyatra.com</span>
-                    </a>
+              <div className="rounded-3xl bg-[#000945] p-8 md:p-10 text-white transition-transform hover:scale-[1.02] relative overflow-hidden">
+                <div className="absolute -right-10 -top-10 w-32 h-32 rounded-full bg-white/10 blur-2xl"></div>
+                <h4 className="text-[28px] font-bold">Business Hours</h4>
+                <div className="mt-6 space-y-3">
+                  <div className="flex justify-between items-center border-b border-white/20 pb-3">
+                    <span className="text-white/80">Mon - Sat</span>
+                    <span className="font-semibold">10:00 AM - 6:30 PM</span>
                   </div>
-                </div>
-
-                <div className="rounded-[6px] border border-[#dfe1df] bg-white p-5 md:p-6">
-                  <h4 className="text-[30px] !font-[600] tracking-tight text-[#000945]" style={{ fontWeight: 600 }}>
-                    Business Hours
-                  </h4>
-                  <p className="mt-3 text-[15px] leading-7 !text-[#000945]" style={{ color: "#000945" }}>
-                    Mon - Sat: 10:00 AM - 6:30 PM
-                  </p>
-                  <p className="text-[15px] leading-7 !text-[#000945]" style={{ color: "#000945" }}>
-                    Sun: Closed
-                  </p>
+                  <div className="flex justify-between items-center pt-1">
+                    <span className="text-white/80">Sunday</span>
+                    <span className="font-semibold text-emerald-400">Closed</span>
+                  </div>
                 </div>
               </div>
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 18 }}
+              initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.45, delay: 0.08 }}
-              className="md:col-span-8"
+              transition={{ duration: 0.6, delay: 0.2 }}
+              className="lg:col-span-7"
             >
-              <div className="h-full overflow-hidden rounded-[6px] border border-[#dfe1df] bg-white">
+              <div className="h-full min-h-[400px] overflow-hidden rounded-3xl bg-slate-100 shadow-lg relative group">
+                <div className="absolute inset-0 bg-blue-900/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-10"></div>
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1388.6582464962262!2d78.03477118988253!3d30.327473883386677!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39092a19318db8c3%3A0xd8c55020cab7d0c4!2sParadise%20Yatra!5e0!3m2!1sen!2sin!4v1772634410746!5m2!1sen!2sin"
                   width="100%"
@@ -667,7 +600,7 @@ const AboutPage = memo(() => {
                   allowFullScreen
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
-                  className="h-full w-full"
+                  className="absolute inset-0 h-full w-full object-cover"
                   title="Paradise Yatra Office Location"
                 />
               </div>

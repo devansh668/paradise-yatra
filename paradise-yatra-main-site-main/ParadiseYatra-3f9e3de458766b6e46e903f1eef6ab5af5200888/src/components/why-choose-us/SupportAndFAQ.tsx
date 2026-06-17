@@ -93,6 +93,7 @@ export default function SupportAndFAQ() {
               src="/Destination Pages/Faq/Image.webp"
               alt="Paradise Yatra Travel"
               fill
+              sizes="(max-width: 768px) 100vw, 50vw"
               className="object-cover"
             />
             <div className="absolute inset-0 bg-transparent" />

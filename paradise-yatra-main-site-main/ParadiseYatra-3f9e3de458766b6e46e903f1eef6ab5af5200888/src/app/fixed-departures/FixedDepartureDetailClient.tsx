@@ -251,6 +251,15 @@ export default function FixedDepartureDetailClient({ departure }: FixedDeparture
               )}
             </section>
 
+            <section>
+              <h2 className="!text-2xl !font-bold text-slate-900 mb-4">About {departure.destination}</h2>
+              <div className="bg-blue-50/50 p-6 rounded-xl border border-blue-100">
+                <p className="!text-slate-700 !leading-relaxed">
+                  {(departure as any).aboutDestination || `Discover the breathtaking beauty, rich culture, and serene landscapes of ${departure.destination}. Whether you are seeking spiritual peace, thrilling adventures, or simply a refreshing escape from the ordinary, ${departure.destination} offers an unforgettable experience that will leave you with cherished memories for a lifetime.`}
+                </p>
+              </div>
+            </section>
+
             {departure.highlights?.length > 0 && (
               <section>
                 <h2 className="!text-2xl !font-bold text-slate-900 mb-6">Experience Highlights</h2>
@@ -369,59 +378,7 @@ export default function FixedDepartureDetailClient({ departure }: FixedDeparture
               </div>
             </section>
 
-            {departure.departures && departure.departures.length > 0 && (
-              <section>
-                <h2 className="!text-2xl !font-bold text-slate-900 mb-6">Available Batch Dates</h2>
-                <div className="space-y-3">
-                  {departure.departures.map((batch, index) => {
-                    const status = String(batch.status || "available").toLowerCase().replace(/\s+/g, "");
-                    const isSoldOut = status === "soldout";
-                    const active = toDateInput(batch.date) === selectedBatchDate;
 
-                    return (
-                      <div
-                        key={`${batch.date}-${index}`}
-                        className={`rounded-xl border p-4 md:p-5 flex flex-col md:flex-row md:items-center md:justify-between gap-3 ${
-                          active ? "border-blue-300 bg-blue-50/40" : "border-slate-200 bg-white"
-                        }`}
-                      >
-                        <div className="space-y-1">
-                          <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Date</p>
-                          <p className="text-sm font-semibold text-slate-900">{formatDate(batch.date)}</p>
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Price</p>
-                          <p className="text-sm font-semibold text-slate-900">{formatPrice(Number(batch.price || departure.price))}</p>
-                        </div>
-                        <div className="space-y-1">
-                          <p className="text-xs font-bold uppercase tracking-wider text-slate-500">Seats</p>
-                          <p className="text-sm font-semibold text-slate-900">{batch.seats}</p>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`text-xs font-bold uppercase tracking-wider px-2.5 py-1 rounded-full ${
-                              isSoldOut ? "bg-red-100 text-red-700" : "bg-emerald-100 text-emerald-700"
-                            }`}
-                          >
-                            {isSoldOut ? "Sold Out" : "Available"}
-                          </span>
-                          <Button
-                            type="button"
-                            onClick={() =>
-                              handleBatchSelect(batch.date, Number(batch.price || departure.price), true)
-                            }
-                            disabled={isSoldOut}
-                            className="h-9 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold disabled:bg-slate-300"
-                          >
-                            Select
-                          </Button>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </section>
-            )}
           </div>
 
           <div className="lg:col-span-1">
@@ -438,45 +395,7 @@ export default function FixedDepartureDetailClient({ departure }: FixedDeparture
                   )}
                 </div>
                 <CardContent className="p-6 space-y-5">
-                  {departure.departures && departure.departures.length > 0 && (
-                    <div className="space-y-2">
-                      <label className="block text-sm font-semibold text-slate-700">Choose Batch</label>
-                      <select
-                        value={selectedBatchDate}
-                        onChange={(e) => {
-                          const date = e.target.value;
-                          const selected = availableBatches.find((d) => toDateInput(d.date) === date);
-                          if (selected) {
-                            handleBatchSelect(selected.date, selected.price, true);
-                          }
-                        }}
-                        className="w-full border border-slate-200 rounded-xl bg-slate-50 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/30"
-                      >
-                        {(availableBatches.length > 0 ? availableBatches : departure.departures).map((d, idx) => (
-                          <option key={idx} value={toDateInput(d.date)}>
-                            {formatDate(d.date)} - {formatPrice(Number(d.price || departure.price))}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
 
-                  <div className="space-y-3 text-sm border border-slate-100 rounded-xl p-4 bg-slate-50/50">
-                    <p className="flex justify-between gap-3">
-                      <span className="text-slate-500 font-semibold">Departure</span>
-                      <span className="text-slate-900 font-bold text-right">{formatDate(selectedBatchDate || departure.departureDate)}</span>
-                    </p>
-                    <p className="flex justify-between gap-3">
-                      <span className="text-slate-500 font-semibold">Duration</span>
-                      <span className="text-slate-900 font-bold text-right">{departure.duration}</span>
-                    </p>
-                    <p className="flex justify-between gap-3">
-                      <span className="text-slate-500 font-semibold">Seats</span>
-                      <span className="text-slate-900 font-bold text-right">
-                        {departure.availableSeats}/{departure.totalSeats}
-                      </span>
-                    </p>
-                  </div>
 
                   <Button
                     onClick={() => setIsLeadFormOpen(true)}

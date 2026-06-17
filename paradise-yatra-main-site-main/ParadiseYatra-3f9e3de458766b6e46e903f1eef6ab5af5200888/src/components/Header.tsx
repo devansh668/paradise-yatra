@@ -469,6 +469,7 @@ const Header = ({
                       src="/favicon.png"
                       alt="Paradise Yatra"
                       fill
+                      sizes="44px"
                       className="object-contain p-1.5"
                     />
                   </div>

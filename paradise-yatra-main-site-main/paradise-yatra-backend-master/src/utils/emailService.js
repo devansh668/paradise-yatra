@@ -3,7 +3,7 @@ const nodemailer = require("nodemailer");
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: process.env.SMTP_PORT,
-    secure: true, // true for 465, false for other ports
+    secure: Number(process.env.SMTP_PORT) === 465, // true for 465, false for other ports
     auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
@@ -35,7 +35,12 @@ const sendOTPEmail = async (email, otp) => {
 
     try {
         await transporter.verify();
-        await transporter.sendMail(mailOptions);
+        let info = await transporter.sendMail(mailOptions);
+        
+        console.log("Message sent to %s: %s", email, info.messageId);
+        // Preview only available when sending through an Ethereal account
+        console.log("Preview URL: %s", nodemailer.getTestMessageUrl(info));
+        
         return { success: true };
     } catch (error) {
         console.error("Email sending error:", error);

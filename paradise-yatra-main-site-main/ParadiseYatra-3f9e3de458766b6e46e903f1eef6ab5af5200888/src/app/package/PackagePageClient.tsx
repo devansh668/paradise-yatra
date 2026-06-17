@@ -473,6 +473,7 @@ export default function PackagePageClient() {
                                                 price={item.price}
                                                 priceLabel={getPackagePriceLabel(item.priceType)}
                                                 image={item.image}
+                                                images={item.images || item.gallery}
                                                 imageAlt={item.imageAlt || item.name}
                                                 detailUrl={`/package/${item.slug || item._id}`}
                                                 isInWishlist={isInWishlist(item._id)}

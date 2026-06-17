@@ -45,7 +45,7 @@ export default async function FixedDeparturesPage() {
         totalSeats: item.totalSeats,
         // Use the first image from the array or a fallback
         image: Array.isArray(item.images) && item.images.length > 0
-            ? (item.images[0].startsWith('http') ? item.images[0] : `/api/uploaded-images/uploads/${item.images[0].split('/').pop()}`)
+            ? (item.images[0].includes('char_dham_collage.png') ? '/images/char_dham_collage.png' : item.images[0].startsWith('http') || item.images[0].startsWith('/char_') ? item.images[0] : `/api/uploaded-images/uploads/${item.images[0].split('/').pop()}`)
             : 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80',
         tag: item.category || 'Fixed Departure',
         typeColor: 'bg-blue-600',

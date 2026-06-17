@@ -427,6 +427,7 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                                                 price={pkg.price}
                                                 priceLabel={getPackagePriceLabel(pkg.priceType)}
                                                 image={pkg.image}
+                                                images={pkg.images || pkg.gallery}
                                                 imageAlt={pkg.imageAlt || pkg.name}
                                                 detailUrl={`/package/${pkg.slug || pkg._id}`}
                                                 isInWishlist={isInWishlist(pkg._id)}

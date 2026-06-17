@@ -77,7 +77,7 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
         availableSeats: rawDeparture.availableSeats || 0,
         totalSeats: rawDeparture.totalSeats || 0,
         image: Array.isArray(rawDeparture.images) && rawDeparture.images.length > 0
-            ? (rawDeparture.images[0].startsWith('http') ? rawDeparture.images[0] : `/api/uploaded-images/uploads/${rawDeparture.images[0].split('/').pop()}`)
+            ? (rawDeparture.images[0].includes('char_dham_collage.png') ? '/images/char_dham_collage.png?v=1' : rawDeparture.images[0].startsWith('http') || rawDeparture.images[0].startsWith('/char_') ? rawDeparture.images[0] : `/api/uploaded-images/uploads/${rawDeparture.images[0].split('/').pop()}`)
             : (rawDeparture.image || 'https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80'),
         tag: rawDeparture.tag || rawDeparture.category || 'Fixed Departure',
         typeColor: 'bg-blue-600',
@@ -114,6 +114,8 @@ export default async function Page({ params }: { params: Promise<{ slug: string 
             status: d.status || 'available'
         })),
     };
+
+    console.log("DETAIL PAGE IMAGE URL:", departure.image);
 
     return <FixedDepartureDetailClient departure={departure as any} />;
 }

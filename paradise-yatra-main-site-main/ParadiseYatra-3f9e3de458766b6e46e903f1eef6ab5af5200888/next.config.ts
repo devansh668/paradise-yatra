@@ -1,4 +1,4 @@
-﻿import type { NextConfig } from "next";
+import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -14,6 +14,7 @@ const nextConfig: NextConfig = {
 
   // Image optimization
   images: {
+    qualities: [50, 60, 70, 75, 80, 90, 100],
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     formats: ['image/webp', 'image/avif'],
