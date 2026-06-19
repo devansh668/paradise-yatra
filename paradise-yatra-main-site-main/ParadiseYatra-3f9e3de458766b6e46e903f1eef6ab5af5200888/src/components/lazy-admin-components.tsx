@@ -186,3 +186,11 @@ export const LazyAdminUsers = createLazyComponent(
   }),
   <Loading size="lg" className="min-h-[400px]" />
 );
+
+export const LazyAdminPageContent = createLazyComponent(
+  () => import("./admin/AdminPageContent").catch(err => {
+    console.error("Failed to load AdminPageContent:", err);
+    return Promise.reject(err);
+  }),
+  <Loading size="lg" className="min-h-[400px]" />
+);

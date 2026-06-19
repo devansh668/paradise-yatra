@@ -11,7 +11,6 @@ import {
   LazyIndiaTourPackagesSection,
   LazyInternationalTourPackagesSection,
   LazyLuxuryPackagesSection,
-  LazySeasonalPackagesSection,
   LazySpiritualJourneysSection,
   LazyTestimonialsSection,
   LazyTrendingPackagesSection,
@@ -96,7 +95,6 @@ const HomePageClient = memo(() => {
             <LazySpiritualJourneysSection />
             <LazyLuxuryPackagesSection />
 
-            <LazySeasonalPackagesSection />
             <LazyFestivalSection />
             <LazyTestimonialsSection />
             <LazyAboutUsSection />

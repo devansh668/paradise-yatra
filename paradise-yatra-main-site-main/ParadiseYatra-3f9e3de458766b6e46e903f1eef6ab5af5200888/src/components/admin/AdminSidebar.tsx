@@ -70,6 +70,13 @@ const AdminSidebar = ({
       isHeader: true,
     },
     {
+      id: "page-content",
+      label: "Page Content",
+      icon: FileText,
+      hasSubmenu: false,
+      hasNotification: false,
+    },
+    {
       id: "hero-section",
       label: "Hero Section",
       icon: BarChart3,

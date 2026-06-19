@@ -153,6 +153,11 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+    
+    // Dynamic content
+    const [dynamicOverview, setDynamicOverview] = useState<string | null>(null);
+    const [dynamicTitle, setDynamicTitle] = useState<string | null>(null);
+    const [dynamicImage, setDynamicImage] = useState<string | null>(null);
 
     // Carousel state for suggestions
     const carouselRef = useRef<HTMLDivElement>(null);
@@ -227,6 +232,22 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                             .filter((pkg: any) => pkg?.isActive !== false && !currentPackageIds.has(pkg?._id))
                             .slice(0, 9)
                     );
+                }
+
+                // Fetch dynamic overview
+                try {
+                    const contentKey = (state || country || 'travel').toLowerCase().replace(/\s+/g, '-');
+                    const contentResponse = await fetch(`/api/page-content/${contentKey}`);
+                    if (contentResponse.ok) {
+                        const contentData = await contentResponse.json();
+                        if (contentData.success && contentData.data) {
+                            setDynamicOverview(contentData.data.content);
+                            if (contentData.data.image) setDynamicImage(contentData.data.image);
+                            if (contentData.data.title) setDynamicTitle(contentData.data.title);
+                        }
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch dynamic content", e);
                 }
 
                 setLoading(false);
@@ -342,6 +363,29 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
         .join(' ');
     const tourTypeLabel = 'Tour';
 
+    const destinationDescriptions: Record<string, string> = {
+        'kerala': 'Known as "God\'s Own Country", Kerala is famous for its serene backwaters, lush tea gardens, pristine beaches, and rich cultural heritage. Experience the perfect blend of nature and tradition as you explore the tranquil networks of canals in Alleppey, the misty hills of Munnar, and the pristine shores of Varkala. From ancient Ayurvedic therapies that rejuvenate the soul to delectable local cuisine infused with fresh spices, Kerala offers a truly transformative escape.',
+        'goa': 'Goa is India\'s pocket-sized paradise, renowned for its golden beaches, vibrant nightlife, Portuguese colonial architecture, and delicious seafood. Beyond the lively parties and stunning coastlines, you can explore centuries-old cathedrals, winding spice plantations, and quaint villages that reflect a unique blend of Indian and Portuguese heritage. Whether you seek thrilling water sports, tranquil yoga retreats, or romantic sunset cruises, Goa promises an unforgettable coastal getaway.',
+        'rajasthan': 'The Land of Kings, Rajasthan offers a royal experience with its magnificent palaces, historic forts, colorful culture, and the vast Thar Desert. Wander through the pink hues of Jaipur, marvel at the blue city of Jodhpur, and take a serene boat ride on the romantic lakes of Udaipur. With its grand heritage hotels, vibrant bazaars, and traditional folk music, Rajasthan immerses you in the majestic history and enduring charm of India\'s royal past.',
+        'kashmir': 'Often referred to as "Paradise on Earth", Kashmir captivates visitors with its snow-capped mountains, beautiful Dal Lake, and blooming Mughal gardens. Drift along the calm waters in a traditional Shikara, glide down the world-class ski slopes of Gulmarg, and wander through lush meadows bursting with colorful wildflowers. The warm hospitality, exquisite handicrafts, and rich culinary traditions make a journey to Kashmir a truly magical and romantic experience.',
+        'himachal-pradesh': 'Nestled in the Himalayas, Himachal Pradesh is a haven for nature lovers and adventure enthusiasts, featuring picturesque hill stations and breathtaking landscapes. Whether you are trekking through the stunning valleys of Manali, exploring the colonial charm of Shimla, or finding spiritual peace in Dharamshala, the state offers diverse experiences. With its crisp mountain air, gushing rivers, and serene monasteries, Himachal is the ultimate destination to unwind and connect with nature.',
+        'uttarakhand': 'The "Land of Gods", Uttarakhand is famous for its sacred pilgrimage sites, majestic Himalayan peaks, and thrilling adventure sports in Rishikesh. Discover the spiritual aura of Haridwar, embark on the legendary Char Dham yatra, or challenge yourself with white-water rafting and jungle safaris in Jim Corbett National Park. From lush green valleys to snow-covered peaks, Uttarakhand offers both spiritual awakening and heart-pounding adventures.',
+        'sikkim': 'A hidden gem in the Northeast, Sikkim boasts stunning views of Mt. Kanchenjunga, serene monasteries, and diverse flora and fauna. Explore the vibrant capital city of Gangtok, drive through the breathtaking high-altitude mountain passes, and immerse yourself in the peaceful ambiance of ancient Buddhist shrines. Known for its organic farming, pristine lakes, and warm local hospitality, Sikkim is a paradise for travelers seeking tranquility and untouched natural beauty.',
+        'andaman-and-nicobar-island': 'A tropical paradise offering crystal-clear waters, white sandy beaches, colorful coral reefs, and exciting water sports. Dive into the vibrant underwater world with scuba diving and snorkeling adventures, or simply relax on the sun-kissed shores of Radhanagar Beach. With its fascinating history, dense tropical forests, and secluded island resorts, the Andamans provide the perfect backdrop for romantic honeymoons and thrilling family vacations.',
+        'ladakh': 'The Land of High Passes, Ladakh is famous for its stark, breathtaking landscapes, ancient Buddhist monasteries, and thrilling mountain roads. Experience the surreal beauty of the azure Pangong Lake, cross the world\'s highest motorable passes, and marvel at the stark contrast of snow-capped peaks against the desert valleys. The rich Tibetan-Buddhist culture and untamed natural beauty make Ladakh a dream destination for adventurers and spiritual seekers alike.',
+        'tamil-nadu': 'Rich in Dravidian culture, Tamil Nadu is known for its magnificent temples, classical arts, hill stations like Ooty, and diverse culinary heritage. Marvel at the towering gopurams of Madurai, stroll through the French colonial streets of Pondicherry, and relax in the cool, misty climate of the Nilgiri Hills. From golden beaches along the Coromandel Coast to ancient stone carvings in Mahabalipuram, Tamil Nadu offers a deep and rewarding cultural immersion.',
+        'dubai': 'A city of superlatives, Dubai offers futuristic architecture, luxury shopping, desert safaris, and world-class entertainment. Stand at the top of the Burj Khalifa, explore the massive indoor theme parks, and shop for gold in the traditional souks. Beyond the glitz and glamour, experience the magic of an Arabian night with thrilling dune bashing, camel rides, and dining under the stars in the vast, mystical desert.',
+        'thailand': 'The Land of Smiles features pristine beaches, ornate temples, vibrant street life, and world-renowned cuisine. Discover the bustling night markets of Bangkok, explore the historic ruins of Ayutthaya, and relax on the stunning, limestone-fringed islands of Phuket and Krabi. With its incredibly affordable luxury, warm tropical climate, and deeply spiritual Buddhist culture, Thailand remains a favorite getaway for travelers around the globe.',
+        'malaysia': 'A melting pot of cultures, Malaysia offers a mix of modern cities, colonial architecture, lush rainforests, and beautiful islands. Admire the iconic Petronas Twin Towers in Kuala Lumpur, explore the historic streets of Penang, and dive into the crystal-clear waters of Langkawi. The country\'s rich multicultural heritage translates into an incredible culinary scene, vibrant festivals, and diverse landscapes ranging from cool tea highlands to ancient jungles.',
+        'maldives': 'The ultimate tropical getaway, the Maldives is famous for its luxurious overwater bungalows, crystal-clear lagoons, and vibrant marine life. Spend your days snorkeling alongside manta rays and sea turtles, enjoying private beachside dining, and relaxing in world-class spas floating above the ocean. With its secluded resorts, powdery white sand, and endless turquoise horizons, the Maldives offers unparalleled luxury and romance.',
+        'singapore': 'A dynamic city-state known for its stunning skyline, lush green spaces, diverse food scene, and world-class attractions. Marvel at the futuristic Supertrees in Gardens by the Bay, enjoy family-friendly thrills at Universal Studios Sentosa, and savor Michelin-starred street food in the bustling hawker centers. Clean, safe, and incredibly efficient, Singapore flawlessly blends ultra-modern innovation with a rich tapestry of Asian cultures.',
+        'indonesia': 'An archipelago of thousands of islands, offering diverse experiences from the cultural hub of Bali to the volcanic landscapes of Java. Explore the iconic terraced rice paddies of Ubud, surf the world-class waves of the coastline, and witness breathtaking sunrises over ancient temples. With its rich spiritual traditions, vibrant arts scene, and incredible biodiversity, Indonesia provides a deeply enriching and adventurous travel experience.'
+    };
+
+    const locationKey = locationLabel.toLowerCase().replace(/\s+/g, '-');
+    const overviewDescription = dynamicOverview || destinationDescriptions[locationKey] || `Discover the exceptional beauty and rich cultural charm of ${formattedLocation}. Immerse yourself in the authentic local culture, explore awe-inspiring landscapes, and indulge in culinary delights that tell the story of the region. Whether you are seeking thrilling adventures, peaceful relaxation, or a deep dive into history, this destination has something incredible to offer. Let us help you create unforgettable memories on a meticulously curated journey tailored specifically to your unique travel desires.`;
+    const finalTitle = dynamicTitle || `Overview of ${formattedLocation}`;
+
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col font-plus-jakarta-sans">
             <Header />
@@ -369,7 +413,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                         className="relative w-full h-[230.4px] md:absolute md:inset-0 md:h-auto flex-shrink-0"
                     >
                         <Image
-                            src={(state?.toLowerCase().replace(/-/g, ' ').includes('sikkim') ||
+                            src={dynamicImage || ((state?.toLowerCase().replace(/-/g, ' ').includes('sikkim') ||
                                 state?.toLowerCase().replace(/-/g, ' ').includes('gangtok') ||
                                 state?.toLowerCase().replace(/-/g, ' ').includes('kalimpong') ||
                                 formattedLocation.toLowerCase().includes('sikkim') ||
@@ -477,7 +521,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                                                                                                     formattedLocation.toLowerCase().includes('dubai') ||
                                                                                                     formattedLocation.toLowerCase().includes('uae'))
                                                                                                     ? '/Destination%20Pages/United%20Arab%20Emirates.webp'
-                                                                                                    : "https://images.unsplash.com/photo-1544735716-a9ff2824d7c1?q=80&w=2070&auto=format&fit=crop"}
+                                                                                                    : "https://images.unsplash.com/photo-1544735716-a9ff2824d7c1?q=80&w=2070&auto=format&fit=crop")}
                             alt={`${formattedLocation} Tourism`}
                             fill
                             className="object-cover transition-transform duration-1000 hover:scale-105"
@@ -534,6 +578,16 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                     <div className="absolute inset-0 bg-[radial-gradient(#b8c9e0_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none"></div>
                     
                     <div className="max-w-6xl mx-auto relative z-10">
+                        {/* Destination Overview Section */}
+                        <div className="mb-10 text-left bg-white/80 backdrop-blur-md p-6 md:p-8 rounded-[20px] shadow-sm border border-slate-100/50">
+                            <h2 className="!text-[24px] md:!text-[32px] !font-bold text-[#000945] mb-4">
+                                {finalTitle}
+                            </h2>
+                            <p className="text-slate-600 text-base md:text-lg leading-relaxed font-medium">
+                                {overviewDescription}
+                            </p>
+                        </div>
+
                 <div className="mb-6 text-left">
                     <h2 className="!text-[24px] md:!text-[36px] !font-bold text-[#000945] mb-2">
                         Handpicked Curated Journeys

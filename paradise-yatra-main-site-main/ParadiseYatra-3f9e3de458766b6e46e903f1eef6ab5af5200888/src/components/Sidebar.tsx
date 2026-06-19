@@ -124,24 +124,7 @@ const Sidebar = ({ isOpen, onClose, navItems, onBookNow }: SidebarProps) => {
                                                 <LogOut className="w-4 h-4" />
                                             </button>
                                         </div>
-                                    ) : (
-                                        <div className="grid grid-cols-2 gap-3">
-                                            <button
-                                                onClick={() => { router.push("/login"); onClose(); }}
-                                                className="flex items-center justify-center gap-2 py-2.5 px-4 bg-white border border-slate-200 text-slate-700 rounded-[6px] text-[13px] font-bold hover:bg-slate-50 active:bg-slate-100 transition-all cursor-pointer shadow-none"
-                                            >
-                                                <LogIn className="w-3.5 h-3.5 text-blue-600" />
-                                                Login
-                                            </button>
-                                            <button
-                                                onClick={() => { router.push("/signup"); onClose(); }}
-                                                className="flex items-center justify-center gap-2 py-2.5 px-4 bg-blue-600 text-white rounded-[6px] text-[13px] font-bold hover:bg-blue-700 active:bg-blue-800 transition-all cursor-pointer shadow-none"
-                                            >
-                                                <UserPlus className="w-3.5 h-3.5" />
-                                                Sign Up
-                                            </button>
-                                        </div>
-                                    )}
+                                    ) : null}
                                 </div>
                             )}
 

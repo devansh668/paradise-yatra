@@ -778,19 +778,7 @@ const Header = ({
                         )}
                       </AnimatePresence>
                     </div>
-                  ) : (
-                    <motion.button
-                      whileTap={{ scale: 0.98 }}
-                      onClick={() => router.push("/login")}
-                      className={`rounded-[6px] px-5 py-2 font-bold transition-all shadow-none flex items-center gap-2 group cursor-pointer ${isTransparent
-                        ? "bg-white text-blue-900"
-                        : "bg-blue-600 text-white"
-                        }`}
-                    >
-                      Login
-                      <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
-                    </motion.button>
-                  )}
+                  ) : null}
 
                   <button
                     className={`p-2 rounded-[6px] cursor-pointer transition-colors ${isTransparent ? "text-white hover:bg-white/10" : "text-gray-700 hover:bg-gray-100"
@@ -818,18 +806,7 @@ const Header = ({
                         {user.name.charAt(0)}
                       </div>
                     </button>
-                  ) : (
-                    <button
-                      onClick={() => router.push("/login")}
-                      className={`flex h-10 w-10 items-center justify-center rounded-[6px] border transition-all duration-300 cursor-pointer ${isTransparent
-                        ? "border-white/40 bg-white/10 text-white"
-                        : "border-gray-200 bg-gray-50 text-slate-700"
-                        }`}
-                      aria-label="Login"
-                    >
-                      <UserIcon className="h-5 w-5" />
-                    </button>
-                  )}
+                  ) : null}
 
                   <button
                     className={`flex h-10 w-10 items-center justify-center rounded-[6px] border transition-all duration-300 cursor-pointer ${isTransparent

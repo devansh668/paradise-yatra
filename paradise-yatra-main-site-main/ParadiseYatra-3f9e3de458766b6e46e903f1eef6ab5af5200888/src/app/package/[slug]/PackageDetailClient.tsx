@@ -137,6 +137,8 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [otherPackages, setOtherPackages] = useState<any[]>([]);
   const [packagesLoading, setPackagesLoading] = useState(false);
+  const [dynamicDescription, setDynamicDescription] = useState<string | null>(null);
+  const [dynamicImage, setDynamicImage] = useState<string | null>(null);
   const [date, setDate] = useState<Date | undefined>();
   const [calendarOpen, setCalendarOpen] = useState(false);
   const [fullName, setFullName] = useState('');
@@ -288,9 +290,11 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
     quality: "good",
   } as const;
 
-  const galleryImages = packageData?.images && packageData.images.length > 0
+  const baseGalleryImages = packageData?.images && packageData.images.length > 0
     ? packageData.images.map((img: string) => getImageUrl(img, heroImageOptions) || img)
     : ["https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1920&q=80"];
+  // If admin uploaded a dynamic image via Page Content, use it as the first gallery image
+  const galleryImages = dynamicImage ? [dynamicImage, ...baseGalleryImages.slice(1)] : baseGalleryImages;
 
   const inclusions = Array.isArray(packageData?.inclusions) ? packageData.inclusions : [];
   const exclusions = Array.isArray(packageData?.exclusions) ? packageData.exclusions : [];
@@ -298,6 +302,26 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
   }, []);
+
+  // Fetch dynamic page content for this package (from admin Page Content section)
+  useEffect(() => {
+    const fetchDynamicContent = async () => {
+      try {
+        const contentKey = slug.toLowerCase().replace(/\s+/g, '-');
+        const contentResponse = await fetch(`/api/page-content/${contentKey}`);
+        if (contentResponse.ok) {
+          const contentData = await contentResponse.json();
+          if (contentData.success && contentData.data) {
+            if (contentData.data.content) setDynamicDescription(contentData.data.content);
+            if (contentData.data.image) setDynamicImage(contentData.data.image);
+          }
+        }
+      } catch (e) {
+        console.error("Failed to fetch dynamic package content", e);
+      }
+    };
+    fetchDynamicContent();
+  }, [slug]);
 
   useEffect(() => {
     let isMounted = true;
@@ -599,13 +623,13 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                 </div>
               )}
 
-              {packageData.description && (
+              {(dynamicDescription || packageData.description) && (
                 <div className="mt-6 text-justify">
                   <h3 style={{ fontWeight: 700 }} className="package-section-heading mb-4">Overview</h3>
                   <div
                     suppressHydrationWarning
                     className="text-base leading-relaxed text-[#000945] overflow-x-auto [&_h1]:!m-0 [&_h1]:!text-2xl [&_h1]:!font-extrabold [&_h1]:!text-[#000945] [&_h2]:!m-0 [&_h2]:!text-xl [&_h2]:!font-bold [&_h2]:!text-[#000945] [&_h3]:!m-0 [&_h3]:!text-lg [&_h3]:!font-bold [&_h3]:!text-[#000945] [&_p]:!m-0 [&_p]:!text-base [&_p]:!text-[#000945] [&_ul]:!m-0 [&_ul]:!list-disc [&_ul]:!pl-6 [&_ol]:!m-0 [&_ol]:!list-decimal [&_ol]:!pl-6 [&_li]:!m-0 [&_li]:!text-[#000945] [&_li_p]:!m-0 [&_ul_li::marker]:!text-blue-500 [&_ol_li::marker]:!text-blue-500 [&_a]:!text-blue-600 [&_a]:!underline"
-                    dangerouslySetInnerHTML={{ __html: normalizeRichTextHtml(packageData.description) }}
+                    dangerouslySetInnerHTML={{ __html: normalizeRichTextHtml(dynamicDescription || packageData.description) }}
                   />
                 </div>
               )}

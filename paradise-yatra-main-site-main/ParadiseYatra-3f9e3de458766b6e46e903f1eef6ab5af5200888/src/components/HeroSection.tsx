@@ -279,20 +279,19 @@ const HeroSection = () => {
               alt={`Travel destination ${index + 1}`}
               fill
               priority={index === 0}
-              className="object-cover object-center md:object-[center_20%] opacity-80"
+              className="object-cover object-center md:object-[center_20%]"
             />
           </div>
         ))}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/40 to-black/80"></div>
       </div>
 
       {/* Hero content */}
       <main className="relative z-10 flex flex-col flex-1 items-center justify-end pb-0 text-center min-h-[90dvh] md:min-h-[110vh] pt-100 md:pt-86">
         <div className="mb-auto"></div>
-        <h1 className="max-w-4xl !text-2xl !font-unbounded !font-bold leading-tight tracking-tight md:!text-4xl  text-white px-4">
+        <h1 className="max-w-4xl !text-2xl !font-unbounded !font-bold leading-tight tracking-tight md:!text-4xl text-white px-4 drop-shadow-[0_4px_8px_rgba(0,0,0,0.8)]">
           Because Travel Should Feel Effortless
         </h1>
-        <p className="mt-3 max-w-3xl font-medium !text-white/90 text-md md:text-lg px-4">
+        <p className="mt-3 max-w-3xl font-medium !text-white/90 text-md md:text-lg px-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
           Discover amazing destinations and create unforgettable memories.
         </p>
         <div className="mt-6 w-full relative">

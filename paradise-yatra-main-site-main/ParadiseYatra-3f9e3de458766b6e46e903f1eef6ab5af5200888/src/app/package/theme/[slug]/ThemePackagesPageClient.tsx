@@ -144,6 +144,11 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
     const [loading, setLoading] = useState(true);
     const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
+    // Dynamic content
+    const [dynamicOverview, setDynamicOverview] = useState<string | null>(null);
+    const [dynamicTitle, setDynamicTitle] = useState<string | null>(null);
+    const [dynamicImage, setDynamicImage] = useState<string | null>(null);
+
     // Filter & Pagination state
     const [durationFilter, setDurationFilter] = useState<string>('all');
     const [priceFilter, setPriceFilter] = useState<string>('all');
@@ -194,6 +199,22 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                             .filter((pkg: any) => pkg?.isActive !== false && !currentThemePackageIds.has(pkg?._id))
                             .slice(0, 9)
                     );
+                }
+
+                // Fetch dynamic overview
+                try {
+                    const contentKey = slug.toLowerCase().replace(/\s+/g, '-');
+                    const contentResponse = await fetch(`/api/page-content/${contentKey}`);
+                    if (contentResponse.ok) {
+                        const contentData = await contentResponse.json();
+                        if (contentData.success && contentData.data) {
+                            setDynamicOverview(contentData.data.content);
+                            if (contentData.data.image) setDynamicImage(contentData.data.image);
+                            if (contentData.data.title) setDynamicTitle(contentData.data.title);
+                        }
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch dynamic content", e);
                 }
             } catch (err) {
                 console.error('Error fetching theme:', err);
@@ -288,7 +309,22 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
 
     const formattedLocation = capitalize(tagData.name);
     const tourTypeLabel = 'Tour';
-    const heroHeading = (slug.includes('char-dham') || slug.includes('chardham'))
+
+    const themeDescriptions: Record<string, string> = {
+        'honeymoon': 'Celebrate your love with our romantic honeymoon packages, featuring breathtaking destinations, luxury accommodations, and unforgettable experiences designed just for couples. Enjoy candlelit dinners on private beaches, relaxing couples spa treatments, and seamless itineraries that let you focus entirely on each other. Let us turn your dream romantic getaway into a beautiful reality with our handpicked selections.',
+        'luxury': 'Indulge in unparalleled opulence with our premium luxury packages, offering exclusive stays, personalized services, and extraordinary travel experiences. From five-star heritage palaces and private villas to seamless chauffeur-driven transfers and bespoke gourmet dining, every detail is meticulously curated. Experience the world in ultimate comfort, style, and exclusivity, catering to the most discerning travelers.',
+        'adventure': 'Satisfy your thrill-seeking spirit with our adventure tours, offering exciting activities like trekking, scuba diving, and wildlife safaris in stunning landscapes. Challenge yourself with high-altitude mountain climbing, navigate thrilling white-water rapids, and camp under the stars in remote wilderness. Designed for adrenaline junkies and nature lovers, these packages guarantee heart-pounding excitement and lifelong memories.',
+        'family': 'Create lasting memories with our family-friendly vacation packages, curated to provide fun, safe, and engaging experiences for travelers of all ages. Enjoy spacious accommodations, exciting theme park visits, kid-friendly cultural activities, and hassle-free transportation. We take the stress out of planning so you can focus on bonding, exploring new sights, and sharing joyful moments with your loved ones.',
+        'spiritual': 'Embark on a divine journey with our pilgrimage and spiritual tours, connecting you to sacred sites, ancient temples, and peaceful retreats. Participate in soulful rituals, meditate in tranquil ashrams, and explore the deep-rooted religious history of the world\'s holiest destinations. These thoughtfully planned itineraries offer a profound sense of inner peace, spiritual awakening, and cultural enlightenment.',
+        'trending': 'Explore the most sought-after destinations of the season with our trending packages, handpicked to offer the best travel experiences right now. From viral social media hotspots and newly opened luxury resorts to exclusive seasonal festivals, these tours keep you ahead of the travel curve. Discover what makes these destinations so popular and join the trend with our expertly crafted itineraries.',
+        'weekend-getaway': 'Escape the routine with our refreshing weekend getaways, perfect for a quick recharge amidst nature or in vibrant cityscapes. Leave the hustle of daily life behind as you relax in cozy mountain retreats, explore nearby historical towns, or unwind at a luxury spa resort just a short drive away. Designed for maximum relaxation in minimal time, these short trips are your perfect weekend antidote.',
+        'char-dham': 'Embark on a sacred journey to the Char Dham, seeking spiritual enlightenment and divine blessings amidst the majestic Himalayas. Visit the holy shrines of Yamunotri, Gangotri, Kedarnath, and Badrinath with our expertly guided and well-organized pilgrimage tours. We ensure safe travel, comfortable accommodations, and VIP darshan assistance, allowing you to focus entirely on your devotion and spiritual awakening.'
+    };
+
+    const themeKey = slug.toLowerCase().replace(/\s+/g, '-');
+    const overviewDescription = dynamicOverview || themeDescriptions[themeKey] || tagData.description || `Explore our expertly handpicked ${formattedLocation} packages, thoughtfully designed to offer you the ultimate travel experience. Discover unique local activities, breathtaking scenic views, and perfectly balanced itineraries that cater to your specific travel style. Whether you are looking for relaxation, adventure, or cultural immersion, our curated selections guarantee a seamless and deeply rewarding vacation.`;
+    const finalTitle = dynamicTitle || `Overview of ${formattedLocation}`;
+    const heroHeading = dynamicTitle || ((slug.includes('char-dham') || slug.includes('chardham'))
         ? 'Char Dham Yatra 2026'
         : slug.includes('honeymoon')
             ? 'Honeymoon Tour Packages'
@@ -296,7 +332,7 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                 ? 'Luxury Tour Packages'
             : slug.includes('trending')
                 ? 'Trending Tour Packages'
-            : `${tourTypeLabel} Packages in ${formattedLocation}`;
+            : `${tourTypeLabel} Packages in ${formattedLocation}`);
 
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col font-plus-jakarta-sans">
@@ -314,7 +350,7 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                     {/* Image Container */}
                     <div className="relative w-full h-[230.4px] md:absolute md:inset-0 md:h-auto flex-shrink-0">
                         <Image
-                            src={(slug.includes('char-dham') || slug.includes('chardham'))
+                            src={dynamicImage || ((slug.includes('char-dham') || slug.includes('chardham'))
                                 ? '/Destination Pages/Char Dham.webp'
                                 : slug.includes('honeymoon')
                                     ? '/Destination Pages/Honeymoon.webp'
@@ -323,7 +359,7 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                                         : slug.includes('trending')
                                             ? '/Destination%20Pages/Trending%20Packages.jpg'
                                             : "https://images.unsplash.com/photo-1544735716-a9ff2824d7c1?q=80&w=2070&auto=format&fit=crop"
-                            }
+                            )}
                             alt={`${formattedLocation} Tourism`}
                             fill
                             className="object-cover"
@@ -365,6 +401,16 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                 {/* Main Content Area */}
                 <section className="py-8 md:py-16 px-4 md:px-8 bg-white">
                     <div className="max-w-6xl mx-auto">
+                        {/* Theme Overview Section */}
+                        <div className="mb-10 text-left bg-white/80 backdrop-blur-md p-6 md:p-8 rounded-[20px] shadow-sm border border-slate-100/50">
+                            <h2 className="!text-[24px] md:!text-[32px] !font-bold text-[#000945] mb-4">
+                                {finalTitle}
+                            </h2>
+                            <p className="text-slate-600 text-base md:text-lg leading-relaxed font-medium">
+                                {overviewDescription}
+                            </p>
+                        </div>
+
                         <div className="mb-6 text-left">
                             <h2 className="!text-[24px] md:!text-[36px] !font-bold text-[#000945] mb-2">
                                 Handpicked Curated Journeys
