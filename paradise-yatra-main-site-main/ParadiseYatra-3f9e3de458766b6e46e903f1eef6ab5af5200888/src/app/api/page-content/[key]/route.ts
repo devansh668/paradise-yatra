@@ -3,10 +3,11 @@ import { getApiUrl } from "@/config/api";
 
 export async function GET(
     req: NextRequest,
-    { params }: { params: { key: string } }
+    { params }: { params: Promise<{ key: string }> }
 ) {
     try {
-        const response = await fetch(getApiUrl(`/api/page-content/${params.key}`));
+        const { key } = await params;
+        const response = await fetch(getApiUrl(`/api/page-content/${key}`));
         const data = await response.json();
         return NextResponse.json(data, { status: response.status });
     } catch (error) {
@@ -20,13 +21,14 @@ export async function GET(
 
 export async function PUT(
     req: NextRequest,
-    { params }: { params: { key: string } }
+    { params }: { params: Promise<{ key: string }> }
 ) {
     try {
+        const { key } = await params;
         const body = await req.json();
         const authHeader = req.headers.get("authorization");
 
-        const response = await fetch(getApiUrl(`/api/page-content/${params.key}`), {
+        const response = await fetch(getApiUrl(`/api/page-content/${key}`), {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -48,12 +50,13 @@ export async function PUT(
 
 export async function DELETE(
     req: NextRequest,
-    { params }: { params: { key: string } }
+    { params }: { params: Promise<{ key: string }> }
 ) {
     try {
+        const { key } = await params;
         const authHeader = req.headers.get("authorization");
 
-        const response = await fetch(getApiUrl(`/api/page-content/${params.key}`), {
+        const response = await fetch(getApiUrl(`/api/page-content/${key}`), {
             method: "DELETE",
             headers: {
                 ...(authHeader && { Authorization: authHeader }),

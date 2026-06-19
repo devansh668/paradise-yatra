@@ -102,4 +102,8 @@ export const API_CONFIG = {
   },
 };
 
+export const getApiUrl = API_CONFIG.getApiUrl;
+export const getFullUrl = API_CONFIG.getFullUrl;
+export const API_ENDPOINTS = API_CONFIG.ENDPOINTS;
+
 export default API_CONFIG;
