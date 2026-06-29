@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, MapPin, Heart } from "lucide-react";
+import { ArrowLeft, ArrowRight, MapPin } from "lucide-react";
 import { getImageUrl, getDestinationWebp } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import LoginAlertModal from "./LoginAlertModal";
@@ -43,20 +43,10 @@ const TrendingPackagesSection = () => {
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
 
-    const { user, toggleWishlist: contextToggleWishlist, isInWishlist } = useAuth();
+    const { user } = useAuth();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-    const handleWishlistToggle = (e: React.MouseEvent, pkgId: string) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (!user) {
-            setIsLoginModalOpen(true);
-            return;
-        }
-
-        contextToggleWishlist(pkgId);
-    };
+    
 
     useEffect(() => {
         const fetchTrendingData = async () => {
@@ -328,9 +318,7 @@ const TrendingPackagesSection = () => {
                                     hrefPrefix="/package"
                                     themeColor="#005beb"
                                     priceLabel="Per Person"
-                                    isInWishlist={isInWishlist(String(pkg.id))}
-                                    onWishlistToggle={handleWishlistToggle}
-                                    showDestination={false}
+                                                                                                            showDestination={false}
                                 />
                             ))}
                         </div>

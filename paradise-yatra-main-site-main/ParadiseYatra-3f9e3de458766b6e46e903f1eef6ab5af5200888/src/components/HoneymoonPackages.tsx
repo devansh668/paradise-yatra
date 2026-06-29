@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, MapPin, Heart } from "lucide-react";
+import { ArrowLeft, ArrowRight, MapPin } from "lucide-react";
 import { getImageUrl, getDestinationWebp } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import LoginAlertModal from "./LoginAlertModal";
@@ -43,20 +43,10 @@ const HoneymoonPackages = () => {
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
 
-    const { user, toggleWishlist: contextToggleWishlist, isInWishlist } = useAuth();
+    const { user } = useAuth();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-    const handleWishlistToggle = (e: React.MouseEvent, pkgId: string) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (!user) {
-            setIsLoginModalOpen(true);
-            return;
-        }
-
-        contextToggleWishlist(pkgId);
-    };
+    
 
     useEffect(() => {
         const fetchHoneymoonData = async () => {
@@ -262,7 +252,7 @@ const HoneymoonPackages = () => {
                             Honeymoon Packages
                         </h3>
 
-                        <p className="!text-sm text-gray-200 md:text-base max-w-2xl font-semibold">
+                        <p className="!text-sm !text-white md:text-base max-w-2xl font-semibold">
                             Curated romantic escapes with luxury stays, candlelit dinners and unforgettable moments.
                         </p>
                     </div>
@@ -317,9 +307,7 @@ const HoneymoonPackages = () => {
                                     hrefPrefix="/package"
                                     themeColor="#ff1493"
                                     priceLabel="Per Couple"
-                                    isInWishlist={isInWishlist(String(pkg.id))}
-                                    onWishlistToggle={handleWishlistToggle}
-                                    showDestination={false}
+                                                                                                            showDestination={false}
                                 />
                             </div>
                         ))}

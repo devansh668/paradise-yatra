@@ -61,14 +61,12 @@ const Header = ({
   const [shouldRenderSidebar, setShouldRenderSidebar] = useState(false);
   const [isLeadFormOpen, setIsLeadFormOpen] = useState(false);
   const [isNavigating, setIsNavigating] = useState(false);
-  const [showPromoBar, setShowPromoBar] = useState(true);
   const [shouldFetchLocations, setShouldFetchLocations] = useState(false);
   const [hasFetchedLocations, setHasFetchedLocations] = useState(false);
 
   const pathname = usePathname();
   const isHome = pathname === "/";
   const isTransparent = (isHome || transparentOnTop) && !isScrolled;
-  const shouldShowPromoBar = isHome && showPromoBar;
 
   // Use the custom hook for dynamic navigation
   const { navItems, loading } = useNavigation();
@@ -405,58 +403,11 @@ const Header = ({
       <header className={`fixed top-0 left-0 right-0 z-[60] w-full font-plus-jakarta-sans transition-all duration-300 ${isTransparent ? 'bg-transparent border-transparent shadow-none' : 'bg-white border-b border-gray-100/60 shadow-[0_1px_2px_rgba(0,0,0,0.04)]'}`}>
 
 
-        {/* PROMO STRIP START */}
-        <AnimatePresence initial={false}>
-          {shouldShowPromoBar && (
-            <motion.div
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-              className="relative z-50 overflow-hidden"
-            >
-              <Link href="/package/theme/char-dham-yatra" className="block group">
-                <div className="promo-strip bg-black text-white px-4 py-1.5 shadow-lg transition-all duration-500 hover:brightness-105">
-                  <div className="max-w-7xl mx-auto flex items-center justify-center text-center gap-3 sm:gap-6 relative">
-
-                    {/* Icon & Main Text */}
-                    <div className="flex items-center gap-2 text-[10px] sm:text-xs font-bold tracking-wider">
-                      <span className="text-orange-500 text-sm">ॐ</span>
-                      <span className="drop-shadow-sm uppercase">Char Dham Yatra 2026 Registrations Open!</span>
-                    </div>
-
-                    {/* Book Now Button Only */}
-                    <div className="hidden sm:flex items-center">
-                      <span className="text-white text-[9px] sm:text-[11px] font-black px-3 py-1.5 rounded-full flex items-center gap-1.5 transition-all duration-300">
-                        BOOK NOW <ArrowRight className="w-2.5 h-2.5 transition-transform group-hover:translate-x-1" />
-                      </span>
-                    </div>
-
-                    {/* Close Button */}
-                    <button
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setShowPromoBar(false);
-                      }}
-                      className="absolute right-0 top-1/2 -translate-y-1/2 p-1 hover:bg-white/20 rounded-full transition-colors cursor-pointer"
-                      aria-label="Close promo"
-                    >
-                      <X className="w-3.5 h-3.5 text-white/80 hover:text-white" />
-                    </button>
-
-                  </div>
-                </div>
-              </Link>
-            </motion.div>
-          )}
-        </AnimatePresence>
-        {/* PROMO STRIP END */}
 
         {/* Main header */}
         <div className="bg-transparent">
           <div className="max-w-6xl mx-auto px-4 md:px-6">
-            <div className="flex items-center justify-between py-5">
+            <div className={`flex items-center justify-between transition-all duration-300 ${isHome ? 'py-5' : 'py-2.5'}`}>
               {/* Logo - Left side */}
               <div className="flex items-center gap-3">
                 <button
@@ -718,12 +669,16 @@ const Header = ({
               <div className="flex items-center gap-3">
                 {/* Desktop specific buttons */}
                 <div className="hidden md:flex items-center gap-3 text-sm font-semibold">
+                  <a
+                    href="tel:+918979269388"
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-[6px] transition-all duration-300 font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm"
+                  >
+                    <Phone className="w-4 h-4" />
+                    <span>+91 8979269388</span>
+                  </a>
                   <motion.button
                     onClick={() => router.push("/payment")}
-                    className={`rounded-[6px] border cursor-pointer backdrop-blur-md px-4 py-2 transition shadow-none ${isTransparent
-                      ? "border-white bg-white/10 hover:bg-white/10 text-white"
-                      : "border-gray-300 hover:bg-gray-100 text-gray-700"
-                      }`}
+                    className={`rounded-[6px] border cursor-pointer backdrop-blur-md px-4 py-2 transition shadow-none border-transparent bg-blue-600 hover:bg-blue-700 text-white`}
                   >
                     Payment
                   </motion.button>
@@ -909,7 +864,7 @@ const Header = ({
       {!isHome && !disableOffset && (
         <div
           className="relative w-full transition-all duration-300 md:mb-[5px]"
-          style={{ height: shouldShowPromoBar ? 'calc(92px + 38px)' : '92px' }}
+          style={{ height: '92px' }}
         />
       )}
     </>

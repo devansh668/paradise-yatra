@@ -49,7 +49,7 @@ const AdminSidebar = ({
     },
     {
       id: "leads",
-      label: "Leads",
+      label: "Queries",
       icon: Users,
       hasSubmenu: false,
       hasNotification: false,
@@ -121,11 +121,15 @@ const AdminSidebar = ({
       isHeader: true,
     },
     {
-      id: "all-packages",
+      id: "packages-group",
       label: "Packages",
       icon: Package,
-      hasSubmenu: false,
+      hasSubmenu: true,
       hasNotification: false,
+      subItems: [
+        { id: "all-packages", label: "All Packages" },
+        { id: "destination-covers", label: "Destinations Covered" },
+      ],
     },
     {
       id: "fixed-departures",

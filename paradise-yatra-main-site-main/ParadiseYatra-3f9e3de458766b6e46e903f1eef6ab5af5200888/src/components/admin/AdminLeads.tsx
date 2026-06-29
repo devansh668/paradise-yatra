@@ -124,12 +124,12 @@ const AdminLeads = () => {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="!text-3xl font-bold text-gray-900">Leads Management</h1>
+                    <h1 className="!text-3xl font-bold text-gray-900">Queries Management</h1>
                     <p className="!text-gray-600">Track and manage your potential customers</p>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-500 bg-white px-4 py-2 rounded-lg shadow-sm">
                     <TrendingUp className="w-4 h-4 text-green-500" />
-                    <span>Total Leads: {leads.length}</span>
+                    <span>Total Queries: {leads.length}</span>
                 </div>
             </div>
 

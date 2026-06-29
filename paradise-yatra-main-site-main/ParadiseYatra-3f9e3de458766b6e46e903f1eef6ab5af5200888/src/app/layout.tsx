@@ -9,7 +9,6 @@ import { AuthProvider } from "@/context/AuthContext";
 import Script from "next/script";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { ReduxProvider } from "@/redux/ReduxProvider";
 import TalkToAgentButton from "@/components/TalkToAgentButton";
 import CookieConsentManager from "@/components/CookieConsentManager";
 
@@ -121,18 +120,16 @@ export default function RootLayout({
         </Script>
       </head>
       <body suppressHydrationWarning className={`${plusJakartaSans.className} antialiased`}>
-        <ReduxProvider>
-          <AuthProvider>
-            {children}
-            <Suspense fallback={null}>
-              <CookieConsentManager />
-            </Suspense>
-            <TalkToAgentButton />
-            <FooterWrapper />
-            <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
-            {/* <NewFooter /> */}
-          </AuthProvider>
-        </ReduxProvider>
+        <AuthProvider>
+          {children}
+          <Suspense fallback={null}>
+            <CookieConsentManager />
+          </Suspense>
+          <TalkToAgentButton />
+          <FooterWrapper />
+          <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light" />
+          {/* <NewFooter /> */}
+        </AuthProvider>
       </body>
     </html>
   );

@@ -16,7 +16,7 @@ import SearchFilterSidebar from '@/components/ui/SearchFilterSidebar';
 import { useAuth } from '@/context/AuthContext';
 import LoginAlertModal from '@/components/LoginAlertModal';
 import CarouselArrows from '@/components/ui/CarouselArrows';
-import WhyParadiseDifference from '@/components/WhyParadiseDifference';
+
 import FAQSection from '@/components/FAQSection';
 
 // Helper to format duration display
@@ -174,20 +174,10 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
     const itemsPerPage = 6;
 
     // Wishlist functionality
-    const { user, toggleWishlist: contextToggleWishlist, isInWishlist } = useAuth();
+    const { user } = useAuth();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-    const handleWishlistToggle = (e: React.MouseEvent, pkgId: string) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (!user) {
-            setIsLoginModalOpen(true);
-            return;
-        }
-
-        contextToggleWishlist(pkgId);
-    };
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -540,14 +530,14 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                             transition={{ duration: 0.6, delay: 0.2 }}
                             className="flex flex-col items-center max-w-5xl mx-auto w-full"
                         >
-                            <Card className="bg-white/80 backdrop-blur-xl rounded-[20px] shadow-2xl border border-white/40 overflow-hidden w-full md:h-[160px] flex items-center transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(0,9,69,0.3)] hover:bg-white/90">
+                            <Card className="bg-white/80 backdrop-blur-xl rounded-[20px] shadow-2xl border border-white/40 overflow-hidden w-full md:min-h-[160px] flex items-center transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(0,9,69,0.3)] hover:bg-white/90">
                                 <CardContent className="p-0 md:p-8 w-full h-full flex flex-col justify-center items-center">
                                     {/* Desktop Heading */}
                                     <h2 className="hidden md:block !text-xl md:!text-[48px] !font-black text-slate-900 mb-6 text-center font-plus-jakarta-sans tracking-tight leading-tight drop-shadow-sm">
                                         {tourTypeLabel} Packages in <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#155dfc] to-[#000945]">{formattedLocation}</span>
                                     </h2>
 
-                                    <div className="hidden md:flex flex-nowrap items-center justify-center gap-x-6 lg:gap-x-12 w-full px-2 md:px-4 overflow-x-auto no-scrollbar">
+                                    <div className="hidden md:flex flex-nowrap items-center justify-center gap-x-6 lg:gap-x-12 w-full px-2 md:px-4 py-4 overflow-x-auto no-scrollbar">
                                         {[
                                             { text: 'Best pricing' },
                                             { text: 'Private cab included' },
@@ -583,7 +573,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                             <h2 className="!text-[24px] md:!text-[32px] !font-bold text-[#000945] mb-4">
                                 {finalTitle}
                             </h2>
-                            <p className="text-slate-600 text-base md:text-lg leading-relaxed font-medium">
+                            <p className="!text-black text-base md:text-lg leading-relaxed font-medium">
                                 {overviewDescription}
                             </p>
                         </div>
@@ -658,8 +648,9 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                                         <HorizontalPackageCard
                                             key={item._id}
                                             id={item._id}
-                                            title={item.name}
-                                            destination={item.location}
+                                            title={item.name || item.title}
+                                            destination={item.destination || item.location || item.state || item.country}
+                                            itinerary={item.itinerary}
                                             duration={item.duration}
                                             description={item.shortDescription || item.description}
                                             price={item.price}
@@ -668,9 +659,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                                             images={item.images || item.gallery}
                                             imageAlt={item.imageAlt || item.name}
                                             detailUrl={`/package/${item.slug || item._id}`}
-                                            isInWishlist={isInWishlist(item._id)}
-                                            onWishlistToggle={handleWishlistToggle}
-                                        />
+                                                                                                                                />
                                     ))}
 
                                     {totalPages > 1 && (
@@ -711,7 +700,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
             </div>
         </section>
 
-                <WhyParadiseDifference />
+
                 <FAQSection destination={state || country} tourType={tourType} />
 
                 {suggestions.length > 0 && (
@@ -763,9 +752,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                                             hrefPrefix="/package"
                                             themeColor="#005beb"
                                             priceLabel={getPackagePriceLabel(pkg.priceType)}
-                                            isInWishlist={isInWishlist(pkg._id)}
-                                            onWishlistToggle={handleWishlistToggle}
-                                        />
+                                                                                                                                />
                                     ))}
                                 </div>
                             </div>

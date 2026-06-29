@@ -26,11 +26,6 @@ export const API_CONFIG = {
       VERIFY_OTP: '/api/auth/verify-otp',
     },
 
-    WISHLIST: {
-      GET: '/api/wishlist',
-      TOGGLE: '/api/wishlist/toggle',
-    },
-
     // Content endpoints
     PACKAGES: {
       ALL: '/api/packages',

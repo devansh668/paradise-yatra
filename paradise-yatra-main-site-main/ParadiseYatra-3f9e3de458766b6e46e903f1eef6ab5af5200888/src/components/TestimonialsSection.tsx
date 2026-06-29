@@ -216,7 +216,7 @@ const TestimonialsSection = () => {
                                         <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
                                     ))}
                                 </div>
-                                <p className="text-white/90 text-sm italic font-medium leading-relaxed mb-3 px-2 line-clamp-3">
+                                <p className="!text-white text-sm italic font-medium leading-relaxed mb-3 px-2 line-clamp-3">
                                     "{testimonial.quote}"
                                 </p>
                                 <h4 className="text-white font-bold text-[15px] tracking-wide">

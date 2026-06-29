@@ -170,6 +170,14 @@ export const LazyAdminPackages = createLazyComponent(
   <Loading size="lg" className="min-h-[400px]" />
 );
 
+export const LazyAdminDestinationCovers = createLazyComponent(
+  () => import("./admin/AdminDestinationCovers").catch(err => {
+    console.error("Failed to load AdminDestinationCovers:", err);
+    return Promise.reject(err);
+  }),
+  <Loading size="lg" className="min-h-[400px]" />
+);
+
 // ... existing code ...
 export const LazyAdminLeads = createLazyComponent(
   () => import("./admin/AdminLeads").catch(err => {

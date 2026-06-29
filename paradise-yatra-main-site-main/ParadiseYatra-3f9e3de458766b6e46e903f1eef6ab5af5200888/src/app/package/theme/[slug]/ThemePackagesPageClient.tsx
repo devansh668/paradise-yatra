@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Clock, Filter, ChevronDown, Check, ChevronLeft, ChevronRight, X, ArrowRight, Heart, Search, Tag as TagIcon, SearchX } from 'lucide-react';
+import { MapPin, Clock, Filter, ChevronDown, Check, ChevronLeft, ChevronRight, X, ArrowRight, Search, Tag as TagIcon, SearchX } from 'lucide-react';
 import Loading from '@/components/ui/loading';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -20,7 +20,7 @@ import { useAuth } from '@/context/AuthContext';
 import LoginAlertModal from '@/components/LoginAlertModal';
 import Footer from '@/components/Footer';
 import CarouselArrows from '@/components/ui/CarouselArrows';
-import WhyParadiseDifference from '@/components/WhyParadiseDifference';
+
 import FAQSection from '@/components/FAQSection';
 
 // Pagination Component
@@ -161,7 +161,7 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
 
-    const { user, toggleWishlist, isInWishlist } = useAuth();
+    const { user } = useAuth();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
     const capitalize = (str: string) => str ? str.charAt(0).toUpperCase() + str.slice(1) : str;
@@ -406,7 +406,7 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                             <h2 className="!text-[24px] md:!text-[32px] !font-bold text-[#000945] mb-4">
                                 {finalTitle}
                             </h2>
-                            <p className="text-slate-600 text-base md:text-lg leading-relaxed font-medium">
+                            <p className="!text-black text-base md:text-lg leading-relaxed font-medium">
                                 {overviewDescription}
                             </p>
                         </div>
@@ -466,8 +466,9 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                                             <HorizontalPackageCard
                                                 key={pkg._id}
                                                 id={pkg._id}
-                                                title={pkg.name}
-                                                destination={pkg.location}
+                                                title={pkg.name || pkg.title}
+                                                destination={pkg.destination || pkg.location || pkg.state || pkg.country}
+                                                itinerary={pkg.itinerary}
                                                 duration={pkg.duration}
                                                 description={pkg.shortDescription || pkg.description}
                                                 price={pkg.price}
@@ -476,12 +477,6 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                                                 images={pkg.images || pkg.gallery}
                                                 imageAlt={pkg.imageAlt || pkg.name}
                                                 detailUrl={`/package/${pkg.slug || pkg._id}`}
-                                                isInWishlist={isInWishlist(pkg._id)}
-                                                onWishlistToggle={(e) => {
-                                                    e.preventDefault();
-                                                    if (!user) setIsLoginModalOpen(true);
-                                                    else toggleWishlist(pkg._id);
-                                                }}
                                             />
                                         ))}
 
@@ -517,7 +512,7 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                     </div>
                 </section>
 
-                <WhyParadiseDifference />
+
                 <FAQSection destination={tagData.name} tourType="india" />
 
                 {suggestions.length > 0 && (
@@ -554,8 +549,9 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                                         <PackageCard
                                             key={`${pkg._id}-${idx}`}
                                             id={pkg._id}
-                                            title={pkg.name}
-                                            destination={pkg.location}
+                                            title={pkg.name || pkg.title}
+                                            destination={pkg.destination || pkg.location || pkg.state || pkg.country}
+                                            itinerary={pkg.itinerary}
                                             image={getImageUrl(pkg.image) || pkg.image || ''}
                                             imageAlt={pkg.imageAlt || pkg.name}
                                             duration={pkg.duration}
@@ -564,12 +560,6 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                                             hrefPrefix="/package"
                                             themeColor="#005beb"
                                             priceLabel={getPackagePriceLabel(pkg.priceType)}
-                                            isInWishlist={isInWishlist(pkg._id)}
-                                            onWishlistToggle={(e) => {
-                                                e.preventDefault();
-                                                if (!user) setIsLoginModalOpen(true);
-                                                else toggleWishlist(pkg._id);
-                                            }}
                                         />
                                     ))}
                                 </div>

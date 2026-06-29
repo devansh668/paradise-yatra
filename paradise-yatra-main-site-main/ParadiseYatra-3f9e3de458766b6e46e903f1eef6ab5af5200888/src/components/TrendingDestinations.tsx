@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Star, MapPin, Clock, Heart, ChevronLeft, ChevronRight, Compass, ArrowRight } from "lucide-react";
+import { Star, MapPin, Clock, ChevronLeft, ChevronRight, Compass, ArrowRight } from "lucide-react";
 import { SkeletonPackageCard } from "@/components/ui/skeleton";
 import Skeleton from "@/components/ui/skeleton";
 import Link from "next/link";
@@ -46,20 +46,10 @@ const TrendingDestinations = () => {
   const [activeScrollIndex, setActiveScrollIndex] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
-  const { user, toggleWishlist: contextToggleWishlist, isInWishlist } = useAuth();
+  const { user } = useAuth();
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-  const handleWishlistToggle = (e: React.MouseEvent, pkgId: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-
-    if (!user) {
-      setIsLoginModalOpen(true);
-      return;
-    }
-
-    contextToggleWishlist(pkgId);
-  };
+  
 
   // Update mobile state based on screen size
   useEffect(() => {
@@ -316,15 +306,6 @@ const TrendingDestinations = () => {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
 
                         {/* Content on Image */}
-                        <button
-                          onClick={(e) => handleWishlistToggle(e, pkg._id)}
-                          className="absolute top-3 right-3 z-40 p-2 rounded-full bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white transition-all shadow-sm group/heart"
-                        >
-                          <Heart
-                            className={`w-4 h-4 transition-colors ${isInWishlist(pkg._id) ? "fill-blue-600 text-blue-600" : "text-white group-hover/heart:text-blue-600"}`}
-                          />
-                        </button>
-
                         <div className="absolute bottom-4 left-4 right-4 text-white">
                           <div className="flex items-center gap-1.5 mb-1.5 opacity-90">
                             <MapPin className="h-3.5 w-3.5 text-blue-600" />
@@ -416,15 +397,6 @@ const TrendingDestinations = () => {
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent" />
 
                         {/* Content on Image */}
-                        <button
-                          onClick={(e) => handleWishlistToggle(e, pkg._id)}
-                          className="absolute top-3 right-3 z-40 p-2 rounded-full bg-white/20 backdrop-blur-md border border-white/30 hover:bg-white transition-all shadow-sm group/heart"
-                        >
-                          <Heart
-                            className={`w-4 h-4 transition-colors ${isInWishlist(pkg._id) ? "fill-blue-600 text-blue-600" : "text-white group-hover/heart:text-blue-600"}`}
-                          />
-                        </button>
-
                         <div className="absolute bottom-4 left-4 right-4 text-white">
                           <div className="flex items-center gap-1.5 mb-1.5 opacity-90">
                             <MapPin className="h-3.5 w-3.5 text-blue-600" />

@@ -10,7 +10,6 @@ import {
     Calendar,
     Mail,
     Star,
-    Heart,
     CreditCard,
     LogIn,
     UserPlus,
@@ -47,7 +46,6 @@ const Sidebar = ({ isOpen, onClose, navItems, onBookNow }: SidebarProps) => {
     }, [isOpen, onClose]);
 
     const discoverLinks = [
-        { name: "Wishlist", href: "/wishlist", icon: Heart },
         { name: "Payment", href: "/payment", icon: CreditCard },
         { name: "Fixed Departures", href: "/fixed-departures", icon: Calendar, highlight: true },
         { name: "Why Choose Us", href: "/why-choose-us", icon: Star },

@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react"
+import { createPortal } from "react-dom"
 import { X } from "lucide-react"
 import { motion, AnimatePresence, HTMLMotionProps } from "framer-motion"
 import { cn } from "@/lib/utils"
@@ -39,7 +40,7 @@ const Dialog = ({ open, onOpenChange, children }: DialogProps) => {
         };
     }, [open]);
 
-    return (
+    const dialogContent = (
         <DialogContext.Provider value={{ onOpenChange }}>
             <AnimatePresence>
                 {open && (
@@ -59,7 +60,15 @@ const Dialog = ({ open, onOpenChange, children }: DialogProps) => {
                 )}
             </AnimatePresence>
         </DialogContext.Provider>
-    )
+    );
+
+    const [mounted, setMounted] = React.useState(false);
+    React.useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted) return null;
+    return createPortal(dialogContent, document.body);
 }
 
 const DialogContent = React.forwardRef<

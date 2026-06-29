@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import Header from "@/components/Header";
+import { motion } from "framer-motion";
 import {
   ArrowUpRight,
   BadgeCheck,
@@ -73,286 +74,359 @@ const securityNotes = [
 
 const portalSteps = [
   {
-    step: "Step 1:",
-    title: "Select Booking Type",
-    accent: "bg-white",
+    step: "Step 01",
+    title: "Select Booking",
+    accent: "text-blue-600",
   },
   {
-    step: "Step 2:",
-    title: "Choose Payment Method",
-    accent: "bg-white",
+    step: "Step 02",
+    title: "Payment Method",
+    accent: "text-amber-500",
   },
   {
-    step: "Step 3:",
-    title: "Share Details & Confirm",
-    accent: "bg-white",
+    step: "Step 03",
+    title: "Confirmation",
+    accent: "text-green-600",
   },
 ];
 
-export default function PaymentPage() {
-  const [copied, setCopied] = useState(false);
+// Animation variants
+const fadeInUp = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } },
+};
 
-  const handleCopyLink = async () => {
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: { staggerChildren: 0.15 },
+  },
+};
+
+export default function PaymentPage() {
+  const [copiedLink, setCopiedLink] = useState(false);
+  const [copiedAccount, setCopiedAccount] = useState(false);
+
+  const handleCopy = async (text: string, type: "link" | "account") => {
     try {
-      await navigator.clipboard.writeText(PAYMENT_LINK);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
+      await navigator.clipboard.writeText(text);
+      if (type === "link") {
+        setCopiedLink(true);
+        setTimeout(() => setCopiedLink(false), 1800);
+      } else {
+        setCopiedAccount(true);
+        setTimeout(() => setCopiedAccount(false), 1800);
+      }
     } catch {
-      setCopied(false);
+      if (type === "link") setCopiedLink(false);
+      else setCopiedAccount(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-white text-[#181818]">
+    <div className="min-h-screen bg-slate-50 text-slate-800 selection:bg-blue-600 selection:text-white">
       <Header />
 
-      <main className="mx-auto max-w-[1120px] px-4 py-8 md:px-6 md:py-10">
-        <section className="rounded-[6px] bg-white py-4 text-center">
-          <h1 className="font-unbounded text-[28px] font-extrabold tracking-[-0.03em] text-[#000945] md:text-[34px]">
-            Lets get this done
-          </h1>
-          <p className="mt-1 text-sm font-medium !text-[#000945] md:text-[15px]">
-            Simple, verified payment options with clear next steps for confirmation.
-          </p>
-        </section>
+      <main className="mx-auto max-w-[1120px] px-4 py-12 md:px-6 md:py-16">
+        <motion.section 
+          initial="hidden"
+          animate="visible"
+          variants={staggerContainer}
+          className="text-center"
+        >
+          <motion.h1 
+            variants={fadeInUp}
+            className="font-unbounded text-4xl font-black tracking-tight !text-slate-950 md:text-5xl lg:text-6xl"
+          >
+            Secure Your <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Journey</span>
+          </motion.h1>
+          <motion.p 
+            variants={fadeInUp}
+            className="mx-auto mt-4 max-w-2xl text-base font-medium !text-slate-700 md:text-lg"
+          >
+            Experience a seamless, encrypted payment process. Choose your preferred premium gateway to finalize your luxury getaway.
+          </motion.p>
+        </motion.section>
 
-        <section className="mt-6 overflow-hidden rounded-[6px] border border-[#d8dce2] bg-white">
-          <div className="grid md:grid-cols-3">
+        <motion.section 
+          initial="hidden"
+          animate="visible"
+          variants={fadeInUp}
+          className="mt-12 overflow-hidden rounded-2xl bg-white shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-slate-100"
+        >
+          <div className="grid md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-slate-100">
             {portalSteps.map((item, index) => (
               <div
                 key={item.title}
-                className={`relative px-4 py-4 text-center ${item.accent} ${index < portalSteps.length - 1 ? "border-b border-[#d8dce2] md:border-b-0 md:border-r" : ""}`}
+                className="relative px-6 py-5 text-center transition-colors hover:bg-slate-50"
               >
-                <p className="text-[13px] font-bold !text-[#000945]">{item.step}</p>
-                <p className="mt-1 text-[15px] font-extrabold !text-[#000945]">{item.title}</p>
-                {index < portalSteps.length - 1 ? (
-                  <div className="absolute right-[-12px] top-1/2 z-10 hidden h-6 w-6 -translate-y-1/2 items-center justify-center rounded-full border border-[#d7dbe1] bg-white md:flex">
-                    <ChevronRight className="h-3.5 w-3.5 text-[#000945]" />
+                <p className={`text-sm font-bold tracking-widest uppercase ${item.accent}`}>{item.step}</p>
+                <p className="mt-1 text-lg font-bold !text-slate-950">{item.title}</p>
+                {index < portalSteps.length - 1 && (
+                  <div className="absolute right-[-14px] top-1/2 z-10 hidden h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full bg-white text-slate-400 shadow-sm ring-1 ring-slate-200 md:flex">
+                    <ChevronRight className="h-4 w-4" />
                   </div>
-                ) : null}
+                )}
               </div>
             ))}
           </div>
-        </section>
+        </motion.section>
 
-        <section className="mt-5 rounded-[6px] border border-[#d8dce2] bg-white p-4">
-          <div className="grid gap-3 md:grid-cols-2">
-            {bookingTypes.map((type) => {
-              const Icon = type.icon;
-
-              return (
-                <Link
-                  key={type.title}
-                  href={type.href}
-                  className="group flex items-center justify-between rounded-[6px] border border-[#d8dce2] bg-white px-4 py-4 transition-colors hover:border-[#000945] hover:bg-white"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-[6px] border border-[#d8dce2] bg-white text-[#000945]">
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <div>
-                      <p className="text-[15px] font-bold !text-[#000945]">{type.title}</p>
-                      <p className="mt-0.5 text-[13px] !text-[#000945]">{type.description}</p>
-                    </div>
+        <motion.section 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+          className="mt-8 grid gap-4 md:grid-cols-2"
+        >
+          {bookingTypes.map((type) => {
+            const Icon = type.icon;
+            return (
+              <Link
+                key={type.title}
+                href={type.href}
+                className="group relative flex items-center justify-between overflow-hidden rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:ring-blue-600/30"
+              >
+                <div className="absolute inset-0 bg-gradient-to-br from-blue-50/50 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <div className="relative z-10 flex items-center gap-5">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-xl bg-slate-950 text-white shadow-inner transition-transform duration-300 group-hover:scale-110">
+                    <Icon className="h-6 w-6" />
                   </div>
-                  <ChevronRight className="h-4 w-4 text-[#000945] transition-transform group-hover:translate-x-0.5" />
-                </Link>
-              );
-            })}
-          </div>
-        </section>
+                  <div>
+                    <p className="text-lg font-bold !text-slate-950">{type.title}</p>
+                    <p className="mt-1 text-sm font-medium !text-slate-600">{type.description}</p>
+                  </div>
+                </div>
+                <div className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-slate-50 transition-colors duration-300 group-hover:bg-blue-600 group-hover:text-white">
+                  <ChevronRight className="h-5 w-5" />
+                </div>
+              </Link>
+            );
+          })}
+        </motion.section>
 
-        <section className="mt-5 grid gap-4 lg:grid-cols-2">
-          <div className="overflow-hidden rounded-[6px] border border-[#8eb0dd] bg-white">
-            <div className="bg-[#000945] px-5 py-4 text-center text-[25px] font-extrabold tracking-[-0.03em] text-white">
-              Instant Gateway (Razorpay)
+        <motion.section 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+          className="mt-10 grid gap-6 lg:grid-cols-2"
+        >
+          {/* Razorpay Gateway Card */}
+          <motion.div variants={fadeInUp} className="group relative overflow-hidden rounded-2xl bg-slate-950 text-white shadow-xl shadow-blue-900/20">
+            <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
+            <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-blue-600/30 blur-[80px] transition-all duration-500 group-hover:bg-blue-500/40"></div>
+            
+            <div className="relative z-10 border-b border-white/10 bg-white/5 px-6 py-5 backdrop-blur-md">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-600">
+                  <Lock className="h-5 w-5 text-white" />
+                </div>
+                <h2 className="text-2xl font-black tracking-tight">Instant Gateway</h2>
+              </div>
             </div>
 
-            <div className="p-5">
+            <div className="relative z-10 p-6 md:p-8">
               <a
                 href={PAYMENT_LINK}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex w-full items-center justify-center gap-2 rounded-[6px] bg-[#155dfc] px-4 py-3 text-[15px] font-bold text-white transition-colors hover:bg-[#0f4bce]"
+                className="flex w-full items-center justify-center gap-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-500 px-6 py-4 text-base font-bold text-white shadow-lg transition-all duration-300 hover:scale-[1.02] hover:from-blue-500 hover:to-blue-400 hover:shadow-blue-500/25 active:scale-95"
               >
                 Pay Securely with Razorpay
-                <ArrowUpRight className="h-4 w-4" />
+                <ArrowUpRight className="h-5 w-5" />
               </a>
 
-              <div className="mt-5">
-                <p className="text-[17px] font-extrabold !text-[#000945]">
-                  Accepted UPI, Cards, Net Banking, Wallets
+              <div className="mt-8 text-center md:text-left">
+                <p className="text-lg font-bold text-white">
+                  Accepted: UPI, Cards, Net Banking, Wallets
                 </p>
-                <p className="mt-2 text-[13px] leading-6 !text-[#000945]">
-                  Razorpay payment link provides a trusted method for cards and net banking, while also supporting UPI
-                  apps and secure wallet transactions.
+                <p className="mt-2 text-sm leading-relaxed text-blue-100/80">
+                  Enjoy a seamless and encrypted transaction using India's most trusted payment gateway. 100% secure processing.
                 </p>
               </div>
 
-              <div className="mt-6 flex justify-center">
-                <Image
-                  referrerPolicy="origin"
-                  src="https://badges.razorpay.com/badge-light.png"
-                  alt="Razorpay | Payment Gateway | Neobank"
-                  width={113}
-                  height={45}
-                  className="h-[45px] w-[113px]"
-                />
+              <div className="mt-8 flex justify-center md:justify-start">
+                <div className="rounded-lg bg-white/10 p-3 backdrop-blur-sm">
+                  <Image
+                    referrerPolicy="origin"
+                    src="https://badges.razorpay.com/badge-dark.png"
+                    alt="Razorpay Security Badge"
+                    width={113}
+                    height={45}
+                    className="h-[45px] w-auto opacity-90 transition-opacity hover:opacity-100"
+                  />
+                </div>
               </div>
 
-              <div className="mt-5">
-                <p className="text-center text-[13px] font-bold !text-[#000945]">Unique payment link</p>
-                <div className="mt-3 flex items-center rounded-[6px] border border-[#d7dbe1] bg-[#f6f7f8] px-3 py-2.5">
-                  <span className="min-w-0 flex-1 truncate text-[12px] font-medium !text-[#000945]">
+              <div className="mt-8">
+                <p className="text-xs font-bold uppercase tracking-wider text-blue-300">Unique Payment Link</p>
+                <div className="mt-3 flex items-center rounded-xl border border-white/10 bg-white/5 p-1 backdrop-blur-md">
+                  <span className="min-w-0 flex-1 truncate px-4 text-sm font-medium text-white">
                     {PAYMENT_LINK}
                   </span>
                   <button
                     type="button"
-                    onClick={handleCopyLink}
-                    className="ml-3 inline-flex h-8 w-8 items-center justify-center rounded-[6px] border border-[#d0d5db] bg-white text-[#4d5662] transition-colors hover:bg-[#eef3fb]"
+                    onClick={() => handleCopy(PAYMENT_LINK, "link")}
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white transition-all hover:bg-white hover:text-[#000945]"
                     aria-label="Copy payment link"
                   >
-                    {copied ? <Check className="h-4 w-4 text-[#2d73c7]" /> : <Copy className="h-4 w-4" />}
+                    {copiedLink ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
                   </button>
                 </div>
-                {copied ? <p className="mt-2 text-right text-[12px] font-semibold !text-[#000945]">Payment link copied</p> : null}
+                {copiedLink && <p className="mt-2 text-right text-xs font-semibold text-emerald-400">Payment link copied to clipboard!</p>}
               </div>
             </div>
-          </div>
+          </motion.div>
 
-          <div className="overflow-hidden rounded-[6px] border border-[#d8dce2] bg-white">
-            <div className="bg-[#e7edf4] px-5 py-4 text-center text-[25px] font-extrabold tracking-[-0.03em] text-[#000945]">
-              Direct Bank Transfer
+          {/* Bank Transfer Card */}
+          <motion.div variants={fadeInUp} className="group overflow-hidden rounded-2xl bg-white shadow-xl shadow-slate-200/50 ring-1 ring-slate-200 transition-all hover:shadow-2xl hover:shadow-slate-200/60 hover:ring-slate-300">
+            <div className="border-b border-slate-100 bg-slate-50/50 px-6 py-5">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-900">
+                  <Landmark className="h-5 w-5 text-white" />
+                </div>
+                <h2 className="text-2xl font-black tracking-tight !text-slate-950">Direct Transfer</h2>
+              </div>
             </div>
 
-            <div className="p-5">
-              <div className="flex flex-wrap items-center gap-2">
-                <p className="text-[17px] font-extrabold !text-[#000945]">Verified Bank Details</p>
-                <span className="inline-flex items-center gap-1 rounded-full bg-[#e9f7ee] px-2.5 py-1 text-[12px] font-bold text-[#1f8a49]">
-                  <BadgeCheck className="h-3.5 w-3.5" />
-                  Verified
+            <div className="p-6 md:p-8">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <p className="text-lg font-extrabold !text-slate-950">Verified Bank Details</p>
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-bold text-emerald-700 ring-1 ring-emerald-600/20">
+                  <BadgeCheck className="h-4 w-4" />
+                  Verified Account
                 </span>
               </div>
 
-              <div className="mt-4 rounded-[6px] bg-[#f2f3f5] p-4">
-                <div className="space-y-3">
+              <div className="mt-6 overflow-hidden rounded-xl bg-slate-50 ring-1 ring-slate-200/60">
+                <div className="divide-y divide-slate-200/60">
                   {bankDetails.map((item) => (
-                    <div key={item.label} className="flex flex-col gap-1 border-b border-[#dde1e6] pb-3 last:border-b-0 last:pb-0 sm:flex-row sm:items-start">
-                      <span className="w-[110px] shrink-0 text-[13px] font-bold !text-[#000945]">{item.label}</span>
-                      <span className="hidden text-[13px] font-bold !text-[#000945] sm:inline">:</span>
-                      <span className="text-[13px] font-semibold !text-[#000945]">{item.value}</span>
+                    <div key={item.label} className="flex flex-col gap-1 p-4 transition-colors hover:bg-white sm:flex-row sm:items-center sm:justify-between">
+                      <span className="text-sm font-semibold !text-slate-600">{item.label}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="text-sm font-bold !text-slate-950">{item.value}</span>
+                        {item.label === "Account No." && (
+                          <button
+                            onClick={() => handleCopy(item.value, "account")}
+                            className="text-slate-400 transition-colors hover:text-blue-600"
+                            title="Copy Account Number"
+                          >
+                            {copiedAccount ? <Check className="h-4 w-4 text-emerald-600" /> : <Copy className="h-4 w-4" />}
+                          </button>
+                        )}
+                      </div>
                     </div>
                   ))}
                 </div>
 
-                <div className="mt-4 border-t border-[#dde1e6] pt-4">
-                  <p className="text-[13px] font-extrabold uppercase tracking-[0.08em] !text-[#000945]">NEFT / IMPS / RTGS</p>
-                  <p className="mt-2 text-[13px] leading-6 !text-[#000945]">
-                    Use these verified details for direct transfer. After payment, share your transaction reference so
-                    our team can verify and confirm the booking.
+                <div className="bg-slate-100/50 p-5">
+                  <p className="text-xs font-black uppercase tracking-[0.1em] !text-slate-950">NEFT / IMPS / RTGS</p>
+                  <p className="mt-2 text-sm leading-relaxed !text-slate-700">
+                    Use these verified details for direct transfer. Please share your transaction reference immediately after payment so we can instantly secure your booking.
                   </p>
                 </div>
               </div>
             </div>
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
 
-        <section className="mt-10 space-y-4">
-          <div className="!bg-white py-1">
-            <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-              <div>
-                <h2 className="text-[24px] font-bold tracking-[-0.04em] text-[#000945] md:text-[36px]">
-                  Post-Payment Checklist
-                </h2>
-              </div>
-              <p className="max-w-[500px] text-[13px] leading-6 !text-[#000945] md:text-right">
-                Share these details once payment is done so the team can verify quickly and lock the booking without follow-up delays.
+        <motion.section 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={staggerContainer}
+          className="mt-12 grid gap-6 lg:grid-cols-12"
+        >
+          <motion.div variants={fadeInUp} className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200 lg:col-span-7 lg:p-8">
+            <div className="mb-6 border-b border-slate-100 pb-5">
+              <h2 className="text-2xl font-black tracking-tight !text-slate-950">
+                Post-Payment Checklist
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed !text-slate-600">
+                Ensure a smooth confirmation process by preparing these details after your payment is successful.
               </p>
             </div>
 
-            <div className="mt-5 grid gap-x-6 gap-y-0 md:grid-cols-2">
+            <div className="grid gap-x-8 gap-y-4 md:grid-cols-2">
               {checklistItems.map((item) => (
-                <div
-                  key={item}
-                  className="flex items-center gap-3 border-b border-[#e4e7ed] py-3 last:border-b md:last:border-b-0"
-                >
-                  <Square className="h-4 w-4 shrink-0 text-[#000945]" />
-                  <p className="text-[13px] font-semibold leading-5 !text-[#000945]">{item}</p>
+                <div key={item} className="group flex items-start gap-3">
+                  <div className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-md bg-blue-50 text-blue-600 transition-colors group-hover:bg-blue-600 group-hover:text-white">
+                    <Square className="h-3.5 w-3.5" />
+                  </div>
+                  <p className="text-sm font-semibold !text-slate-800">{item}</p>
                 </div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          <div className="rounded-[6px] border border-[#f2cf7e] !bg-white p-3 md:p-3.5">
-            <div className="flex flex-col gap-1.5">
-              <div>
-                <h2 className="text-[24px] font-bold tracking-[-0.04em] text-[#6b4300] md:text-[30px]">
-                  Important Security Notes
-                </h2>
-              </div>
-              <p className="max-w-[560px] text-[12px] leading-5 !text-[#7b5208]">
-                Treat this as a final payment safety check. Every point below directly protects the booking and the customer.
+          <motion.div variants={fadeInUp} className="relative overflow-hidden rounded-2xl bg-amber-50 p-6 ring-1 ring-amber-200 lg:col-span-5 lg:p-8">
+            <div className="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-amber-200/40 blur-3xl"></div>
+            
+            <div className="relative z-10 mb-6 border-b border-amber-200/60 pb-5">
+              <h2 className="text-2xl font-black tracking-tight text-[#6b4300]">
+                Security Notes
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-[#8c5e0a]">
+                Your safety is our priority. Follow these strict guidelines to protect your transaction.
               </p>
             </div>
 
-            <div className="mt-2.5 space-y-0">
+            <div className="relative z-10 space-y-5">
               {securityNotes.map((note) => {
                 const Icon = note.icon;
-
                 return (
-                  <div
-                    key={note.title}
-                    className="flex items-start gap-2 border-b border-[#edd38f] py-2.5 last:border-b-0"
-                  >
-                    <div className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white text-[#9a6200]">
-                      <Icon className="h-3.5 w-3.5" />
+                  <div key={note.title} className="flex items-start gap-4">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-white text-amber-600 shadow-sm ring-1 ring-amber-100">
+                      <Icon className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="text-[12px] font-extrabold leading-4.5 text-[#6b4300]">{note.title}</p>
-                      <p className="mt-0.5 text-[11px] leading-4.5 !text-[#7b5208]">{note.description}</p>
+                      <p className="text-sm font-bold text-[#6b4300]">{note.title}</p>
+                      <p className="mt-1 text-xs leading-relaxed text-[#8c5e0a]">{note.description}</p>
                     </div>
                   </div>
                 );
               })}
             </div>
-          </div>
-        </section>
+          </motion.div>
+        </motion.section>
 
-        <section className="mt-6 rounded-[10px] border border-[#d8dce2] bg-white px-4 py-4 md:px-5">
-          <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <motion.section 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={fadeInUp}
+          className="mt-8 overflow-hidden rounded-2xl bg-slate-950 text-white shadow-xl shadow-blue-900/10"
+        >
+          <div className="flex flex-col gap-6 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-blend-overlay p-6 md:flex-row md:items-center md:justify-between lg:p-8">
             <div>
-              <p className="text-[15px] font-bold text-[#1e2126]">Need help after payment?</p>
-              <p className="mt-1 text-[13px] text-[#5e6670]">
-                Share your payment reference and booking details with our team for verification.
+              <p className="text-xl font-black tracking-tight text-white">Need help with your payment?</p>
+              <p className="mt-2 text-sm text-blue-200">
+                Our premium support team is ready to assist you with verification and booking.
               </p>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               <a
                 href="tel:+918031274154"
-                className="inline-flex items-center gap-2 rounded-[8px] border border-[#d4d9e0] bg-[#fafbfc] px-4 py-2 text-[13px] font-semibold text-[#21242a] transition-colors hover:bg-[#f2f5fa]"
+                className="group flex items-center gap-2 rounded-xl bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur-md transition-all hover:bg-white hover:!text-slate-950"
               >
-                <Phone className="h-4 w-4 text-[#2d73c7]" />
+                <Phone className="h-4 w-4 transition-transform group-hover:scale-110" />
                 +91 8031274154
               </a>
               <a
                 href="mailto:info@paradiseyatra.com"
-                className="inline-flex items-center gap-2 rounded-[8px] border border-[#d4d9e0] bg-[#fafbfc] px-4 py-2 text-[13px] font-semibold text-[#21242a] transition-colors hover:bg-[#f2f5fa]"
+                className="group flex items-center gap-2 rounded-xl bg-white/10 px-5 py-3 text-sm font-bold text-white backdrop-blur-md transition-all hover:bg-white hover:!text-slate-950"
               >
-                <Mail className="h-4 w-4 text-[#2d73c7]" />
-                info@paradiseyatra.com
+                <Mail className="h-4 w-4 transition-transform group-hover:scale-110" />
+                Email Support
               </a>
-              <Link
-                href="/contact"
-                className="inline-flex items-center gap-2 rounded-[8px] bg-[#2d73c7] px-4 py-2 text-[13px] font-semibold text-white transition-colors hover:bg-[#235fa7]"
-              >
-                <Landmark className="h-4 w-4" />
-                Contact Support
-              </Link>
             </div>
           </div>
-        </section>
+        </motion.section>
       </main>
     </div>
   );
 }
+

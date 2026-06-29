@@ -22,6 +22,7 @@ export interface Package {
   state?: string;
   tourType: 'international' | 'india';
   images: string[];
+  destinationsCovered?: string[];
   highlights?: string[];
   itinerary: ItineraryDay[];
   inclusions: string[];

@@ -23,6 +23,7 @@ import {
   LazyAdminPopularDestinations,
   LazyAdminTags,
   LazyAdminPackages,
+  LazyAdminDestinationCovers,
   LazyAdminLeads,
   LazyAdminUsers,
   LazyAdminPageContent,
@@ -48,6 +49,7 @@ type AdminSection =
   | "destination-faq"
   | "tags"
   | "all-packages"
+  | "destination-covers"
   | "leads"
   | "users";
 
@@ -180,6 +182,8 @@ const AdminPage = () => {
         return <LazyAdminTags />;
       case "all-packages":
         return <LazyAdminPackages />;
+      case "destination-covers":
+        return <LazyAdminDestinationCovers />;
       case "leads":
         return <LazyAdminLeads />;
       case "users":

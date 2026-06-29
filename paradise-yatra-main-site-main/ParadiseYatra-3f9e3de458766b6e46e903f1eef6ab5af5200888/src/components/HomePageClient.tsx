@@ -18,9 +18,7 @@ import {
   LazyAboutUsSection,
 } from "@/components/lazy-components";
 
-const LeadCaptureForm = dynamic(() => import("./LeadCaptureForm"), {
-  ssr: false,
-});
+
 
 const ShutdownPopup = dynamic(() => import("@/components/ShutdownPopup"), {
   ssr: false,
@@ -33,16 +31,7 @@ const PerformanceMonitor = dynamic(
 
 const HomePageClient = memo(() => {
   const [showShutdownPopup, setShowShutdownPopup] = useState(false);
-  const [showLeadCaptureForm, setShowLeadCaptureForm] = useState(false);
   const [renderBelowFold, setRenderBelowFold] = useState(false);
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowLeadCaptureForm(true);
-    }, 10000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -112,12 +101,7 @@ const HomePageClient = memo(() => {
 
       {/* Shutdown Popup - you can control this with state */}
       {showShutdownPopup && <ShutdownPopup isOpen={showShutdownPopup} />}
-      {showLeadCaptureForm && (
-        <LeadCaptureForm
-          isOpen={showLeadCaptureForm}
-          onClose={() => setShowLeadCaptureForm(false)}
-        />
-      )}
+
     </div>
   );
 });

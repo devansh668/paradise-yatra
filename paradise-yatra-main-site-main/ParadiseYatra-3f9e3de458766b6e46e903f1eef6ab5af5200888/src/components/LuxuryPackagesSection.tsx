@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Heart, Clock, MapPin } from "lucide-react";
+import { ArrowLeft, ArrowRight, Clock, MapPin } from "lucide-react";
 import { getImageUrl, getDestinationWebp } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
 import LoginAlertModal from "./LoginAlertModal";
@@ -31,20 +31,10 @@ const LuxuryPackagesSection = () => {
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
 
-    const { user, toggleWishlist: contextToggleWishlist, isInWishlist } = useAuth();
+    const { user } = useAuth();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-    const handleWishlistToggle = (e: React.MouseEvent, pkgId: string) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (!user) {
-            setIsLoginModalOpen(true);
-            return;
-        }
-
-        contextToggleWishlist(pkgId);
-    };
+    
 
     const updateScrollState = () => {
         if (carouselRef.current) {
@@ -259,15 +249,6 @@ const LuxuryPackagesSection = () => {
                                         />
                                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
 
-                                        {/* Wishlist Button */}
-                                        <button
-                                            onClick={(e) => handleWishlistToggle(e, pkg._id)}
-                                            className="absolute top-3 right-3 z-40 p-2 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 hover:bg-white/20 transition-all shadow-sm group/heart"
-                                        >
-                                            <Heart
-                                                className={`w-4 h-4 transition-colors ${isInWishlist(pkg._id) ? "fill-amber-400 text-amber-400" : "text-white"}`}
-                                            />
-                                        </button>
                                     </div>
 
                                     {/* Content container */}

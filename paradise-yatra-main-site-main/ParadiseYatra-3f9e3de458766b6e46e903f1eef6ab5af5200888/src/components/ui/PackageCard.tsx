@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { MapPin, Heart, ArrowRight } from "lucide-react";
+import { MapPin, ArrowRight } from "lucide-react";
 import React from "react";
 import { getImageUrl } from "@/lib/utils";
 
@@ -18,9 +18,8 @@ interface PackageCardProps {
     hrefPrefix: string;
     themeColor: string; // e.g., "#ff1493" or "#005beb"
     priceLabel: string; // e.g., "Per Couple" or "Per Person"
-    isInWishlist: boolean;
-    onWishlistToggle: (e: React.MouseEvent, pkgId: string) => void;
     showDestination?: boolean;
+    itinerary?: any[];
 }
 
 const PackageCard: React.FC<PackageCardProps> = ({
@@ -35,8 +34,6 @@ const PackageCard: React.FC<PackageCardProps> = ({
     hrefPrefix,
     themeColor,
     priceLabel,
-    isInWishlist,
-    onWishlistToggle,
     showDestination = true
 }) => {
     const optimizedImage =
@@ -66,20 +63,6 @@ const PackageCard: React.FC<PackageCardProps> = ({
 
                 {/* Dark Gradient Overlay for Contrast */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/10 opacity-80 group-hover:opacity-90 transition-opacity duration-500" />
-
-                {/* Wishlist Button */}
-                <button
-                    onClick={(e) => onWishlistToggle(e, String(id))}
-                    className="absolute top-4 right-4 z-40 p-2.5 rounded-full backdrop-blur-md bg-white/20 border border-white/30 hover:bg-white/40 transition-all shadow-lg group/heart"
-                >
-                    <Heart
-                        className="w-4 h-4 transition-transform group-hover/heart:scale-110"
-                        style={{
-                            color: "white",
-                            fill: isInWishlist ? themeColor : "none"
-                        }}
-                    />
-                </button>
 
                 {/* Content Overlay */}
                 <div className="absolute inset-0 flex flex-col justify-end p-5">
@@ -131,4 +114,3 @@ const PackageCard: React.FC<PackageCardProps> = ({
 };
 
 export default PackageCard;
-

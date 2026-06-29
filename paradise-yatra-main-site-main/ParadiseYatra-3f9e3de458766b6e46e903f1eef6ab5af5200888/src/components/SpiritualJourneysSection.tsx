@@ -29,20 +29,10 @@ const SpiritualJourneysSection = () => {
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
 
-    const { user, toggleWishlist: contextToggleWishlist, isInWishlist } = useAuth();
+    const { user } = useAuth();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-    const handleWishlistToggle = (e: React.MouseEvent, pkgId: string) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (!user) {
-            setIsLoginModalOpen(true);
-            return;
-        }
-
-        contextToggleWishlist(pkgId);
-    };
+    
 
     useEffect(() => {
         const fetchSpiritualData = async () => {
@@ -320,9 +310,7 @@ const SpiritualJourneysSection = () => {
                                     hrefPrefix="/package"
                                     themeColor="#005beb"
                                     priceLabel="Per Person"
-                                    isInWishlist={isInWishlist(String(pkg.id))}
-                                    onWishlistToggle={handleWishlistToggle}
-                                />
+                                                                                                        />
                             </div>
                         ))}
                         </div>

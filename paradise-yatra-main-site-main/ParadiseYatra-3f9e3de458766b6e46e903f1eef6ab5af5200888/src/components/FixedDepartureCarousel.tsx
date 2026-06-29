@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -56,174 +56,63 @@ const FESTIVAL_DESTINATIONS: FestivalDestination[] = [
     },
 ];
 
-const FestivalSection = () => {
+const FixedDepartureCarousel = () => {
     return (
-        <section className="bg-white py-14 px-4 text-gray-900 md:px-8">
-            <div className="mx-auto max-w-6xl">
+        <section className="bg-white py-14 px-4 text-gray-900 md:px-8 overflow-hidden">
+            <div className="mx-auto max-w-[1200px]">
                 {/* Header Style matching India Tour Package */}
-                <div className="mb-10 flex flex-col gap-2">
-                    <span className="text-[#005beb] !font-black uppercase tracking-wider text-xs flex items-center gap-2">
-                        <span className="h-px w-8 bg-[#005beb]"></span>
-                        Cultural Joy
-                    </span>
-                    <h2 className="!text-2xl !font-bold text-slate-900 md:text-3xl">
-                        Celebrations Across the World
-                    </h2>
-                    <p className="!text-sm !text-slate-600 md:text-base max-w-2xl font-semibold">
-                        Immerse yourself in vibrant global traditions and iconic celebrations with our curated cultural tour packages.
-                    </p>
+                <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
+                    <div className="flex flex-col gap-2 max-w-2xl">
+                        <span className="text-[#005beb] !font-black uppercase tracking-wider text-xs flex items-center gap-2">
+                            <span className="h-px w-8 bg-[#005beb]"></span>
+                            Cultural Joy
+                        </span>
+                        <h2 className="!text-2xl !font-bold text-slate-900 md:text-3xl">
+                            Celebrations Across the World
+                        </h2>
+                        <p className="!text-sm !text-slate-600 md:text-base font-semibold mt-1 leading-relaxed">
+                            Immerse yourself in vibrant global traditions and iconic celebrations with our curated cultural tour packages.
+                        </p>
+                    </div>
+                    <Link href="/all-packages" className="text-[#005beb] font-bold text-sm flex items-center gap-1 hover:underline whitespace-nowrap pb-1">
+                        View All Packages &rarr;
+                    </Link>
                 </div>
 
-                {/* Masonry Grid Layout */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                    {/* Column 1 */}
-                    <div className="space-y-5">
-                        {/* Rio Carnival */}
+                {/* Premium Horizontal Carousel */}
+                <div className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-8 -mx-4 px-4 md:mx-0 md:px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    {FESTIVAL_DESTINATIONS.map((destination) => (
                         <Link
-                            href={FESTIVAL_DESTINATIONS[0].href}
-                            className="relative group overflow-hidden rounded-lg h-[280px] cursor-pointer block"
+                            key={destination.id}
+                            href={destination.href}
+                            className="snap-start shrink-0 w-[280px] md:w-[340px] group cursor-pointer block"
                         >
-                            {/* White hover overlay */}
-                            <div className="absolute inset-0 bg-white/10 opacity-10 group-hover:opacity-100 transition-opacity duration-300 z-20 pointer-events-none"></div>
-
-                            <Image
-                                src={FESTIVAL_DESTINATIONS[0].image}
-                                alt={FESTIVAL_DESTINATIONS[0].name}
-                                fill
-                                className="object-cover transition-transform duration-500"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                            <div className="absolute bottom-6 left-6 text-white z-10">
-                                <h3 className="!text-2xl !font-bold">
-                                    {FESTIVAL_DESTINATIONS[0].name}
-                                </h3>
-                            </div>
-                        </Link>
-
-                        {/* Oktoberfest */}
-                        <Link
-                            href={FESTIVAL_DESTINATIONS[3].href}
-                            className="relative group overflow-hidden rounded-lg h-[250px] cursor-pointer block"
-                        >
-                            {/* White hover overlay */}
-                            <div className="absolute inset-0 bg-white/10 opacity-10 group-hover:opacity-100 transition-opacity duration-300 z-20 pointer-events-none"></div>
-
-                            <Image
-                                src={FESTIVAL_DESTINATIONS[3].image}
-                                alt={FESTIVAL_DESTINATIONS[3].name}
-                                fill
-                                className="object-cover transition-transform duration-500"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                            <div className="absolute bottom-6 left-6 text-white z-10">
-                                <h3 className="!text-2xl !font-bold">
-                                    {FESTIVAL_DESTINATIONS[3].name}
-                                </h3>
-                            </div>
-                        </Link>
-                    </div>
-
-                    {/* Column 2 - Large center card */}
-                    <div className="h-[550px]">
-                        {/* Cherry Blossom */}
-                        <Link
-                            href={FESTIVAL_DESTINATIONS[1].href}
-                            className="relative h-full group overflow-hidden rounded-lg cursor-pointer block"
-                        >
-                            {/* White hover overlay */}
-                            <div className="absolute inset-0 bg-white/10 opacity-10 group-hover:opacity-100 transition-opacity duration-300 z-20 pointer-events-none"></div>
-
-                            <Image
-                                src={FESTIVAL_DESTINATIONS[1].image}
-                                alt={FESTIVAL_DESTINATIONS[1].name}
-                                fill
-                                className="object-cover transition-transform duration-500"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                            <div className="absolute bottom-8 left-8 text-white z-10">
-                                <h3 className="!text-2xl !font-bold">
-                                    {FESTIVAL_DESTINATIONS[1].name}
-                                </h3>
-                            </div>
-                        </Link>
-                    </div>
-
-                    {/* Column 3 */}
-                    <div className="space-y-5">
-                        {/* Lantern Festival */}
-                        <Link
-                            href={FESTIVAL_DESTINATIONS[2].href}
-                            className="relative group overflow-hidden rounded-lg h-[280px] cursor-pointer block"
-                        >
-                            {/* White hover overlay */}
-                            <div className="absolute inset-0 bg-white/10 opacity-10 group-hover:opacity-100 transition-opacity duration-300 z-20 pointer-events-none"></div>
-
-                            <Image
-                                src={FESTIVAL_DESTINATIONS[2].image}
-                                alt={FESTIVAL_DESTINATIONS[2].name}
-                                fill
-                                className="object-cover transition-transform duration-500"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                            <div className="absolute bottom-6 left-6 text-white z-10">
-                                <h3 className="!text-2xl !font-bold">
-                                    {FESTIVAL_DESTINATIONS[2].name}
-                                </h3>
-                            </div>
-                        </Link>
-
-                        {/* Bottom row - two cards side by side */}
-                        <div className="flex gap-4 h-[250px]">
-                            {/* Day of the Dead */}
-                            <Link
-                                href={FESTIVAL_DESTINATIONS[4].href}
-                                className="relative flex-1 group overflow-hidden rounded-lg cursor-pointer block"
-                            >
-                                {/* White hover overlay */}
-                                <div className="absolute inset-0 bg-white/10 opacity-10 group-hover:opacity-100 transition-opacity duration-300 z-20 pointer-events-none"></div>
-
+                            <div className="relative overflow-hidden rounded-2xl h-[400px] w-full mb-4 shadow-sm group-hover:shadow-2xl transition-all duration-500 ring-1 ring-black/5">
                                 <Image
-                                    src={FESTIVAL_DESTINATIONS[4].image}
-                                    alt={FESTIVAL_DESTINATIONS[4].name}
+                                    src={destination.image}
+                                    alt={destination.name}
                                     fill
-                                    className="object-cover transition-transform duration-500"
+                                    className="object-cover transition-transform duration-700 group-hover:scale-105"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                                <div className="absolute bottom-5 left-5 text-white z-10">
-                                    <h3 className="!text-2xl !font-bold">
-                                        {FESTIVAL_DESTINATIONS[4].name}
+                                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent opacity-80 group-hover:opacity-100 transition-opacity duration-500"></div>
+                                <div className="absolute bottom-6 left-6 text-white z-10 pr-6">
+                                    <h3 className="text-2xl font-bold mb-2 leading-tight">
+                                        {destination.name}
                                     </h3>
+                                    <div className="inline-block bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20">
+                                        <p className="text-xs text-white font-semibold flex items-center gap-1 uppercase tracking-wider">
+                                            From ₹{destination.price.toLocaleString('en-IN')}
+                                        </p>
+                                    </div>
                                 </div>
-                            </Link>
-
-                            {/* Loy Krathong */}
-                            <Link
-                                href={FESTIVAL_DESTINATIONS[5].href}
-                                className="relative flex-1 group overflow-hidden rounded-lg cursor-pointer block"
-                            >
-                                {/* White hover overlay */}
-                                <div className="absolute inset-0 bg-white/10 opacity-10 group-hover:opacity-100 transition-opacity duration-300 z-20 pointer-events-none"></div>
-
-                                <Image
-                                    src={FESTIVAL_DESTINATIONS[5].image}
-                                    alt={FESTIVAL_DESTINATIONS[5].name}
-                                    fill
-                                    className="object-cover transition-transform duration-500"
-                                />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                                <div className="absolute bottom-5 left-5 text-white z-10">
-                                    <h3 className="!text-2xl !font-bold">
-                                        {FESTIVAL_DESTINATIONS[5].name}
-                                    </h3>
-                                </div>
-                            </Link>
-                        </div>
-                    </div>
+                            </div>
+                        </Link>
+                    ))}
                 </div>
             </div>
         </section>
     );
 };
 
-export default FestivalSection;
+export default FixedDepartureCarousel;
 

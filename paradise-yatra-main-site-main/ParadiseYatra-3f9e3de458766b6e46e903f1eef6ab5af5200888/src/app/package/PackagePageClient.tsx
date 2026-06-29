@@ -2,7 +2,7 @@
 
 import { Suspense, useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MapPin, Clock, Filter, ChevronDown, Check, ChevronLeft, ChevronRight, X, ArrowRight, Heart, Search, Users, SearchX } from 'lucide-react';
+import { MapPin, Clock, Filter, ChevronDown, Check, ChevronLeft, ChevronRight, X, ArrowRight, Search, Users, SearchX } from 'lucide-react';
 import Loading from '@/components/ui/loading';
 import Link from 'next/link';
 import Image from 'next/image';
@@ -171,20 +171,10 @@ export default function PackagePageClient() {
     const itemsPerPage = 6;
 
     // Wishlist functionality
-    const { user, toggleWishlist: contextToggleWishlist, isInWishlist } = useAuth();
+    const { user } = useAuth();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-    const handleWishlistToggle = (e: React.MouseEvent, pkgId: string) => {
-        e.preventDefault();
-        e.stopPropagation();
-
-        if (!user) {
-            setIsLoginModalOpen(true);
-            return;
-        }
-
-        contextToggleWishlist(pkgId);
-    };
+    
 
     useEffect(() => {
         const fetchData = async () => {
@@ -466,8 +456,9 @@ export default function PackagePageClient() {
                                             <HorizontalPackageCard
                                                 key={item._id}
                                                 id={item._id}
-                                                title={item.name}
-                                                destination={item.location}
+                                                title={item.name || item.title}
+                                                destination={item.destination || item.location || item.state || item.country}
+                                                itinerary={item.itinerary}
                                                 duration={item.duration}
                                                 description={item.shortDescription || item.description}
                                                 price={item.price}
@@ -476,9 +467,7 @@ export default function PackagePageClient() {
                                                 images={item.images || item.gallery}
                                                 imageAlt={item.imageAlt || item.name}
                                                 detailUrl={`/package/${item.slug || item._id}`}
-                                                isInWishlist={isInWishlist(item._id)}
-                                                onWishlistToggle={handleWishlistToggle}
-                                            />
+                                                                                                                                            />
                                         ))}
 
                                         {totalPages > 1 && (

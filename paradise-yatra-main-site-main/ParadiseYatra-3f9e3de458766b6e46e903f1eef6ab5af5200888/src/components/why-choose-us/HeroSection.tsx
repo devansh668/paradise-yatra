@@ -188,10 +188,12 @@ export function HeroSection() {
   const [heroIndex, setHeroIndex] = useState(0);
   const [heroTransition, setHeroTransition] = useState(true);
   const [visibleCount, setVisibleCount] = useState(10);
+  
+  // Premium, elegant gradients for the rotating text
   const heroItems = [
-    { text: "1000 Happy Travelers", color: "#10b981" }, // Vibrant Green
-    { text: "45 Destinations", color: "#ef4444" },        // Vibrant Red
-    { text: "150 Trips Completed", color: "#f59e0b" }     // Vibrant Orange
+    { text: "1000 Happy Travelers", bgClass: "from-emerald-500 to-teal-500" },
+    { text: "45 Destinations", bgClass: "from-blue-600 to-indigo-600" },
+    { text: "150 Trips Completed", bgClass: "from-amber-500 to-orange-600" }
   ];
   // Clone first item at end for seamless loop
   const heroDisplay = [...heroItems, heroItems[0]];
@@ -214,43 +216,38 @@ export function HeroSection() {
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [selectedMedia]);
 
-
   useEffect(() => {
     if (!mounted) return;
     const interval = window.setInterval(() => {
       setHeroIndex((prev) => {
         const next = prev + 1;
         if (next > heroItems.length) {
-          // Should not happen, but safety
           return 1;
         }
         return next;
       });
-    }, 2000);
+    }, 2800); // Relaxed reading time
     return () => window.clearInterval(interval);
   }, [mounted, heroItems.length]);
 
-  // When we reach the cloned item (index === heroItems.length),
-  // wait for the transition to finish, then instantly reset to 0
   useEffect(() => {
     if (heroIndex === heroItems.length) {
       const timer = window.setTimeout(() => {
         setHeroTransition(false);
         setHeroIndex(0);
-        // Re-enable transition after the instant reset
         requestAnimationFrame(() => {
           requestAnimationFrame(() => {
             setHeroTransition(true);
           });
         });
-      }, 540); // slightly longer than transition duration (520ms)
+      }, 540);
       return () => window.clearTimeout(timer);
     }
   }, [heroIndex, heroItems.length]);
 
   // Real testimonial assets (64 images + 17 videos)
-  const OPT = "f_auto,q_auto:eco,w_400,dpr_auto,c_limit";
-  const V_OPT = "q_auto:eco,f_auto,vc_auto,w_400";
+  const OPT = "f_auto,q_auto:eco,w_500,dpr_auto,c_limit";
+  const V_OPT = "q_auto:eco,f_auto,vc_auto,w_500";
   const allCards = [
     { type: "image", src: `https://res.cloudinary.com/dop1mi4lg/image/upload/${OPT}/v1774508040/Image_Testimonial_25_uxj3li.jpg` },
     { type: "image", src: `https://res.cloudinary.com/dop1mi4lg/image/upload/${OPT}/v1774508052/Image_Testimonial_55_qibijw.jpg` },
@@ -362,142 +359,124 @@ export function HeroSection() {
         ? 6
         : mounted && window.innerWidth < 1024
           ? 8
-          : 10;
+          : 12;
 
     setVisibleCount((prev) => Math.min(prev + step, allCards.length));
-    setMaxHeight((prev) => prev + 1000);
+    setMaxHeight((prev) => prev + 1200);
   };
 
   return (
-    <section className="relative overflow-hidden bg-white">
-      {/* Dynamic Background Decorative Flowers */}
-      {Array.from({ length: Math.ceil((totalHeight || 2000) / (mounted && window.innerWidth < 640 ? 1000 : 700)) + 1 }).map((_, i) => {
-        const isLeft = i % 2 !== 0;
-        const isMobile = mounted && window.innerWidth < 640;
-        const currentSpacing = isMobile ? 1000 : 700;
+    <section className="relative overflow-hidden bg-[#000945] text-white selection:bg-amber-500/30">
+      {/* Sleek, Dark Background with Abstract Pastel Orbs */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+        <div className="absolute -top-[10%] -left-[5%] w-[40%] h-[40%] rounded-full bg-blue-500/20 blur-[100px] mix-blend-screen animate-pulse" style={{ animationDuration: '8s' }} />
+        <div className="absolute top-[30%] -right-[10%] w-[35%] h-[50%] rounded-full bg-amber-500/10 blur-[100px] mix-blend-screen animate-pulse" style={{ animationDuration: '12s' }} />
+        <div className="absolute -bottom-[10%] left-[20%] w-[50%] h-[40%] rounded-full bg-teal-500/20 blur-[120px] mix-blend-screen animate-pulse" style={{ animationDuration: '10s' }} />
+      </div>
 
-        // First flower is special (top-right, extra large)
-        if (i === 0) {
-          return (
-            <div
-              key="flower-0"
-              className="absolute top-4 right-0 z-0 h-72 w-72 sm:h-96 sm:w-96 lg:h-[600px] lg:w-[600px]"
-              style={{ opacity: 0.4, transform: 'translate(25%, -25%)' }}
-            >
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
-                className="h-full w-full"
-              >
-                <img
-                  src="/Why%20Choose%20Us/BG%20Flower.webp"
-                  alt="Decorative Background Flower"
-                  className="h-full w-full object-contain"
-                />
-              </motion.div>
-            </div>
-          );
-        }
-
-        // Subsequent flowers (alternating sides, slightly smaller)
-        return (
-          <div
-            key={`flower-${i}`}
-            className="absolute z-0 h-64 w-64 lg:h-[450px] lg:w-[450px]"
-            style={{
-              top: `${i * currentSpacing + (isMobile ? 300 : 200)}px`,
-              left: isLeft ? 0 : 'auto',
-              right: isLeft ? 'auto' : 0,
-              opacity: isMobile ? 0.35 : 0.25,
-              transform: isLeft ? 'translateX(-25%)' : 'translateX(25%)'
-            }}
-          >
-            <motion.div
-              animate={{ rotate: isLeft ? -360 : 360 }}
-              transition={{ duration: 50 + i * 5, repeat: Infinity, ease: "linear" }}
-              className="h-full w-full"
-            >
-              <img
-                src="/Why%20Choose%20Us/BG%20Flower.webp"
-                alt="Decorative Background Flower"
-                className="h-full w-full object-contain"
-              />
-            </motion.div>
-          </div>
-        );
-      })}
-      <div className="relative mx-auto max-w-7xl px-4 pb-12 pt-24 sm:pt-36 lg:px-8">
+      <div className="relative mx-auto max-w-[1400px] px-4 pb-20 pt-20 sm:pt-28 lg:px-8 z-10">
         <div className="flex flex-col items-center gap-12 text-center">
-          <h1 className="w-full max-w-full text-center font-unbounded text-[#000945] !text-[24px] leading-[1.2] tracking-[-0.03em] sm:!text-[34px] md:!text-[44px] lg:!text-[56px] xl:!text-[64px] font-extrabold flex flex-col items-center justify-center gap-y-1 sm:flex-row sm:gap-y-0 sm:gap-x-4">
-            <span className="flex-shrink-0">More Than</span>
-            <span className="hero-rotator w-max text-center">
-              <span
-                suppressHydrationWarning
-                className={`hero-rotator-inner${heroTransition ? '' : ' no-transition'}`}
-                style={{ transform: `translateY(${heroIndex * -(1.1)}em)` }}
-              >
-                {heroDisplay.map((item, i) => (
-                  <span
-                    key={`${item.text}-${i}`}
-                    className="hero-rotator-item"
-                    style={{ color: item.color }}
-                  >
-                    {item.text}
-                  </span>
-                ))}
-              </span>
-            </span>
-          </h1>
+          
+          {/* Enhanced Title Section */}
+          <div className="space-y-6 max-w-4xl mx-auto w-full">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/10 border border-white/20 shadow-sm mx-auto backdrop-blur-md"
+            >
+              <span className="flex h-2.5 w-2.5 rounded-full bg-amber-400 animate-pulse" />
+              <span className="text-xs sm:text-sm font-bold tracking-widest text-amber-100 uppercase">Our Global Community</span>
+            </motion.div>
+            
+            <h1 className="w-full font-unbounded text-white text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black flex flex-col items-center justify-center gap-y-2 sm:flex-row sm:gap-x-4">
+              <span className="flex-shrink-0">More Than</span>
+              
+              {/* Rotator Container */}
+              <div className="hero-rotator relative h-[1.2em] overflow-hidden flex items-center justify-start min-w-[300px] sm:min-w-[400px] md:min-w-[500px]">
+                <span
+                  suppressHydrationWarning
+                  className={`hero-rotator-inner${heroTransition ? '' : ' no-transition'} flex flex-col items-center sm:items-start w-full`}
+                  style={{ transform: `translateY(${heroIndex * -1.2}em)` }}
+                >
+                  {heroDisplay.map((item, i) => (
+                    <span
+                      key={`${item.text}-${i}`}
+                      className={`hero-rotator-item h-[1.2em] flex items-center justify-center sm:justify-start w-full bg-gradient-to-r ${item.bgClass} bg-clip-text text-transparent pb-1`}
+                    >
+                      {item.text}
+                    </span>
+                  ))}
+                </span>
+              </div>
+            </h1>
+            
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3, duration: 0.8 }}
+              className="text-base sm:text-lg text-blue-100/80 font-medium max-w-2xl mx-auto leading-relaxed mt-4"
+            >
+              Join thousands of discerning travelers who have trusted us to curate their perfect, unforgettable journeys across the globe. Explore our gallery of genuine memories.
+            </motion.p>
+          </div>
 
-          <div className="relative w-full">
+          {/* Masonry Gallery Section */}
+          <div className="relative w-full mt-6">
             <motion.div
               animate={{ maxHeight: maxHeight }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
               className="relative overflow-hidden"
             >
-              <div ref={containerRef} className="columns-2 gap-4 sm:columns-3 lg:columns-5">
+              <div ref={containerRef} className="columns-2 gap-3 sm:columns-3 lg:columns-4 xl:columns-5 space-y-3 pb-32">
                 {visibleCards.map((card, index) => (
-                  <div
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "50px" }}
+                    transition={{ duration: 0.5, delay: (index % 10) * 0.05 }}
                     key={`${card.type}-${index}`}
-                    className="mb-4 break-inside-avoid cursor-pointer group"
+                    className="break-inside-avoid cursor-pointer group rounded-2xl overflow-hidden shadow-sm border border-white/5 transition-all hover:-translate-y-1 hover:shadow-2xl hover:shadow-blue-500/20 hover:border-white/20 bg-white/5 backdrop-blur-sm"
                     onClick={() => setSelectedMedia({ type: card.type, src: card.src })}
                   >
                     {card.type === "video" ? (
-                      <div className="relative w-full overflow-hidden rounded-[6px] bg-[#e7dfd6]">
+                      <div className="relative w-full overflow-hidden bg-[#000945]">
                         <TestimonialVideoCard src={card.src} />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 pointer-events-none">
-                          <svg className="w-10 h-10 text-white shadow-xl" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M8 5v14l11-7z" />
-                          </svg>
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#000945]/60 via-transparent to-transparent pointer-events-none transition-opacity group-hover:opacity-80" />
+                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none scale-90 group-hover:scale-100">
+                          <div className="bg-white/10 p-4 rounded-full shadow-lg text-white backdrop-blur-md border border-white/20 transition-transform">
+                            <svg className="w-8 h-8 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M8 5v14l11-7z" />
+                            </svg>
+                          </div>
                         </div>
                       </div>
                     ) : (
-                      <div className="relative w-full overflow-hidden rounded-[6px] bg-[#e7dfd6]">
+                      <div className="relative w-full overflow-hidden bg-[#000945]">
                         <img
                           src={card.src}
                           alt="Happy travelers"
-                          className="w-full h-auto object-cover block"
+                          className="w-full h-auto object-cover block transition-transform duration-700 group-hover:scale-105"
                           loading="lazy"
                           decoding="async"
                           fetchPriority="low"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 pointer-events-none" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[#000945]/40 via-transparent to-transparent pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                       </div>
                     )}
-                  </div>
+                  </motion.div>
                 ))}
               </div>
 
-              {/* Fading view more CTA */}
+              {/* Seamless Fade & Load More Button */}
               {canLoadMore && (
-                <div className="absolute inset-x-0 bottom-0 z-30 flex items-center justify-center pt-32 pb-4 bg-gradient-to-t from-white via-white/90 to-transparent pointer-events-none">
+                <div className="absolute inset-x-0 bottom-0 z-30 flex flex-col items-center justify-end h-64 bg-gradient-to-t from-[#000945] via-[#000945]/90 to-transparent pointer-events-none">
                   <button
                     onClick={handleLoadMore}
-                    className="pointer-events-auto cursor-pointer rounded-full border border-gray-300 bg-gray-100 px-6 py-2.5 text-xs font-bold text-gray-600 transition-all duration-300 hover:border-gray-400 hover:bg-gray-200"
+                    className="pointer-events-auto flex items-center gap-2 cursor-pointer rounded-full border border-white/20 bg-white/10 backdrop-blur-md px-8 py-3.5 text-sm font-bold text-white transition-all duration-300 hover:bg-white/20 hover:border-white/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.1)] hover:-translate-y-0.5 mb-8"
                   >
-                    View More
+                    Load More Memories
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                   </button>
                 </div>
               )}
@@ -514,32 +493,32 @@ export function HeroSection() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/90 p-4 md:p-8 backdrop-blur-sm"
+              className="fixed inset-0 z-[9999] flex items-center justify-center bg-slate-950/95 p-4 md:p-8 backdrop-blur-xl"
               onClick={() => setSelectedMedia(null)}
             >
               <button
                 onClick={() => setSelectedMedia(null)}
-                className="absolute top-4 right-4 z-50 p-2 cursor-pointer text-white/70 hover:text-white transition-colors bg-black/50 rounded-full"
+                className="absolute top-4 right-4 md:top-8 md:right-8 z-50 p-3 cursor-pointer text-slate-400 hover:text-white hover:bg-white/10 transition-all rounded-full bg-white/5 border border-white/10"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                 </svg>
               </button>
               <motion.div
-                initial={{ scale: 0.9, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.9, opacity: 0 }}
+                initial={{ scale: 0.95, opacity: 0, y: 20 }}
+                animate={{ scale: 1, opacity: 1, y: 0 }}
+                exit={{ scale: 0.95, opacity: 0, y: 20 }}
                 transition={{ type: "spring", damping: 25, stiffness: 300 }}
-                className="relative max-h-full max-w-5xl rounded-lg overflow-hidden flex items-center justify-center bg-transparent"
+                className="relative max-h-full max-w-6xl w-full rounded-2xl overflow-hidden flex items-center justify-center bg-transparent ring-1 ring-white/10 shadow-2xl"
                 onClick={(e) => e.stopPropagation()}
               >
                 {selectedMedia.type === "video" ? (
-                  <CustomVideoPlayer src={selectedMedia.src.replace("w_400", "w_1200")} />
+                  <CustomVideoPlayer src={selectedMedia.src.replace("w_500", "w_1200")} />
                 ) : (
                   <img
-                    src={selectedMedia.src.replace("w_400", "w_1200")}
+                    src={selectedMedia.src.replace("w_500", "w_1200")}
                     alt="Full view testimonial"
-                    className="max-h-[85vh] w-auto max-w-full rounded-lg object-contain shadow-2xl"
+                    className="max-h-[85vh] w-auto max-w-full rounded-2xl object-contain"
                   />
                 )}
               </motion.div>

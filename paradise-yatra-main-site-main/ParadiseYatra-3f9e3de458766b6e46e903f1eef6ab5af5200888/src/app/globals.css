@@ -588,7 +588,7 @@ h3 {
 
 p {
   line-height: 1.7;
-  color: var(--muted-foreground);
+  color: #000000;
 }
 
 /* Modern text shadows */

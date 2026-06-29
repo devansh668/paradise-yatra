@@ -75,7 +75,7 @@ interface ItineraryPageClientProps {
 const LeadCaptureForm = dynamic(() => import("@/components/LeadCaptureForm"), { ssr: false });
 const LoginAlertModal = dynamic(() => import("@/components/LoginAlertModal"), { ssr: false });
 const PackageCard = dynamic(() => import("@/components/ui/PackageCard"), { ssr: false });
-const WhyParadiseDifference = dynamic(() => import("@/components/WhyParadiseDifference"), { ssr: false });
+
 
 const stripHtmlTags = (value: string = "") =>
   value
@@ -147,16 +147,25 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
   const [phoneDialCode, setPhoneDialCode] = useState('+91');
   const [adults, setAdults] = useState<number>(2);
   const [children, setChildren] = useState<number>(0);
+  const [numberOfDays, setNumberOfDays] = useState<number>(1);
   const [message, setMessage] = useState('');
   const [isSubmittingEnquiry, setIsSubmittingEnquiry] = useState(false);
   const [isHighlightsExpanded, setIsHighlightsExpanded] = useState(false);
+  const [activeTab, setActiveTab] = useState<'overview' | 'itinerary' | 'includes' | 'highlights' | 'faqs'>('overview');
+  const [isOverviewExpanded, setIsOverviewExpanded] = useState(false);
   const [actionMessage, setActionMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [breadcrumbSource, setBreadcrumbSource] = useState<BreadcrumbSource>(() => getFallbackBreadcrumb(packageData));
   const [stickyTop, setStickyTop] = useState(120);
-  const router = useRouter();
-  const { user, toggleWishlist, isInWishlist } = useAuth();
-  const isPackageSaved = isInWishlist(packageData._id);
+  const [isPackageSaved, setIsPackageSaved] = useState(false);
+  
+  const toggleWishlist = (id: string) => {
+    // Basic local state toggle. To persist, add API call here.
+    setIsPackageSaved(prev => !prev);
+  };
 
+  const router = useRouter();
+  const { user } = useAuth();
+  
   const handleShare = async () => {
     const shareUrl = typeof window !== "undefined" ? window.location.href : "";
     if (!shareUrl) {
@@ -233,7 +242,7 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
     setIsSubmittingEnquiry(true);
 
     const travelDateStr = date ? format(date, "MMM dd, yyyy") : "Not specified";
-    const enhancedMessage = `Travel Date: ${travelDateStr}\nTravelers: ${adults} Adults, ${children} Children\n\nMessage:\n${message}`;
+    const enhancedMessage = `Travel Date: ${travelDateStr}\nDuration: ${numberOfDays} Days\nTravelers: ${adults} Adults, ${children} Children\n\nMessage:\n${message}`;
     const dialCodeDigits = phoneDialCode.replace(/\D/g, "");
     const formattedPhone = dialCodeDigits ? `${dialCodeDigits}${phoneNumber}` : phoneNumber;
 
@@ -267,6 +276,7 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
         setDate(undefined);
         setAdults(2);
         setChildren(0);
+        setNumberOfDays(1);
       } else {
         const errorData = await response.json();
         toast.error(errorData.error || "Failed to send enquiry. Please try again.");
@@ -476,10 +486,13 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
     : "Tour details coming soon.";
 
   return (
-    <div className="min-h-screen bg-white [&_button]:cursor-pointer [&_a]:cursor-pointer [&_select]:cursor-pointer [&_[role=button]]:cursor-pointer [&_label]:cursor-pointer [&_input:not([type='checkbox']):not([type='radio'])]:cursor-text [&_textarea]:cursor-text">
+    <div className="min-h-screen bg-slate-50/30 [&_button]:cursor-pointer [&_a]:cursor-pointer [&_select]:cursor-pointer [&_[role=button]]:cursor-pointer [&_label]:cursor-pointer [&_input:not([type='checkbox']):not([type='radio'])]:cursor-text [&_textarea]:cursor-text relative">
       <Header />
 
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 md:px-6 pt-4 md:pt-6 lg:pt-10 pb-28 lg:pb-10">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 md:px-6 pt-2 md:pt-4 lg:pt-4 pb-28 lg:pb-10 relative">
+        {/* Background Decorative Gradient */}
+        <div className="absolute inset-x-0 top-0 h-[600px] bg-gradient-to-b from-[#eef2ff] via-white to-transparent -z-10 opacity-70 pointer-events-none" />
+        
         {/* Breadcrumbs */}
         <div className="mb-4 flex flex-wrap items-center gap-1.5 text-[12px] text-[#000945]">
           <Link href="/" className="hover:underline transition-all">Home</Link>
@@ -520,14 +533,6 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                     <ArrowRight className="h-5 w-5 rotate-45" />
                     Share
                   </Button>
-                  <Button
-                    onClick={handleSave}
-                    variant="outline"
-                    className="flex items-center gap-2 !rounded-[6px] border !border-[#dfe1df] !shadow-none bg-white px-4 py-2 text-sm font-semibold text-[#000945] hover:bg-slate-50 hover:text-[#000945]"
-                  >
-                    <Shield className="h-5 w-5" />
-                    {isPackageSaved ? "Saved" : "Save"}
-                  </Button>
                 </div>
                 <div
                   className={`min-h-[18px] text-[12px] font-medium transition-all duration-300 ${actionMessage
@@ -544,311 +549,388 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
         </div>
 
         {/* Grid Layout */}
-        <div className="grid grid-cols-1 gap-4 md:gap-8 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-12">
           {/* Left Column (Content) */}
-          <div className="flex flex-col gap-10 lg:col-span-8">
-            {/* Hero Image Gallery */}
-            <div className="relative overflow-hidden rounded-[6px] shadow-none">
-              <div className="relative aspect-video w-full overflow-hidden rounded-[6px] bg-slate-200">
-                <Image
-                  src={galleryImages[selectedImage]}
-                  alt={packageData.imageAlt || packageData.title || packageData.destination || "Package image"}
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 800px"
-                  priority={selectedImage === 0}
-                  fetchPriority={selectedImage === 0 ? "high" : "auto"}
-                  quality={70}
-                />
+          <div className="flex flex-col gap-6 lg:col-span-8">
+            {/* Tour Gallery & Quick Facts */}
+            <div className="bg-white rounded-[6px] border border-[#dfe1df] shadow-none">
+              <div className="p-5 border-b border-[#dfe1df]">
+                <h3 style={{ fontWeight: 700 }} className="text-[20px] text-[#000945] flex items-center gap-2">
+                  <span className="text-[#ff4e00] text-xl">Tour Gallery</span>
+                </h3>
               </div>
-              {galleryImages.length > 1 && (
-                <div className="absolute bottom-4 right-4 flex gap-2">
-                  <Button
-                    onClick={() => setSelectedImage((prev) => (prev + 1) % galleryImages.length)}
-                    className="flex items-center gap-2 rounded-lg bg-white/90 px-4 py-2 text-sm font-bold text-slate-900 backdrop-blur-sm transition hover:bg-white"
-                  >
-                    View Next Photo
-                  </Button>
+              
+              <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+                {/* Hero Image */}
+                <div className="relative overflow-hidden rounded-[6px] shadow-none">
+                  <div className="relative aspect-video w-full overflow-hidden rounded-[6px] bg-slate-200">
+                    <Image
+                      src={galleryImages[selectedImage]}
+                      alt={packageData.imageAlt || packageData.title || packageData.destination || "Package image"}
+                      fill
+                      className="object-cover"
+                      sizes="(max-width: 768px) 100vw, 400px"
+                      priority={selectedImage === 0}
+                      fetchPriority={selectedImage === 0 ? "high" : "auto"}
+                      quality={70}
+                    />
+                    {/* Overlay text on image */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-4">
+                      <h4 className="text-white font-bold text-lg md:text-xl leading-tight">
+                        {packageData.title}
+                      </h4>
+                    </div>
+                  </div>
+                  {galleryImages.length > 1 && (
+                    <div className="absolute top-2 right-2 flex gap-2">
+                      <Button
+                        onClick={() => setSelectedImage((prev) => (prev + 1) % galleryImages.length)}
+                        className="flex items-center gap-1 rounded bg-black/50 px-2 py-1 text-xs font-bold text-white backdrop-blur-sm transition hover:bg-black/70"
+                      >
+                        Next
+                      </Button>
+                    </div>
+                  )}
                 </div>
-              )}
+
+                {/* Quick Facts */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="flex flex-col items-center text-center p-4 rounded-xl bg-gradient-to-br from-white to-slate-50/50 border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300">
+                    <div className="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center mb-3">
+                      <MapPin className="h-5 w-5 text-[#ff4e00]" />
+                    </div>
+                    <p className="text-[11px] font-bold text-black uppercase tracking-wider mb-1">Tour Name</p>
+                    <p className="text-[13px] font-bold text-black leading-tight line-clamp-2">{packageData.title}</p>
+                  </div>
+
+                  <div className="flex flex-col items-center text-center p-4 rounded-xl bg-gradient-to-br from-white to-slate-50/50 border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300">
+                    <div className="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center mb-3">
+                      <Clock className="h-5 w-5 text-[#ff4e00]" />
+                    </div>
+                    <p className="text-[11px] font-bold text-black uppercase tracking-wider mb-1">Duration</p>
+                    <p className="text-[13px] font-bold text-black leading-tight">{packageData.duration}</p>
+                  </div>
+
+                  <div className="flex flex-col items-center text-center p-4 rounded-xl bg-gradient-to-br from-white to-slate-50/50 border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300">
+                    <div className="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center mb-3">
+                      <Plane className="h-5 w-5 text-[#ff4e00]" />
+                    </div>
+                    <p className="text-[11px] font-bold text-black uppercase tracking-wider mb-1">Vehicle Type</p>
+                    <p className="text-[13px] font-bold text-black leading-tight">Sedan / SUV / Traveller</p>
+                  </div>
+
+                  <div className="flex flex-col items-center text-center p-4 rounded-xl bg-gradient-to-br from-white to-slate-50/50 border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300">
+                    <div className="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center mb-3">
+                      <MapPin className="h-5 w-5 text-[#ff4e00]" />
+                    </div>
+                    <p className="text-[11px] font-bold text-black uppercase tracking-wider mb-1">Start & End</p>
+                    <p className="text-[13px] font-bold text-black leading-tight">{packageData.destination?.split(',')[0].trim() || 'Not specified'}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Tabs Navigation */}
+            <div className="flex overflow-x-auto no-scrollbar gap-3 pb-4 mb-2">
+              {[
+                { id: 'overview', label: 'Overview' },
+                { id: 'itinerary', label: 'Itinerary' },
+                { id: 'includes', label: 'Includes' },
+                { id: 'highlights', label: 'Highlights' },
+                { id: 'guideline', label: 'Guideline' }
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id as any)}
+                  className={cn(
+                    "relative flex items-center gap-2 px-5 py-2.5 text-[15px] font-bold rounded-full transition-all duration-300 whitespace-nowrap",
+                    activeTab === tab.id 
+                      ? "text-white bg-gradient-to-r from-[#000945] to-[#155dfc] shadow-md shadow-[#155dfc]/20" 
+                      : "text-slate-600 bg-white border border-slate-200 hover:border-slate-300 hover:text-[#000945] hover:shadow-sm"
+                  )}
+                >
+                  {tab.label}
+                </button>
+              ))}
             </div>
 
-            {/* Experience Highlights */}
-            <section>
-              <div className="mb-6">
-                <h3 style={{ fontWeight: 700 }} className="!text-[24px] md:!text-[36px] text-[#000945]">Experience Highlights</h3>
-              </div>
-
-              <div
-                className={cn(
-                  "relative overflow-hidden transition-all duration-500 ease-in-out",
-                  !isHighlightsExpanded && (packageData.highlights?.length || 0) > 5 ? "max-h-[140px] md:max-h-none" : "max-h-[1500px]"
+            {/* Tab Contents */}
+            
+            {/* OVERVIEW TAB */}
+            {activeTab === 'overview' && (
+              <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+                {/* Tour Overview Card */}
+                {(dynamicDescription || packageData.description) && (
+                  <div className="bg-white rounded-[6px] border border-[#dfe1df] p-5 shadow-none">
+                    <h3 style={{ fontWeight: 700 }} className="text-[20px] text-[#000945] mb-4 flex items-center gap-2">
+                      <span className="text-[#ff4e00] text-xl">Tour Overview</span>
+                    </h3>
+                    <div className={cn("text-justify transition-all duration-300", !isOverviewExpanded && "line-clamp-3 overflow-hidden")}>
+                      <div
+                        suppressHydrationWarning
+                        className="text-[14px] md:text-base leading-relaxed text-black overflow-x-auto [&_h1]:!m-0 [&_h1]:!text-2xl [&_h1]:!font-extrabold [&_h1]:!text-black [&_h2]:!m-0 [&_h2]:!text-xl [&_h2]:!font-bold [&_h2]:!text-black [&_h3]:!m-0 [&_h3]:!text-lg [&_h3]:!font-bold [&_h3]:!text-black [&_p]:!m-0 [&_p]:!text-base [&_p]:!text-black [&_ul]:!m-0 [&_ul]:!list-disc [&_ul]:!pl-6 [&_ol]:!m-0 [&_ol]:!list-decimal [&_ol]:!pl-6 [&_li]:!m-0 [&_li]:!text-black [&_li_p]:!m-0 [&_ul_li::marker]:!text-[#155dfc] [&_ol_li::marker]:!text-[#155dfc] [&_a]:!text-blue-600 [&_a]:!underline"
+                        dangerouslySetInnerHTML={{ __html: normalizeRichTextHtml(dynamicDescription || packageData.description) }}
+                      />
+                    </div>
+                    <button
+                      onClick={() => setIsOverviewExpanded(!isOverviewExpanded)}
+                      className="mt-3 text-[14px] font-bold text-[#ff4e00] hover:underline"
+                    >
+                      {isOverviewExpanded ? "See Less" : "See More"}
+                    </button>
+                  </div>
                 )}
-              >
+              </div>
+            )}
+
+            {/* ITINERARY TAB */}
+            {activeTab === 'itinerary' && (
+              <div className="bg-white rounded-[6px] border border-[#dfe1df] p-5 shadow-none">
+                <div className="flex flex-wrap items-center justify-between gap-4 md:gap-6 mb-6 pb-6 border-b border-[#dfe1df]">
+                  {[
+                    { icon: Plane, title: "All Transfers" },
+                    { icon: Utensils, title: "Local Meals" },
+                    { icon: Camera, title: "Photo Stops" },
+                    { icon: Shield, title: "24/7 Support" },
+                  ].map((item, i) => (
+                    <div key={i} className="flex flex-1 flex-col items-center justify-center gap-3 min-w-[120px]">
+                      <item.icon className="h-7 w-7 text-[#155dfc]" strokeWidth={1.5} />
+                      <span className="text-[15px] font-bold text-[#155dfc]">{item.title}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mb-6">
+                  <h3 style={{ fontWeight: 700 }} className="text-[20px] text-[#000945]">Detailed Itinerary</h3>
+                </div>
+
+                <Accordion type="multiple" className="space-y-3">
+                  {packageData.itinerary?.map((day, index) => (
+                    <AccordionItem key={index} value={`day-${index}`} className="!border border-[#dfe1df] rounded-[6px] bg-white overflow-hidden shadow-none focus-within:ring-0 focus-within:outline-none">
+                      <AccordionTrigger className="!p-5 !bg-white hover:!bg-slate-50 transition-colors !no-underline focus:!outline-none focus-visible:!outline-none focus:!ring-0 data-[state=open]:[&_.day-badge]:bg-[#155dfc] data-[state=open]:[&_.day-title]:text-[#155dfc]">
+                        <div className="flex items-center gap-3 overflow-hidden text-left">
+                          <span
+                            style={{ fontWeight: 700 }}
+                            className="day-badge text-[11px] md:text-xs shrink-0 text-white bg-[#000945] px-2.5 md:px-3 py-1 rounded-[4px] uppercase tracking-wider"
+                          >
+                            Day {day.day}
+                          </span>
+                          <span style={{ fontWeight: 600 }} className="day-title text-[16px] md:text-[18px] text-[#000945] truncate">
+                            {day.title}
+                          </span>
+                        </div>
+                      </AccordionTrigger>
+                      <AccordionContent className="!px-5 !pb-5 !pt-0">
+                        <div className="space-y-3">
+                          {day.activities?.map((activity, actIndex) => (
+                            containsHtml(activity) ? (
+                              <div
+                                key={actIndex}
+                                className="!text-[#000945] text-sm [&_p]:!m-0 [&_*]:!text-[#000945] [&_p]:!text-[#000945]"
+                                dangerouslySetInnerHTML={{ __html: preserveRichTextSpacing(activity) }}
+                              />
+                            ) : (
+                              <p key={actIndex} className="!text-[#000945] text-[15px] leading-relaxed">
+                                {activity}
+                              </p>
+                            )
+                          ))}
+                        </div>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </div>
+            )}
+
+            {/* INCLUDES TAB */}
+            {activeTab === 'includes' && (
+              <div className="bg-white rounded-[6px] border border-[#dfe1df] p-5 shadow-none">
+                <h3 style={{ fontWeight: 700 }} className="mb-6 !text-[24px] md:!text-[28px] text-[#000945]">Inclusions & Exclusions</h3>
+                <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                  {/* Inclusions */}
+                  <div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-50 text-green-600 border border-green-100">
+                        <Check className="h-5 w-5" />
+                      </div>
+                      <h4 className="text-[20px] font-bold text-[#000945]">What's Included</h4>
+                    </div>
+                    <ul className="flex flex-col gap-2.5">
+                      {inclusions.map((item, index) => (
+                        <li key={index} className="flex items-start gap-4 text-[#000945]">
+                          <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-500">
+                            <Check className="h-3 w-3 text-white" />
+                          </div>
+                          <span className="text-[15px] leading-relaxed text-black" dangerouslySetInnerHTML={{ __html: item }} />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                  {/* Exclusions */}
+                  <div>
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-50 text-red-500 border border-red-100">
+                        <X className="h-5 w-5" />
+                      </div>
+                      <h4 className="text-[20px] font-bold text-[#000945]">What's Excluded</h4>
+                    </div>
+                    <ul className="flex flex-col gap-2.5">
+                      {exclusions.map((item, index) => (
+                        <li key={index} className="flex items-start gap-4 text-[#000945]">
+                          <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100">
+                            <X className="h-3.5 w-3.5 text-red-500" />
+                          </div>
+                          <span className="text-[15px] leading-relaxed text-black" dangerouslySetInnerHTML={{ __html: item }} />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* HIGHLIGHTS TAB */}
+            {activeTab === 'highlights' && (
+              <div className="bg-white rounded-[6px] border border-[#dfe1df] p-5 shadow-none">
+                <div className="mb-4">
+                  <h3 style={{ fontWeight: 700 }} className="!text-[24px] md:!text-[28px] text-[#000945]">Experience Highlights</h3>
+                </div>
+
                 <div className="flex flex-wrap gap-2.5">
                   {packageData.highlights?.map((highlight, index) => (
                     <div key={index} className="flex items-center gap-2 rounded-full border border-[#dfe1df] bg-slate-50 px-3.5 py-1.5 shadow-none">
                       <div className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#000945]">
                         <Check className="h-2.5 w-2.5 text-white" />
                       </div>
-                      <span className="text-[14px] font-medium text-[#000945]">{highlight}</span>
+                      <span className="text-[14px] font-medium text-black">{highlight}</span>
                     </div>
                   ))}
                 </div>
-
-                {/* Mobile Expand Gradient Overlay */}
-                {!isHighlightsExpanded && (packageData.highlights?.length || 0) > 5 && (
-                  <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-white via-white/90 to-transparent md:hidden flex items-end justify-center pb-2">
-                    <button
-                      onClick={() => setIsHighlightsExpanded(true)}
-                      className="text-[#000945] font-bold text-[13px] bg-white px-5 py-2 rounded-full border border-[#dfe1df] shadow-[0_2px_10px_rgba(0,0,0,0.05)] flex items-center gap-1.5 z-10 transition-colors hover:bg-slate-50"
-                    >
-                      See More
-                      <ChevronDown className="w-4 h-4" />
-                    </button>
-                  </div>
-                )}
               </div>
+            )}
 
-              {/* Mobile Collapse Button */}
-              {isHighlightsExpanded && (packageData.highlights?.length || 0) > 5 && (
-                <div className="md:hidden flex justify-center -mt-4 mb-8">
-                  <button
-                    onClick={() => setIsHighlightsExpanded(false)}
-                    className="text-[#000945] font-bold text-[13px] bg-white px-5 py-2 rounded-full border border-[#dfe1df] shadow-[0_2px_10px_rgba(0,0,0,0.05)] flex items-center gap-1.5 z-10 transition-colors hover:bg-slate-50"
-                  >
-                    Show Less
-                    <ChevronDown className="w-4 h-4 rotate-180" />
-                  </button>
-                </div>
-              )}
-
-              {(dynamicDescription || packageData.description) && (
-                <div className="mt-6 text-justify">
-                  <h3 style={{ fontWeight: 700 }} className="package-section-heading mb-4">Overview</h3>
-                  <div
-                    suppressHydrationWarning
-                    className="text-base leading-relaxed text-[#000945] overflow-x-auto [&_h1]:!m-0 [&_h1]:!text-2xl [&_h1]:!font-extrabold [&_h1]:!text-[#000945] [&_h2]:!m-0 [&_h2]:!text-xl [&_h2]:!font-bold [&_h2]:!text-[#000945] [&_h3]:!m-0 [&_h3]:!text-lg [&_h3]:!font-bold [&_h3]:!text-[#000945] [&_p]:!m-0 [&_p]:!text-base [&_p]:!text-[#000945] [&_ul]:!m-0 [&_ul]:!list-disc [&_ul]:!pl-6 [&_ol]:!m-0 [&_ol]:!list-decimal [&_ol]:!pl-6 [&_li]:!m-0 [&_li]:!text-[#000945] [&_li_p]:!m-0 [&_ul_li::marker]:!text-blue-500 [&_ol_li::marker]:!text-blue-500 [&_a]:!text-blue-600 [&_a]:!underline"
-                    dangerouslySetInnerHTML={{ __html: normalizeRichTextHtml(dynamicDescription || packageData.description) }}
-                  />
-                </div>
-              )}
-            </section>
-
-            {/* Itinerary */}
-            <section className="package-itinerary">
-              <div className="flex flex-wrap items-center justify-between gap-6 md:gap-8 mb-10 pb-8 border-b border-[#dfe1df]">
-                {[
-                  { icon: Plane, title: "All Transfers" },
-                  { icon: Utensils, title: "Local Meals" },
-                  { icon: Camera, title: "Photo Stops" },
-                  { icon: Shield, title: "24/7 Support" },
-                ].map((item, i) => (
-                  <div key={i} className="flex flex-1 flex-col items-center justify-center gap-3 min-w-[120px]">
-                    <item.icon className="h-7 w-7 text-[#155dfc]" strokeWidth={1.5} />
-                    <span className="text-[15px] font-bold text-[#155dfc]">{item.title}</span>
-                  </div>
-                ))}
+            {/* GUIDELINE TAB */}
+            {activeTab === 'guideline' && (
+              <div className="bg-white rounded-[6px] border border-[#dfe1df] p-5 shadow-none">
+                <h3 style={{ fontWeight: 700 }} className="!text-[24px] md:!text-[28px] text-[#000945] mb-4">Booking Information & Guidelines</h3>
+                <Accordion type="single" collapsible className="space-y-0">
+                  {[
+                    { title: "Booking and Payment", content: ["A deposit of 30% is required to confirm your booking", "Full payment must be completed 30 days before departure", "All prices are in INR and include taxes", "Payment via credit card, bank transfer, or UPI"] },
+                    { title: "Cancellation Policy", content: ["Cancellation 60+ days: Full refund minus fee", "Cancellation 30-59 days: 75% refund", "Cancellation 15-29 days: 50% refund", "Less than 15 days: No refund"] },
+                    { title: "Travel Documents", content: ["Valid passport required (min 6 months)", "Visa requirements vary by destination", "Travel insurance strongly recommended", "Accurate personal details required"] }
+                  ].map((item, idx) => (
+                    <AccordionItem key={idx} value={`item-${idx}`} className="!border-b !border-[#dfe1df] !border-x-0 !border-t-0 !bg-transparent !shadow-none !rounded-none focus-within:ring-0 focus-within:outline-none">
+                      <AccordionTrigger
+                        id={`package-terms-item-${idx}-trigger`}
+                        className="!py-4 hover:!bg-transparent transition-colors !no-underline focus:!outline-none focus-visible:!outline-none focus:!ring-0"
+                      >
+                        <h3 style={{ fontSize: '18px', fontWeight: 700 }} className="text-[#000945] text-left !m-0">{item.title}</h3>
+                      </AccordionTrigger>
+                      <AccordionContent className="!pb-4 !pt-0">
+                        <ul className="flex flex-col gap-1.5 text-[15px] text-[#000945] !mb-0">
+                          {item.content.map((point, pIdx) => <li key={pIdx} className="flex gap-2 leading-snug"><span className="text-[#ff4e00] shrink-0 font-bold">•</span> <span className="text-black">{point}</span></li>)}
+                        </ul>
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
               </div>
-
-              <div className="mb-6">
-                <h3 style={{ fontWeight: 700 }} className="package-section-heading">Detailed Itinerary</h3>
-              </div>
-
-              <Accordion type="multiple" className="space-y-3">
-                {packageData.itinerary?.map((day, index) => (
-                  <AccordionItem key={index} value={`day-${index}`} className="!border border-[#dfe1df] rounded-[6px] bg-white overflow-hidden shadow-none focus-within:ring-0 focus-within:outline-none">
-                    <AccordionTrigger className="!p-5 !bg-white hover:!bg-slate-50 transition-colors !no-underline focus:!outline-none focus-visible:!outline-none focus:!ring-0 data-[state=open]:[&_.day-badge]:bg-[#155dfc] data-[state=open]:[&_.day-title]:text-[#155dfc]">
-                      <div className="flex items-center gap-3 overflow-hidden text-left">
-                        <span
-                          style={{ fontWeight: 700 }}
-                          className="day-badge text-[11px] md:text-xs shrink-0 text-white bg-[#000945] px-2.5 md:px-3 py-1 rounded-[4px] uppercase tracking-wider"
-                        >
-                          Day {day.day}
-                        </span>
-                        <span style={{ fontWeight: 600 }} className="day-title text-[16px] md:text-[18px] text-[#000945] truncate">
-                          {day.title}
-                        </span>
-                      </div>
-                    </AccordionTrigger>
-                    <AccordionContent className="!px-5 !pb-5 !pt-0">
-                      <div className="space-y-3">
-                        {day.activities?.map((activity, actIndex) => (
-                          containsHtml(activity) ? (
-                            <div
-                              key={actIndex}
-                              className="!text-[#000945] text-sm [&_p]:!m-0 [&_*]:!text-[#000945] [&_p]:!text-[#000945]"
-                              dangerouslySetInnerHTML={{ __html: preserveRichTextSpacing(activity) }}
-                            />
-                          ) : (
-                            <p key={actIndex} className="!text-[#000945] text-[15px] leading-relaxed">
-                              {activity}
-                            </p>
-                          )
-                        ))}
-                      </div>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </section>
-
-            <section>
-              <h3 style={{ fontWeight: 700 }} className="mb-8 !text-[24px] md:!text-[36px] text-[#000945]">Inclusions & Exclusions</h3>
-              <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-                {/* Inclusions */}
-                <div>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-50 text-green-600 border border-green-100">
-                      <Check className="h-5 w-5" />
-                    </div>
-                    <h4 className="text-[22px] font-bold text-[#000945]">What's Included</h4>
-                  </div>
-                  <ul className="flex flex-col gap-4">
-                    {inclusions.map((item, index) => (
-                      <li key={index} className="flex items-start gap-4 text-[#000945]">
-                        <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-500">
-                          <Check className="h-3 w-3 text-white" />
-                        </div>
-                        <span className="text-[15px] leading-relaxed" dangerouslySetInnerHTML={{ __html: item }} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                {/* Exclusions */}
-                <div>
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-50 text-red-500 border border-red-100">
-                      <X className="h-5 w-5" />
-                    </div>
-                    <h4 className="text-[22px] font-bold text-[#000945]">What's Excluded</h4>
-                  </div>
-                  <ul className="flex flex-col gap-4">
-                    {exclusions.map((item, index) => (
-                      <li key={index} className="flex items-start gap-4 text-[#000945]">
-                        <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100">
-                          <X className="h-3.5 w-3.5 text-red-500" />
-                        </div>
-                        <span className="text-[15px] leading-relaxed" dangerouslySetInnerHTML={{ __html: item }} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </section>
-
-            {/* Terms and Conditions */}
-            <section className="scroll-mt-32">
-              <h3 style={{ fontWeight: 700 }} className="!text-[24px] md:!text-[36px] text-[#000945] mb-6">Booking Information</h3>
-              <Accordion type="single" collapsible className="space-y-0">
-                {[
-                  { title: "Booking and Payment", content: ["A deposit of 30% is required to confirm your booking", "Full payment must be completed 30 days before departure", "All prices are in INR and include taxes", "Payment via credit card, bank transfer, or UPI"] },
-                  { title: "Cancellation Policy", content: ["Cancellation 60+ days: Full refund minus fee", "Cancellation 30-59 days: 75% refund", "Cancellation 15-29 days: 50% refund", "Less than 15 days: No refund"] },
-                  { title: "Travel Documents", content: ["Valid passport required (min 6 months)", "Visa requirements vary by destination", "Travel insurance strongly recommended", "Accurate personal details required"] }
-                ].map((item, idx) => (
-                  <AccordionItem key={idx} value={`item-${idx}`} className="!border-b !border-[#dfe1df] !border-x-0 !border-t-0 !bg-transparent !shadow-none !rounded-none focus-within:ring-0 focus-within:outline-none">
-                    <AccordionTrigger
-                      id={`package-terms-item-${idx}-trigger`}
-                      className="!py-4 hover:!bg-transparent transition-colors !no-underline focus:!outline-none focus-visible:!outline-none focus:!ring-0"
-                    >
-                      <h3 style={{ fontSize: '18px', fontWeight: 700 }} className="text-[#000945] text-left !m-0">{item.title}</h3>
-                    </AccordionTrigger>
-                    <AccordionContent className="!pb-4 !pt-0">
-                      <ul className="flex flex-col gap-1.5 text-[15px] text-[#000945] !mb-0">
-                        {item.content.map((point, pIdx) => <li key={pIdx} className="flex gap-2 leading-snug"><span className="text-[#000945] shrink-0 font-bold">•</span> <span className="text-[#000945]">{point}</span></li>)}
-                      </ul>
-                    </AccordionContent>
-                  </AccordionItem>
-                ))}
-              </Accordion>
-            </section>
+            )}
+            
           </div>
 
           {/* Right Column (Sticky Sidebar) */}
-          <div className="lg:col-span-4 flex flex-col gap-6">
+          <div className="lg:col-span-4 flex flex-col gap-6 relative z-10">
             {/* Pricing Card */}
             <div
               id="booking-sidebar"
-              className="lg:sticky w-full overflow-hidden scroll-mt-[100px] rounded-[6px] border border-[#dfe1df] bg-white shadow-none"
+              className="lg:sticky w-full overflow-hidden scroll-mt-[100px] rounded-2xl border border-slate-200/60 bg-white/95 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300"
               style={{ top: stickyTop }}
             >
-                <div className="bg-[#000945] p-4 text-center">
-                  <span className="text-sm font-medium text-white">Package Starting From</span>
+                <div className="bg-gradient-to-r from-[#000945] via-[#0a1860] to-[#155dfc] p-4 text-center border-b border-white/10 relative overflow-hidden">
+                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+                  <span className="relative text-[15px] font-bold text-white tracking-wide uppercase">Package Starting From</span>
                 </div>
-                <div className="p-6">
-                  <div className="mb-6 flex flex-col items-center justify-center gap-1 border-b border-slate-100 pb-6">
-                    <div className="flex items-baseline gap-1">
-                      <span className="text-4xl font-semibold tracking-tight text-[#155dfc]">{formatPrice(packageData.price)}</span>
-                      <span className="text-sm font-medium text-slate-500">per {packageData.priceType === 'per_couple' ? 'couple' : 'person'}</span>
+                <div className="p-5">
+                  <div className="mb-4 flex flex-col items-center justify-center gap-1 border-b border-slate-100 pb-5">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-[40px] leading-none font-medium tracking-tight text-[#155dfc]">{formatPrice(packageData.price)}</span>
+                      <span className="text-[14px] text-slate-500">per {packageData.priceType === 'per_couple' ? 'couple' : 'person'}</span>
                     </div>
                     {discount > 0 && (
-                      <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700">
+                      <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700 mt-2">
                         {discount}% OFF Early Bird
                       </span>
                     )}
                   </div>
                   <div className="flex flex-col gap-4">
-                    <div className="space-y-3">
-                      <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-[6px] border border-slate-100">
-                        <User className="h-5 w-5 text-blue-600 shrink-0" />
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-3">
+                        <User className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
                         <div className="flex-1">
-                          <p className="text-[14px] font-bold !text-[#000945] tracking-wider mb-1">Full Name</p>
+                          <p className="text-[14px] font-bold !text-black mb-1">Full Name</p>
                           <input
                             type="text"
                             placeholder="Enter your name"
                             value={fullName}
                             onChange={(e) => setFullName(e.target.value)}
-                            className="w-full bg-white border border-[#dfe1df] rounded-[6px] h-8 px-2 py-1 text-sm text-[#000945] shadow-none outline-none focus:ring-1 focus:ring-[#155dfc] placeholder:text-slate-400"
+                            className="w-full bg-white border border-[#e5e7eb] rounded-[4px] h-9 px-3 text-[13px] !text-black shadow-none outline-none focus:border-[#155dfc] transition-colors placeholder:text-slate-400"
                           />
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-[6px] border border-slate-100">
-                        <Mail className="h-5 w-5 text-blue-600 shrink-0" />
+                      <div className="flex items-start gap-3">
+                        <Mail className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
                         <div className="flex-1">
-                          <p className="text-[14px] font-bold !text-[#000945] tracking-wider mb-1">Email</p>
+                          <p className="text-[14px] font-bold !text-black mb-1">Email</p>
                           <input
                             type="email"
                             placeholder="your@email.com"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full bg-white border border-[#dfe1df] rounded-[6px] h-8 px-2 py-1 text-sm text-[#000945] shadow-none outline-none focus:ring-1 focus:ring-[#155dfc] placeholder:text-slate-400"
+                            className="w-full bg-white border border-[#e5e7eb] rounded-[4px] h-9 px-3 text-[13px] !text-black shadow-none outline-none focus:border-[#155dfc] transition-colors placeholder:text-slate-400"
                           />
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-[6px] border border-slate-100">
-                        <Phone className="h-5 w-5 text-blue-600 shrink-0" />
+                      <div className="flex items-start gap-3">
+                        <Phone className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
                         <div className="flex-1">
-                          <p className="text-[14px] font-bold !text-[#000945] tracking-wider mb-1">Phone Number</p>
-                          <div className="package-phone-input flex gap-2" data-dial-code={phoneDialCode}>
-                            <PhoneInput
-                              country="in"
-                              onChange={(value, data) => {
-                                if (data && typeof data === "object" && "dialCode" in data) {
-                                  const dialCode = (data as { dialCode?: string }).dialCode;
-                                  if (dialCode) setPhoneDialCode(`+${dialCode}`);
-                                }
-                              }}
-                              preferredCountries={["in", "ae", "us", "gb"]}
-                              enableSearch={false}
-                              disableSearchIcon
-                              inputStyle={{ display: 'none' }}
-                              buttonStyle={{
-                                position: 'relative',
-                                border: 'none',
-                                background: 'transparent',
-                                width: '100%',
-                                height: '100%',
-                                padding: 0
-                              }}
-                            />
+                          <p className="text-[14px] font-bold !text-black mb-1">Phone Number</p>
+                          <div className="flex bg-white border border-[#e5e7eb] rounded-[4px] overflow-hidden focus-within:border-[#155dfc] transition-colors">
+                            <div className="w-[80px] shrink-0 h-9 flex items-center px-1 bg-slate-50 border-r border-[#e5e7eb]">
+                              <PhoneInput
+                                country="in"
+                                onChange={(value, data) => {
+                                  if (data && typeof data === "object" && "dialCode" in data) {
+                                    const dialCode = (data as { dialCode?: string }).dialCode;
+                                    if (dialCode) setPhoneDialCode(`+${dialCode}`);
+                                  }
+                                }}
+                                preferredCountries={["in", "ae", "us", "gb"]}
+                                enableSearch={false}
+                                disableSearchIcon
+                                inputStyle={{ display: 'none' }}
+                                buttonStyle={{
+                                  position: 'relative',
+                                  border: 'none',
+                                  background: 'transparent',
+                                  width: '100%',
+                                  height: '100%',
+                                  padding: '0 4px',
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                  alignItems: 'center'
+                                }}
+                              />
+                            </div>
                             <input
                               type="tel"
                               value={phoneNumber}
                               onChange={(e) => setPhoneNumber(e.target.value)}
                               placeholder="Enter your number"
-                              className="phone-number-input"
+                              className="flex-1 h-9 px-3 text-[13px] !text-black shadow-none outline-none placeholder:text-slate-400 bg-transparent"
                               required
                               autoComplete="tel"
                             />
@@ -856,17 +938,17 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-[6px] border border-slate-100">
-                        <Calendar className="h-5 w-5 text-blue-600 shrink-0" />
+                      <div className="flex items-start gap-3">
+                        <Calendar className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
                         <div className="flex-1">
-                          <p className="text-[14px] font-bold !text-[#000945] tracking-wider mb-1">Travel Date</p>
+                          <p className="text-[14px] font-bold !text-black mb-1">Travel Date</p>
                           <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
                             <PopoverTrigger asChild>
                               <Button
                                 variant="outline"
                                 className={cn(
-                                  "w-full justify-start text-left font-normal bg-white !border-[#dfe1df] !rounded-[6px] h-8 px-2 py-1 text-sm text-[#000945] !shadow-none hover:bg-slate-100 hover:text-[#000945]",
-                                  !date && "!text-slate-500"
+                                  "w-full justify-start text-left font-normal bg-white !border-[#e5e7eb] !rounded-[4px] h-9 px-3 text-[13px] !text-black !shadow-none hover:bg-slate-50 hover:!text-black transition-colors",
+                                  !date && "!text-slate-400"
                                 )}
                               >
                                 {date ? format(date, "MMM dd, yyyy") : <span>Pick a date</span>}
@@ -884,37 +966,51 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-[6px] border border-slate-100">
-                        <Users className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
-                        <div className="flex-1 flex flex-col gap-3">
+                      <div className="flex items-start gap-3">
+                        <Clock className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
+                        <div className="flex-1 flex flex-col gap-2">
                           <div className="flex items-center justify-between">
-                            <p className="text-[14px] font-bold !text-[#000945] tracking-wider">Adults</p>
-                            <div className="flex items-center bg-white border border-[#dfe1df] rounded-[6px] overflow-hidden">
-                              <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-7 h-7 flex items-center justify-center text-[#000945] hover:bg-slate-100 transition"><Minus className="w-3 h-3" /></button>
-                              <span className="text-[13px] font-semibold text-[#000945] w-6 flex items-center justify-center border-x border-[#dfe1df] h-7">{adults}</span>
-                              <button onClick={() => setAdults(adults + 1)} className="w-7 h-7 flex items-center justify-center text-[#000945] hover:bg-slate-100 transition"><Plus className="w-3 h-3" /></button>
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <p className="text-[14px] font-bold !text-[#000945] tracking-wider">Children</p>
-                            <div className="flex items-center bg-white border border-[#dfe1df] rounded-[6px] overflow-hidden">
-                              <button onClick={() => setChildren(Math.max(0, children - 1))} className="w-7 h-7 flex items-center justify-center text-[#000945] hover:bg-slate-100 transition"><Minus className="w-3 h-3" /></button>
-                              <span className="text-[13px] font-semibold text-[#000945] w-6 flex items-center justify-center border-x border-[#dfe1df] h-7">{children}</span>
-                              <button onClick={() => setChildren(children + 1)} className="w-7 h-7 flex items-center justify-center text-[#000945] hover:bg-slate-100 transition"><Plus className="w-3 h-3" /></button>
+                            <p className="text-[14px] font-bold !text-black">Number of Days</p>
+                            <div className="flex items-center bg-white border border-[#e5e7eb] rounded-[4px] overflow-hidden">
+                              <button onClick={() => setNumberOfDays(Math.max(1, numberOfDays - 1))} className="w-8 h-8 flex items-center justify-center !text-black hover:bg-slate-50 transition-colors"><Minus className="w-3.5 h-3.5" /></button>
+                              <span className="text-[13px] font-semibold !text-black w-8 flex items-center justify-center border-x border-[#e5e7eb] h-8">{numberOfDays}</span>
+                              <button onClick={() => setNumberOfDays(numberOfDays + 1)} className="w-8 h-8 flex items-center justify-center !text-black hover:bg-slate-50 transition-colors"><Plus className="w-3.5 h-3.5" /></button>
                             </div>
                           </div>
                         </div>
                       </div>
 
-                      <div className="flex items-start gap-3 p-3 bg-slate-50 rounded-[6px] border border-slate-100">
-                        <MessageSquare className="h-5 w-5 text-blue-600 shrink-0 mt-0.5" />
+                      <div className="flex items-start gap-3">
+                        <Users className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
+                        <div className="flex-1 flex flex-col gap-2">
+                          <div className="flex items-center justify-between">
+                            <p className="text-[14px] font-bold !text-black">Adults</p>
+                            <div className="flex items-center bg-white border border-[#e5e7eb] rounded-[4px] overflow-hidden">
+                              <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-8 h-8 flex items-center justify-center !text-black hover:bg-slate-50 transition-colors"><Minus className="w-3.5 h-3.5" /></button>
+                              <span className="text-[13px] font-semibold !text-black w-8 flex items-center justify-center border-x border-[#e5e7eb] h-8">{adults}</span>
+                              <button onClick={() => setAdults(adults + 1)} className="w-8 h-8 flex items-center justify-center !text-black hover:bg-slate-50 transition-colors"><Plus className="w-3.5 h-3.5" /></button>
+                            </div>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <p className="text-[14px] font-bold !text-black">Children</p>
+                            <div className="flex items-center bg-white border border-[#e5e7eb] rounded-[4px] overflow-hidden">
+                              <button onClick={() => setChildren(Math.max(0, children - 1))} className="w-8 h-8 flex items-center justify-center !text-black hover:bg-slate-50 transition-colors"><Minus className="w-3.5 h-3.5" /></button>
+                              <span className="text-[13px] font-semibold !text-black w-8 flex items-center justify-center border-x border-[#e5e7eb] h-8">{children}</span>
+                              <button onClick={() => setChildren(children + 1)} className="w-8 h-8 flex items-center justify-center !text-black hover:bg-slate-50 transition-colors"><Plus className="w-3.5 h-3.5" /></button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex items-start gap-3">
+                        <MessageSquare className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
                         <div className="flex-1">
-                          <p className="text-[14px] font-bold !text-[#000945] tracking-wider mb-1">Message</p>
+                          <p className="text-[14px] font-bold !text-black mb-1">Message</p>
                           <textarea
                             placeholder="Any special requests?"
                             value={message}
                             onChange={(e) => setMessage(e.target.value)}
-                            className="w-full bg-white border border-[#dfe1df] rounded-[6px] px-2 py-2 text-sm text-[#000945] shadow-none outline-none focus:ring-1 focus:ring-[#155dfc] placeholder:text-slate-400 min-h-[60px] resize-none leading-relaxed"
+                            className="w-full bg-white border border-[#e5e7eb] rounded-[4px] px-3 py-2 text-[13px] !text-black shadow-none outline-none focus:border-[#155dfc] transition-colors placeholder:text-slate-400 min-h-[60px] resize-none leading-relaxed"
                           />
                         </div>
                       </div>
@@ -922,22 +1018,9 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
 
                     <div className="mt-2 flex gap-3">
                       <Button
-                        onClick={() => {
-                          if (!user) {
-                            setIsLoginModalOpen(true);
-                            return;
-                          }
-                          router.push(`/checkout?type=package&slug=${encodeURIComponent(packageData.slug || slug)}`);
-                        }}
-                        className="flex-1 flex h-10 items-center justify-center rounded-[6px] bg-[#000945] text-sm font-semibold text-white shadow-none transition-all hover:bg-[#000945]/90"
-                      >
-                        Book Now
-                      </Button>
-                      <Button
                         onClick={handleSubmitEnquiry}
                         disabled={isSubmittingEnquiry}
-                        variant="outline"
-                        className="flex-1 flex h-10 items-center justify-center rounded-[6px] border border-[#dfe1df] bg-white text-sm font-semibold text-[#000945] shadow-none transition-colors hover:bg-slate-50 disabled:opacity-70"
+                        className="flex-1 flex h-10 items-center justify-center rounded-[6px] bg-gradient-to-r from-[#ff4e00] to-[#ff7e00] text-[15px] font-bold text-white shadow-lg shadow-[#ff4e00]/20 transition-all hover:shadow-[#ff4e00]/40 hover:-translate-y-0.5 border-none disabled:opacity-70"
                       >
                         {isSubmittingEnquiry ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                         {isSubmittingEnquiry ? 'Sending...' : 'Send Enquiry'}
@@ -984,12 +1067,12 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
 
         {/* Why Choose Us Section */}
         <div className="mt-8">
-          <WhyParadiseDifference />
+
         </div>
 
         {/* Other Packages Section */}
         {otherPackages.length > 0 && (
-          <section className="!bg-white py-12 text-gray-900 relative z-20">
+          <section className="!bg-white py-8 text-gray-900 relative z-20">
             <div className="mx-auto flex flex-col gap-6 relative z-10">
               <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between mb-2">
                 <div className="flex flex-col gap-1">
@@ -1032,18 +1115,7 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                       hrefPrefix="/package"
                       themeColor="#005beb"
                       priceLabel={getPackagePriceLabel(pkg.priceType)}
-                      isInWishlist={isInWishlist(pkg._id)}
                       showDestination={false}
-                      // Handle wishlist toggle gracefully
-                      onWishlistToggle={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        if (!user) {
-                          setIsLoginModalOpen(true);
-                          return;
-                        }
-                        toggleWishlist(pkg._id);
-                      }}
                     />
                   ))}
                 </div>
@@ -1070,22 +1142,9 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                 element.scrollIntoView({ behavior: 'smooth' });
               }
             }}
-            variant="outline"
-            className="flex-1 h-10 px-0 items-center justify-center rounded-[6px] border border-[#dfe1df] bg-white text-[13px] font-bold text-[#000945] shadow-none hover:bg-slate-50"
-          >
-            Enquire
-          </Button>
-          <Button
-            onClick={() => {
-              if (!user) {
-                setIsLoginModalOpen(true);
-                return;
-              }
-              router.push(`/checkout?type=package&slug=${encodeURIComponent(packageData.slug || slug)}`);
-            }}
             className="flex-1 h-10 px-0 items-center justify-center rounded-[6px] bg-[#000945] text-[13px] font-bold text-white shadow-none hover:bg-[#000945]/90"
           >
-            Book Now
+            Enquire
           </Button>
         </div>
       </div>

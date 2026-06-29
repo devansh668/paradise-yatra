@@ -247,20 +247,20 @@ export default function LeadCaptureForm({
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.4, type: "spring", bounce: 0.2 }}
-            className="relative w-full max-w-[800px] max-h-[90dvh] overflow-hidden rounded-3xl bg-white shadow-[0_32px_96px_rgba(0,0,0,0.25)] sm:max-h-[calc(100vh-3rem)] ring-1 ring-slate-200/50"
+            className="relative w-full max-w-[1000px] h-auto md:h-[600px] max-h-[90dvh] overflow-hidden rounded-3xl bg-white shadow-[0_32px_96px_rgba(0,0,0,0.25)] sm:max-h-[calc(100vh-3rem)] ring-1 ring-slate-200/50"
             onClick={(e) => e.stopPropagation()}
           >
             <button
               onClick={onClose}
-              className="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-white/80 text-slate-500 shadow-sm backdrop-blur-md transition-all hover:bg-white hover:text-slate-800 hover:shadow-md hover:scale-105 active:scale-95"
+              className="absolute right-4 top-4 z-20 flex h-8 w-8 items-center justify-center rounded-full bg-slate-100 text-slate-500 shadow-sm backdrop-blur-md transition-all hover:bg-slate-200 hover:text-slate-800 hover:shadow-md hover:scale-105 active:scale-95"
               aria-label="Close lead capture form"
             >
               <X className="h-4 w-4" />
             </button>
 
-            <div className="flex flex-col max-h-[90dvh] min-h-0 overflow-y-auto sm:max-h-[calc(100vh-3rem)]">
-              {/* Top Banner - Image with Dynamic Overlay */}
-              <div className="relative w-full h-[200px] sm:h-[240px] shrink-0 group">
+            <div className="flex flex-col md:flex-row h-full">
+              {/* Left Banner - Image with Dynamic Overlay */}
+              <div className="relative w-full md:w-[45%] h-[200px] sm:h-[240px] md:h-full shrink-0 group">
                 <Link
                   href="https://paradiseyatra.com/package/royal-egypt-nile-heritage-journey"
                   className="block h-full w-full overflow-hidden"
@@ -277,20 +277,20 @@ export default function LeadCaptureForm({
                       alt="Travel planning"
                       fill
                       className="object-cover"
-                      sizes="100vw"
+                      sizes="(max-width: 768px) 100vw, 45vw"
                     />
                   </motion.div>
                   <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent mix-blend-multiply" />
                   <div className="absolute inset-0 bg-gradient-to-r from-yellow-600/30 to-transparent" />
 
-                  <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col justify-end p-6 sm:p-8">
+                  <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col justify-end p-6 sm:p-8 md:p-10">
                     <motion.div
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3, duration: 0.6 }}
                       className="space-y-3"
                     >
-                      <h2 className="max-w-[95%] text-[28px] sm:text-[34px] font-extrabold leading-[1.15] text-white drop-shadow-md">
+                      <h2 className="max-w-[100%] text-[24px] sm:text-[30px] md:text-[34px] font-extrabold leading-[1.15] text-white drop-shadow-md">
                         Relax in Egypt with Nile sunsets, <br className="hidden sm:block"/> timeless beauty, and calm escapes.
                       </h2>
                     </motion.div>
@@ -300,7 +300,7 @@ export default function LeadCaptureForm({
 
               {/* Form Container */}
               <div
-                className="relative min-h-0 bg-white p-6 sm:p-10 shrink-0 overflow-hidden"
+                className="relative flex-1 bg-white p-6 sm:p-10 md:p-12 overflow-y-auto"
               >
                 {/* Decorative background blob */}
                 <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-blue-400/10 blur-3xl" />

@@ -28,6 +28,7 @@ interface Package {
     duration: string;
     isActive: boolean;
     tags: string[];
+    destinationsCovered?: string[];
     createdAt: string;
     updatedAt: string;
 }
@@ -43,6 +44,7 @@ const AdminPackages = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage] = useState(10);
     const [allTags, setAllTags] = useState<any[]>([]);
+    const [allDestinationCovers, setAllDestinationCovers] = useState<any[]>([]);
     const [deletingId, setDeletingId] = useState<string | null>(null);
     const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
     const [exportingAll, setExportingAll] = useState(false);
@@ -70,6 +72,9 @@ const AdminPackages = () => {
     // Track if slug has been manually edited
     const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
 
+    // Destinations Covered
+    const [newDestinationCovered, setNewDestinationCovered] = useState("");
+
     const [formData, setFormData] = useState({
         name: "",
         slug: "",
@@ -86,7 +91,8 @@ const AdminPackages = () => {
         discount: "",
         duration: "",
         isActive: true,
-        tags: [] as string[]
+        tags: [] as string[],
+        destinationsCovered: [] as string[]
     });
 
     // Get all countries
@@ -365,9 +371,22 @@ const AdminPackages = () => {
         }
     };
 
+    const fetchDestinationCovers = async () => {
+        try {
+            const response = await fetch('/api/destination-covers');
+            if (response.ok) {
+                const result = await response.json();
+                setAllDestinationCovers(result || []);
+            }
+        } catch (err) {
+            console.error('Failed to fetch destination covers:', err);
+        }
+    };
+
     useEffect(() => {
         fetchPackages();
         fetchTags();
+        fetchDestinationCovers();
     }, []);
 
     // Sync tags with package - bidirectional relationship
@@ -754,22 +773,23 @@ const AdminPackages = () => {
         const mergedTags = Array.from(new Set([...(pkg.tags || []), ...linkedTags]));
 
         setFormData({
-            name: pkg.name,
-            slug: pkg.slug,
-            description: pkg.description,
-            shortDescription: pkg.shortDescription,
+            name: pkg.name || pkg.title || "",
+            slug: pkg.slug || "",
+            description: pkg.description || "",
+            shortDescription: pkg.shortDescription || "",
             imageAlt: pkg.imageAlt || "",
-            location: pkg.location,
-            country: pkg.country,
+            location: pkg.location || pkg.destination || "",
+            country: pkg.country || "",
             state: pkg.state || "",
-            tourType: pkg.tourType,
+            tourType: pkg.tourType || "india",
             priceType: pkg.priceType || "per_person",
-            price: pkg.price.toString(),
+            price: pkg.price?.toString() || "",
             originalPrice: pkg.originalPrice?.toString() || "",
             discount: pkg.discount?.toString() || "",
-            duration: pkg.duration,
-            isActive: pkg.isActive,
-            tags: mergedTags
+            duration: pkg.duration || "",
+            isActive: pkg.isActive ?? true,
+            tags: pkg.tags || [],
+            destinationsCovered: pkg.destinationsCovered || []
         });
         setShowAddForm(true);
         setIsSlugManuallyEdited(true); // Mark as manually edited when editing existing package
@@ -1532,6 +1552,41 @@ const AdminPackages = () => {
                                     <option value="india">India</option>
                                     <option value="international">International</option>
                                 </select>
+                            </div>
+
+                            {/* Destinations Covered */}
+                            <div className="border border-gray-200 rounded-lg p-4">
+                                <label className="block text-sm font-medium text-gray-700 mb-2">Destinations Covered</label>
+                                <p className="text-xs text-gray-500 mb-3">Select destinations covered by this package. Manage these in the sidebar.</p>
+                                <div className="flex flex-wrap gap-2">
+                                    {allDestinationCovers.map((dest) => {
+                                        const isSelected = (formData.destinationsCovered || []).includes(dest.name);
+                                        return (
+                                            <button
+                                                key={dest._id}
+                                                type="button"
+                                                onClick={() => {
+                                                    const currentDests = formData.destinationsCovered || [];
+                                                    const newDests = isSelected 
+                                                        ? currentDests.filter((d: string) => d !== dest.name)
+                                                        : [...currentDests, dest.name];
+                                                    setFormData({ ...formData, destinationsCovered: newDests });
+                                                }}
+                                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                                                    isSelected 
+                                                        ? "bg-blue-600 text-white shadow-md"
+                                                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                                                }`}
+                                            >
+                                                {dest.name}
+                                                {isSelected && <span className="ml-1">✓</span>}
+                                            </button>
+                                        );
+                                    })}
+                                    {allDestinationCovers.length === 0 && (
+                                        <p className="text-xs text-gray-500 italic">No destination covers available. Add them in the sidebar.</p>
+                                    )}
+                                </div>
                             </div>
 
                             {/* Image Upload Section */}

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getApiUrl } from "@/config/api";
+import { getFullUrl } from "@/config/api";
 
 export async function GET(
     req: NextRequest,
@@ -7,7 +7,7 @@ export async function GET(
 ) {
     try {
         const { key } = await params;
-        const response = await fetch(getApiUrl(`/api/page-content/${key}`));
+        const response = await fetch(getFullUrl(`/api/page-content/${key}`));
         const data = await response.json();
         return NextResponse.json(data, { status: response.status });
     } catch (error) {
@@ -28,7 +28,7 @@ export async function PUT(
         const body = await req.json();
         const authHeader = req.headers.get("authorization");
 
-        const response = await fetch(getApiUrl(`/api/page-content/${key}`), {
+        const response = await fetch(getFullUrl(`/api/page-content/${key}`), {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
@@ -56,7 +56,7 @@ export async function DELETE(
         const { key } = await params;
         const authHeader = req.headers.get("authorization");
 
-        const response = await fetch(getApiUrl(`/api/page-content/${key}`), {
+        const response = await fetch(getFullUrl(`/api/page-content/${key}`), {
             method: "DELETE",
             headers: {
                 ...(authHeader && { Authorization: authHeader }),
@@ -73,3 +73,4 @@ export async function DELETE(
         );
     }
 }
+

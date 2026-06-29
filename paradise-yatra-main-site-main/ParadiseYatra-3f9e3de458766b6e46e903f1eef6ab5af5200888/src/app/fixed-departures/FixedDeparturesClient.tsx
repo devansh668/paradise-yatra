@@ -6,7 +6,7 @@ import Link from 'next/link';
 import {
     Calendar, MapPin, Users, Clock, ArrowRight, Star,
     CheckCircle2, ShieldCheck, Zap, Search, Filter,
-    TrendingUp, X, SlidersHorizontal, Heart, Ticket, Plane
+    TrendingUp, X, SlidersHorizontal, Ticket, Plane, Heart
 } from 'lucide-react';
 import { motion, AnimatePresence, Variants } from 'framer-motion';
 import Header from '@/components/Header';
@@ -83,20 +83,16 @@ export default function FixedDeparturesClient({ departures }: FixedDeparturesCli
     };
 
     // Wishlist states
-    const { user, toggleWishlist: contextToggleWishlist, isInWishlist } = useAuth();
+    const { user } = useAuth();
     const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
-    const handleWishlistToggle = (e: React.MouseEvent, pkgId: string) => {
+    const handleWishlistToggle = (e: any, id: string) => {
         e.preventDefault();
         e.stopPropagation();
-
-        if (!user) {
-            setIsLoginModalOpen(true);
-            return;
-        }
-
-        contextToggleWishlist(pkgId);
+        // Placeholder for future implementation
     };
+
+    const isInWishlist = (id: string) => false;
 
     // Extract unique categories from departures, excluding "Fixed Departure"
     const categories = ['All Departures', ...Array.from(new Set(departures.map(d => d.tag).filter(t => t && t !== 'Fixed Departure')))];
@@ -457,7 +453,7 @@ export default function FixedDeparturesClient({ departures }: FixedDeparturesCli
                                                     {item.destination}
                                                 </div>
 
-                                                {/* Wishlist Heart */}
+                                                
                                                 <div
                                                     role="button"
                                                     tabIndex={0}
