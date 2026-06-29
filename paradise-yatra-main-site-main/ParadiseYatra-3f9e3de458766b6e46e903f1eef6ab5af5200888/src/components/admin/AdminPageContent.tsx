@@ -404,7 +404,7 @@ const AdminPageContent = () => {
                 title="Delete Content"
                 message="Are you sure you want to delete this content block? This action cannot be undone."
                 onConfirm={handleDelete}
-                onCancel={() => setDeleteId(null)}
+                onClose={() => setDeleteId(null)}
                 confirmText="Delete"
                 variant="danger"
             />

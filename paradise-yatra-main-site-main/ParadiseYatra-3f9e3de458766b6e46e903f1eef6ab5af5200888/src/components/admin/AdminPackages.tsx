@@ -778,7 +778,7 @@ const AdminPackages = () => {
             description: pkg.description || "",
             shortDescription: pkg.shortDescription || "",
             imageAlt: pkg.imageAlt || "",
-            location: pkg.location || pkg.destination || "",
+            location: pkg.location || "",
             country: pkg.country || "",
             state: pkg.state || "",
             tourType: pkg.tourType || "india",
@@ -893,7 +893,8 @@ const AdminPackages = () => {
             discount: "",
             duration: "",
             isActive: true,
-            tags: []
+            tags: [],
+            destinationsCovered: []
         });
         clearImageSelection();
         setShowAddForm(false);
