@@ -151,7 +151,7 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
   const [message, setMessage] = useState('');
   const [isSubmittingEnquiry, setIsSubmittingEnquiry] = useState(false);
   const [isHighlightsExpanded, setIsHighlightsExpanded] = useState(false);
-  const [activeTab, setActiveTab] = useState<'overview' | 'itinerary' | 'includes' | 'highlights' | 'faqs'>('overview');
+  const [activeTab, setActiveTab] = useState<'overview' | 'itinerary' | 'includes' | 'highlights' | 'faqs' | 'guideline'>('overview');
   const [isOverviewExpanded, setIsOverviewExpanded] = useState(false);
   const [actionMessage, setActionMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [breadcrumbSource, setBreadcrumbSource] = useState<BreadcrumbSource>(() => getFallbackBreadcrumb(packageData));
