@@ -773,7 +773,7 @@ const AdminPackages = () => {
         const mergedTags = Array.from(new Set([...(pkg.tags || []), ...linkedTags]));
 
         setFormData({
-            name: pkg.name || pkg.title || "",
+            name: pkg.name || "",
             slug: pkg.slug || "",
             description: pkg.description || "",
             shortDescription: pkg.shortDescription || "",
