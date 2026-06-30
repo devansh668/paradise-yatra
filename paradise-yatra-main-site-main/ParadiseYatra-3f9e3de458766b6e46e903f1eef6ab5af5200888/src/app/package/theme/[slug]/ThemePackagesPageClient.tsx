@@ -369,7 +369,7 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                     </div>
 
                     {/* Centered Hub */}
-                    <div className="hidden md:block max-w-6xl w-full mx-auto px-4 md:px-8 relative z-30 pt-10">
+                    <div className="hidden md:block max-w-6xl w-full mx-auto px-4 md:px-8 relative z-30 -mt-16">
                         <div className="flex flex-col items-center max-w-5xl mx-auto w-full gap-8">
                             {/* Desktop Heading */}
                             <h2 className="hidden md:block !text-xl md:!text-[56px] !font-black text-white text-center font-plus-jakarta-sans tracking-tight leading-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.6)]">

@@ -523,7 +523,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                     </motion.div>
 
                     {/* Centered Hub (Hidden on mobile since highlights are hidden) */}
-                    <div className="hidden md:block max-w-6xl w-full mx-auto px-4 md:px-8 relative z-30 pt-10">
+                    <div className="hidden md:block max-w-6xl w-full mx-auto px-4 md:px-8 relative z-30 -mt-16">
                         <motion.div 
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
