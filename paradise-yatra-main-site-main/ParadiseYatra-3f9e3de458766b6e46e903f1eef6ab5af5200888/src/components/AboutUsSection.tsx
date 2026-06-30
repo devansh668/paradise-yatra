@@ -5,6 +5,7 @@ import { Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export default function AboutUsSection() {
+    const scrollRef = useRef<HTMLDivElement>(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     const images = [
@@ -13,6 +14,45 @@ export default function AboutUsSection() {
         "/About/Life At Paradise Yatra/Image 2.jpg",
         "/About/Life At Paradise Yatra/Image 3.jpg"
     ];
+
+    useEffect(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        
+        let animationFrameId: number;
+        let isHovered = false;
+
+        const scroll = () => {
+            if (!isHovered && el) {
+                el.scrollTop += 0.5; // Auto-scroll speed
+                if (el.scrollTop >= el.scrollHeight - el.clientHeight) {
+                    // Slight delay before snapping back to top, or just snap
+                    el.scrollTop = 0; 
+                }
+            }
+            animationFrameId = requestAnimationFrame(scroll);
+        };
+
+        const handleMouseEnter = () => (isHovered = true);
+        const handleMouseLeave = () => (isHovered = false);
+        const handleTouchStart = () => (isHovered = true);
+        const handleTouchEnd = () => (isHovered = false);
+
+        el.addEventListener("mouseenter", handleMouseEnter);
+        el.addEventListener("mouseleave", handleMouseLeave);
+        el.addEventListener("touchstart", handleTouchStart);
+        el.addEventListener("touchend", handleTouchEnd);
+
+        animationFrameId = requestAnimationFrame(scroll);
+
+        return () => {
+            cancelAnimationFrame(animationFrameId);
+            el.removeEventListener("mouseenter", handleMouseEnter);
+            el.removeEventListener("mouseleave", handleMouseLeave);
+            el.removeEventListener("touchstart", handleTouchStart);
+            el.removeEventListener("touchend", handleTouchEnd);
+        };
+    }, []);
 
     return (
         <section className="bg-white py-16 md:py-24 px-4 sm:px-6">
@@ -114,10 +154,15 @@ export default function AboutUsSection() {
                         
                         {/* Auto-scrolling SEO Content Container */}
                         <div 
+                            ref={scrollRef}
                             className="flex-1 overflow-y-auto pr-4 space-y-4 text-black leading-relaxed text-[14px] sm:text-[15px] mb-8 font-medium scrollbar-thin scrollbar-thumb-slate-200 hover:scrollbar-thumb-slate-300"
-                            style={{ scrollBehavior: 'auto' }}
+                            style={{ 
+                                scrollBehavior: 'auto',
+                                maskImage: 'linear-gradient(to bottom, transparent, black 15px, black calc(100% - 15px), transparent)',
+                                WebkitMaskImage: 'linear-gradient(to bottom, transparent, black 15px, black calc(100% - 15px), transparent)'
+                            }}
                         >
-                            <h3 className="text-lg font-bold text-black">Travel Agency in Dehradun, India – Paradise Yatra</h3>
+                            <h3 className="text-xl font-extrabold text-black">Travel Agency in Dehradun, India – Paradise Yatra</h3>
                             <p>
                                 Planning a holiday is exciting, but choosing the right travel partner is equally important. Most travellers begin with simple questions: Which travel agency can I trust? Who will plan my trip properly? Where can I get affordable tour packages in India? How do I know what is included and what is not?
                             </p>
@@ -128,7 +173,7 @@ export default function AboutUsSection() {
                                 Whether you are planning a family vacation, honeymoon, group tour, corporate trip, pilgrimage, adventure holiday, or international getaway, Paradise Yatra creates travel plans that match your budget, comfort, and travel style.
                             </p>
 
-                            <h3 className="text-lg font-bold text-black mt-6">Tour Operators in India – What Should Travellers Expect Today?</h3>
+                            <h3 className="text-xl font-extrabold text-black mt-6">Tour Operators in India – What Should Travellers Expect Today?</h3>
                             <p>
                                 Travel today is not just about booking hotels and transport. A good tour operator understands your travel purpose, your group type, your comfort level, your budget, and the seasonality of the destination.
                             </p>
@@ -139,7 +184,7 @@ export default function AboutUsSection() {
                                 At Paradise Yatra, we listen first and plan later. This helps us design tour packages that are practical on the ground and comfortable for the traveller.
                             </p>
 
-                            <h3 className="text-lg font-bold text-black mt-6">How to Choose a Reliable Travel Agent in India?</h3>
+                            <h3 className="text-xl font-extrabold text-black mt-6">How to Choose a Reliable Travel Agent in India?</h3>
                             <p>
                                 A reliable travel agent should not simply sell a package. They should understand your needs, explain what is possible, and guide you honestly.
                             </p>
@@ -156,7 +201,7 @@ export default function AboutUsSection() {
                                 Paradise Yatra believes that a good holiday starts with clarity. We make sure travellers know what they are booking, what is included, what is excluded, and what to expect at every stage of the journey.
                             </p>
 
-                            <h3 className="text-lg font-bold text-black mt-6">Affordable Tour Packages in India</h3>
+                            <h3 className="text-xl font-extrabold text-black mt-6">Affordable Tour Packages in India</h3>
                             <p>
                                 Travellers often search for affordable tour packages in India, but affordability should never mean confusion or poor planning. A good budget-friendly package should balance cost, comfort, location, and experience.
                             </p>
@@ -168,7 +213,7 @@ export default function AboutUsSection() {
                                 Our team helps you choose the right package according to season, duration, travel group, and budget.
                             </p>
 
-                            <h3 className="text-lg font-bold text-black mt-6">What Is Included in Tour Packages?</h3>
+                            <h3 className="text-xl font-extrabold text-black mt-6">What Is Included in Tour Packages?</h3>
                             <p>Every travel package is different, but most well-planned tour packages may include:</p>
                             <ul className="list-disc pl-5 space-y-1">
                                 <li>Hotel accommodation with selected meal plan</li>
@@ -195,7 +240,7 @@ export default function AboutUsSection() {
                                 At Paradise Yatra, we provide clear package details so travellers can compare options properly before confirming their booking.
                             </p>
 
-                            <h3 className="text-lg font-bold text-black mt-6">Documents, Payments, Cancellations, and Travel Insurance</h3>
+                            <h3 className="text-xl font-extrabold text-black mt-6">Documents, Payments, Cancellations, and Travel Insurance</h3>
                             <p>
                                 Before booking a tour package, every traveller should keep basic documents ready. For domestic travel, government-issued photo ID is usually required for all travellers. For children, age proof may be required where child rates apply. For restricted areas such as Ladakh, North East, or certain border regions, special permits may be needed.
                             </p>
@@ -217,7 +262,7 @@ export default function AboutUsSection() {
                                 Cancellation rules vary depending on hotels, transport, flights, and activities. That is why we recommend checking cancellation policies before final payment. Travel insurance is also advisable, especially for international holidays, adventure tours, high-altitude destinations, and expensive bookings.
                             </p>
 
-                            <h3 className="text-lg font-bold text-black mt-6">Why Customised Travel Itineraries Matter</h3>
+                            <h3 className="text-xl font-extrabold text-black mt-6">Why Customised Travel Itineraries Matter</h3>
                             <p>
                                 Ready-made packages are convenient, but they do not always suit every traveller. A customised itinerary gives you better control over your holiday.
                             </p>
@@ -238,7 +283,7 @@ export default function AboutUsSection() {
                                 Paradise Yatra creates customised travel plans so your holiday feels comfortable, balanced, and meaningful. We avoid over-packed schedules and focus on realistic travel planning.
                             </p>
 
-                            <h3 className="text-lg font-bold text-black mt-6">Popular Domestic Tour Packages by Paradise Yatra</h3>
+                            <h3 className="text-xl font-extrabold text-black mt-6">Popular Domestic Tour Packages by Paradise Yatra</h3>
                             <ul className="space-y-2">
                                 <li><strong>Himachal Tour Packages:</strong> Perfect for mountain lovers, honeymoon couples, families, and adventure seekers. Packages for Shimla, Manali, Kasol, Dharamshala, Dalhousie, Kullu, Spiti, and more.</li>
                                 <li><strong>Uttarakhand Tour Packages:</strong> Being based in Dehradun, we have strong destination understanding of Uttarakhand. Tours for Mussoorie, Rishikesh, Haridwar, Nainital, Jim Corbett, Auli, Chopta, Kedarnath, Badrinath, Gangotri, Yamunotri, and Chardham Yatra.</li>
@@ -249,7 +294,7 @@ export default function AboutUsSection() {
                                 <li><strong>Chardham Yatra Packages:</strong> Organised from Dehradun, Haridwar, and Rishikesh. Routes planned carefully with proper halts, comfortable stays, and travel support.</li>
                             </ul>
 
-                            <h3 className="text-lg font-bold text-black mt-6">International Holiday Packages</h3>
+                            <h3 className="text-xl font-extrabold text-black mt-6">International Holiday Packages</h3>
                             <p>
                                 Paradise Yatra also offers international tour packages for travellers looking for easy, well-planned holidays abroad. Popular destinations include: Dubai, Maldives, Bali, Thailand, Singapore, Vietnam, Sri Lanka, Mauritius, Europe, Bhutan, and Nepal.
                             </p>
@@ -257,7 +302,7 @@ export default function AboutUsSection() {
                                 From visa guidance to hotel booking, sightseeing, transfers, and complete itinerary planning, our team helps make your international holiday smooth and stress-free.
                             </p>
 
-                            <h3 className="text-lg font-bold text-black mt-6">How to Book a Holiday with Paradise Yatra</h3>
+                            <h3 className="text-xl font-extrabold text-black mt-6">How to Book a Holiday with Paradise Yatra</h3>
                             <ol className="list-decimal pl-5 space-y-1">
                                 <li>Share your travel dates, destination, number of travellers, and budget.</li>
                                 <li>Our travel expert will understand your requirements.</li>
@@ -268,7 +313,7 @@ export default function AboutUsSection() {
                             </ol>
                             <p>Our aim is to make the entire booking process simple, transparent, and comfortable.</p>
 
-                            <h3 className="text-lg font-bold text-black mt-6">Why Choose Paradise Yatra?</h3>
+                            <h3 className="text-xl font-extrabold text-black mt-6">Why Choose Paradise Yatra?</h3>
                             <p>Paradise Yatra is a Dehradun-based travel agency offering domestic and international tour packages for all types of travellers. You should choose us because:</p>
                             <ul className="list-disc pl-5 space-y-1">
                                 <li>We create customised tour packages.</li>
@@ -282,7 +327,7 @@ export default function AboutUsSection() {
                             </ul>
                             <p>For us, travel is not just a booking. It is an experience that should feel smooth, safe, and memorable.</p>
 
-                            <h3 className="text-lg font-bold text-black mt-6">Travel Agency in Dehradun for Domestic and International Tours</h3>
+                            <h3 className="text-xl font-extrabold text-black mt-6">Travel Agency in Dehradun for Domestic and International Tours</h3>
                             <p>
                                 Paradise Yatra is one of the growing travel agencies in Dehradun, helping travellers explore India and the world with confidence. From peaceful mountain holidays to luxury beach vacations, from pilgrimage tours to adventure trips, from honeymoon packages to family holidays, we plan every journey with care.
                             </p>
@@ -290,7 +335,7 @@ export default function AboutUsSection() {
                                 Our team focuses on practical travel planning, trusted hotel options, comfortable transport, and honest guidance. Whether you are travelling from Dehradun, Haridwar, Rishikesh, Delhi NCR, or any other city in India, Paradise Yatra can help you plan a complete holiday package.
                             </p>
 
-                            <h3 className="text-lg font-bold text-black mt-6">Plan Your Next Holiday with Paradise Yatra</h3>
+                            <h3 className="text-xl font-extrabold text-black mt-6">Plan Your Next Holiday with Paradise Yatra</h3>
                             <p>
                                 If you are looking for a trusted tour and travel agency in Dehradun, Paradise Yatra is here to help you plan your next journey. Tell us where you want to go, how you want to travel, and what kind of experience you are looking for.
                             </p>
