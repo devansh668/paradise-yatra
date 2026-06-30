@@ -275,9 +275,9 @@ const HorizontalPackageCard: React.FC<HorizontalPackageCardProps> = ({
                     <div className="flex items-center gap-2">
                         <button
                             onClick={(e) => { e.preventDefault(); setIsQueryModalOpen(true); }}
-                            className="bg-white border border-[#155dfc] text-[#155dfc] hover:bg-[#155dfc] hover:text-white text-[12px] font-bold py-2.5 px-5 rounded-[10px] transition-all duration-300 flex items-center gap-1.5 shadow-sm"
+                            className="bg-white border border-[#155dfc] text-[#155dfc] hover:bg-[#155dfc] hover:text-white text-[12px] font-bold py-2.5 px-5 rounded-[10px] transition-all duration-300 flex items-center gap-1.5 shadow-sm whitespace-nowrap"
                         >
-                            Query
+                            Enquire Now
                         </button>
                         <Link
                             href={detailUrl}
