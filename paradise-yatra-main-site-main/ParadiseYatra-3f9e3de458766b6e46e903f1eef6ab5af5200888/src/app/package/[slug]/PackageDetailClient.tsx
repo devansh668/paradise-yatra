@@ -822,22 +822,34 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
             {activeTab === 'guideline' && (
               <div className="bg-white rounded-[6px] border border-[#dfe1df] p-5 shadow-none">
                 <h3 style={{ fontWeight: 700 }} className="!text-[24px] md:!text-[28px] text-[#000945] mb-4">Booking Information & Guidelines</h3>
-                <Accordion type="single" collapsible className="space-y-0">
+                <Accordion type="single" collapsible className="space-y-4">
                   {[
                     { title: "Booking and Payment", content: ["A deposit of 30% is required to confirm your booking", "Full payment must be completed 30 days before departure", "All prices are in INR and include taxes", "Payment via credit card, bank transfer, or UPI"] },
                     { title: "Cancellation Policy", content: ["Cancellation 60+ days: Full refund minus fee", "Cancellation 30-59 days: 75% refund", "Cancellation 15-29 days: 50% refund", "Less than 15 days: No refund"] },
                     { title: "Travel Documents", content: ["Valid passport required (min 6 months)", "Visa requirements vary by destination", "Travel insurance strongly recommended", "Accurate personal details required"] }
                   ].map((item, idx) => (
-                    <AccordionItem key={idx} value={`item-${idx}`} className="!border-b !border-[#dfe1df] !border-x-0 !border-t-0 !bg-transparent !shadow-none !rounded-none focus-within:ring-0 focus-within:outline-none">
+                    <AccordionItem key={idx} value={`item-${idx}`} className="!border !border-slate-200 !bg-white !shadow-sm !rounded-xl overflow-hidden focus-within:ring-0 focus-within:outline-none data-[state=open]:!border-[#155dfc] data-[state=open]:!shadow-md transition-all duration-300">
                       <AccordionTrigger
                         id={`package-terms-item-${idx}-trigger`}
-                        className="!py-4 hover:!bg-transparent transition-colors !no-underline focus:!outline-none focus-visible:!outline-none focus:!ring-0"
+                        className="!p-4 sm:!p-5 hover:!bg-[#EFF6FF]/50 transition-colors !no-underline focus:!outline-none focus-visible:!outline-none focus:!ring-0 data-[state=open]:!bg-[#EFF6FF]"
                       >
-                        <h3 style={{ fontSize: '18px', fontWeight: 700 }} className="text-[#000945] text-left !m-0">{item.title}</h3>
+                        <div className="flex items-center gap-4 text-left">
+                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#155dfc]/10 text-[#155dfc] font-bold text-[14px]">
+                            {idx + 1}
+                          </div>
+                          <h3 style={{ fontSize: '16px', fontWeight: 700 }} className="text-[#000945] !m-0">{item.title}</h3>
+                        </div>
                       </AccordionTrigger>
-                      <AccordionContent className="!pb-4 !pt-0">
-                        <ul className="flex flex-col gap-1.5 text-[15px] text-[#000945] !mb-0">
-                          {item.content.map((point, pIdx) => <li key={pIdx} className="flex gap-2 leading-snug"><span className="text-[#ff4e00] shrink-0 font-bold">•</span> <span className="text-black">{point}</span></li>)}
+                      <AccordionContent className="!p-4 sm:!p-5 !pt-0 border-t border-slate-100 bg-white">
+                        <ul className="flex flex-col gap-3 mt-4">
+                          {item.content.map((point, pIdx) => (
+                            <li key={pIdx} className="flex items-start gap-3">
+                              <div className="mt-1.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-green-100">
+                                <Check className="h-2.5 w-2.5 text-green-600" strokeWidth={3} />
+                              </div>
+                              <span className="text-[14px] leading-relaxed text-slate-700">{point}</span>
+                            </li>
+                          ))}
                         </ul>
                       </AccordionContent>
                     </AccordionItem>
