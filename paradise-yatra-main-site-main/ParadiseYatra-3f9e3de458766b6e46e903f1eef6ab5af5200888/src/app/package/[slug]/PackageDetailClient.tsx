@@ -489,12 +489,12 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
     <div className="min-h-screen bg-slate-50/30 [&_button]:cursor-pointer [&_a]:cursor-pointer [&_select]:cursor-pointer [&_[role=button]]:cursor-pointer [&_label]:cursor-pointer [&_input:not([type='checkbox']):not([type='radio'])]:cursor-text [&_textarea]:cursor-text relative">
       <Header />
 
-      <main className="mx-auto w-full max-w-7xl flex-1 px-4 md:px-6 pt-2 md:pt-4 lg:pt-4 pb-28 lg:pb-10 relative">
+      <main className="mx-auto w-full max-w-7xl flex-1 px-4 md:px-6 pt-1 md:pt-2 lg:pt-2 pb-16 lg:pb-6 relative">
         {/* Background Decorative Gradient */}
         <div className="absolute inset-x-0 top-0 h-[600px] bg-gradient-to-b from-[#eef2ff] via-white to-transparent -z-10 opacity-70 pointer-events-none" />
         
         {/* Breadcrumbs */}
-        <div className="mb-4 flex flex-wrap items-center gap-1.5 text-[12px] text-[#000945]">
+        <div className="mb-2 flex flex-wrap items-center gap-1.5 text-[12px] text-[#000945]">
           <Link href="/" className="hover:underline transition-all">Home</Link>
           <ChevronDown className="h-3 w-3 -rotate-90" />
           <Link
@@ -508,9 +508,9 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
         </div>
 
         {/* Header Section */}
-        <div className="mb-4 md:mb-8">
-          <div className="flex flex-col gap-4">
-            <h1 style={{ fontWeight: 800 }} className="text-3xl tracking-tight text-[#000945] md:text-4xl lg:!text-[44px] leading-tight">
+        <div className="mb-3 md:mb-5">
+          <div className="flex flex-col gap-3">
+            <h1 style={{ fontWeight: 800 }} className="text-2xl tracking-tight text-[#000945] md:text-3xl lg:!text-[36px] leading-tight">
               {packageData.title}
             </h1>
 
@@ -549,18 +549,18 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
         </div>
 
         {/* Grid Layout */}
-        <div className="grid grid-cols-1 gap-4 md:gap-6 lg:grid-cols-12">
+        <div className="grid grid-cols-1 gap-3 md:gap-4 lg:grid-cols-12">
           {/* Left Column (Content) */}
-          <div className="flex flex-col gap-6 lg:col-span-8">
+          <div className="flex flex-col gap-4 lg:col-span-8">
             {/* Tour Gallery & Quick Facts */}
             <div className="bg-white rounded-[6px] border border-[#dfe1df] shadow-none">
-              <div className="p-5 border-b border-[#dfe1df]">
-                <h3 style={{ fontWeight: 700 }} className="text-[20px] text-[#000945] flex items-center gap-2">
-                  <span className="text-[#155dfc] text-xl">Tour Gallery</span>
+              <div className="p-4 border-b border-[#dfe1df]">
+                <h3 style={{ fontWeight: 700 }} className="text-[18px] text-[#000945] flex items-center gap-2">
+                  <span className="text-[#155dfc] text-lg">Tour Gallery</span>
                 </h3>
               </div>
               
-              <div className="p-5 grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
+              <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-4 items-start">
                 {/* Hero Image */}
                 <div className="relative overflow-hidden rounded-[6px] shadow-none">
                   <div className="relative aspect-video w-full overflow-hidden rounded-[6px] bg-slate-200">
@@ -666,12 +666,12 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
             
             {/* OVERVIEW TAB */}
             {activeTab === 'overview' && (
-              <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+              <div className="flex flex-col gap-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
                 {/* Tour Overview Card */}
                 {(dynamicDescription || packageData.description) && (
-                  <div className="bg-white rounded-[6px] border border-[#dfe1df] p-5 shadow-none">
-                    <h3 style={{ fontWeight: 700 }} className="text-[20px] text-[#000945] mb-4 flex items-center gap-2">
-                      <span className="text-[#155dfc] text-xl">Tour Overview</span>
+                  <div className="bg-white rounded-[6px] border border-[#dfe1df] p-4 shadow-none">
+                    <h3 style={{ fontWeight: 700 }} className="text-[18px] text-[#000945] mb-3 flex items-center gap-2">
+                      <span className="text-[#155dfc] text-lg">Tour Overview</span>
                     </h3>
                     <div className={cn("text-justify transition-all duration-300", !isOverviewExpanded && "line-clamp-3 overflow-hidden")}>
                       <div
@@ -693,23 +693,23 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
 
             {/* ITINERARY TAB */}
             {activeTab === 'itinerary' && (
-              <div className="bg-white rounded-[6px] border border-[#dfe1df] p-5 shadow-none">
-                <div className="flex flex-wrap items-center justify-between gap-4 md:gap-6 mb-6 pb-6 border-b border-[#dfe1df]">
+              <div className="bg-white rounded-[6px] border border-[#dfe1df] p-4 shadow-none">
+                <div className="flex flex-wrap items-center justify-between gap-3 md:gap-4 mb-4 pb-4 border-b border-[#dfe1df]">
                   {[
                     { icon: Plane, title: "All Transfers" },
                     { icon: Utensils, title: "Local Meals" },
                     { icon: Camera, title: "Photo Stops" },
                     { icon: Shield, title: "24/7 Support" },
                   ].map((item, i) => (
-                    <div key={i} className="flex flex-1 flex-col items-center justify-center gap-3 min-w-[120px]">
-                      <item.icon className="h-7 w-7 text-[#155dfc]" strokeWidth={1.5} />
-                      <span className="text-[15px] font-bold text-[#155dfc]">{item.title}</span>
+                    <div key={i} className="flex flex-1 flex-col items-center justify-center gap-2 min-w-[100px]">
+                      <item.icon className="h-6 w-6 text-[#155dfc]" strokeWidth={1.5} />
+                      <span className="text-[14px] font-bold text-[#155dfc]">{item.title}</span>
                     </div>
                   ))}
                 </div>
 
-                <div className="mb-6">
-                  <h3 style={{ fontWeight: 700 }} className="text-[20px] text-[#000945]">Detailed Itinerary</h3>
+                <div className="mb-4">
+                  <h3 style={{ fontWeight: 700 }} className="text-[18px] text-[#000945]">Detailed Itinerary</h3>
                 </div>
 
                 <Accordion type="multiple" className="space-y-3">
@@ -753,18 +753,18 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
 
             {/* INCLUDES TAB */}
             {activeTab === 'includes' && (
-              <div className="bg-white rounded-[6px] border border-[#dfe1df] p-5 shadow-none">
-                <h3 style={{ fontWeight: 700 }} className="mb-6 !text-[24px] md:!text-[28px] text-[#000945]">Inclusions & Exclusions</h3>
-                <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+              <div className="bg-white rounded-[6px] border border-[#dfe1df] p-4 shadow-none">
+                <h3 style={{ fontWeight: 700 }} className="mb-4 !text-[18px] text-[#000945]">Inclusions & Exclusions</h3>
+                <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
                   {/* Inclusions */}
                   <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-green-50 text-green-600 border border-green-100">
-                        <Check className="h-5 w-5" />
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-green-50 text-green-600 border border-green-100 shrink-0">
+                        <Check className="h-4 w-4" />
                       </div>
-                      <h4 className="text-[20px] font-bold text-[#000945]">What's Included</h4>
+                      <h4 className="text-[16px] font-bold text-[#000945]">What's Included</h4>
                     </div>
-                    <ul className="flex flex-col gap-2.5">
+                    <ul className="flex flex-col gap-2">
                       {inclusions.map((item, index) => (
                         <li key={index} className="flex items-start gap-4 text-[#000945]">
                           <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-green-500">
@@ -777,13 +777,13 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                   </div>
                   {/* Exclusions */}
                   <div>
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-red-50 text-red-500 border border-red-100">
-                        <X className="h-5 w-5" />
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-red-50 text-red-500 border border-red-100 shrink-0">
+                        <X className="h-4 w-4" />
                       </div>
-                      <h4 className="text-[20px] font-bold text-[#000945]">What's Excluded</h4>
+                      <h4 className="text-[16px] font-bold text-[#000945]">What's Excluded</h4>
                     </div>
-                    <ul className="flex flex-col gap-2.5">
+                    <ul className="flex flex-col gap-2">
                       {exclusions.map((item, index) => (
                         <li key={index} className="flex items-start gap-4 text-[#000945]">
                           <div className="mt-1 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-red-100">
@@ -800,9 +800,9 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
 
             {/* HIGHLIGHTS TAB */}
             {activeTab === 'highlights' && (
-              <div className="bg-white rounded-[6px] border border-[#dfe1df] p-5 shadow-none">
-                <div className="mb-4">
-                  <h3 style={{ fontWeight: 700 }} className="!text-[24px] md:!text-[28px] text-[#000945]">Experience Highlights</h3>
+              <div className="bg-white rounded-[6px] border border-[#dfe1df] p-4 shadow-none">
+                <div className="mb-3">
+                  <h3 style={{ fontWeight: 700 }} className="!text-[18px] text-[#000945]">Experience Highlights</h3>
                 </div>
 
                 <div className="flex flex-wrap gap-2.5">
@@ -820,9 +820,9 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
 
             {/* GUIDELINE TAB */}
             {activeTab === 'guideline' && (
-              <div className="bg-white rounded-[6px] border border-[#dfe1df] p-5 shadow-none">
-                <h3 style={{ fontWeight: 700 }} className="!text-[24px] md:!text-[28px] text-[#000945] mb-4">Booking Information & Guidelines</h3>
-                <Accordion type="single" collapsible className="space-y-4">
+              <div className="bg-white rounded-[6px] border border-[#dfe1df] p-4 shadow-none">
+                <h3 style={{ fontWeight: 700 }} className="!text-[18px] text-[#000945] mb-3">Booking Information & Guidelines</h3>
+                <Accordion type="single" collapsible className="space-y-2">
                   {[
                     { title: "Booking and Payment", content: ["A deposit of 30% is required to confirm your booking", "Full payment must be completed 30 days before departure", "All prices are in INR and include taxes", "Payment via credit card, bank transfer, or UPI"] },
                     { title: "Cancellation Policy", content: ["Cancellation 60+ days: Full refund minus fee", "Cancellation 30-59 days: 75% refund", "Cancellation 15-29 days: 50% refund", "Less than 15 days: No refund"] },
@@ -831,16 +831,16 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                     <AccordionItem key={idx} value={`item-${idx}`} className="!border !border-slate-200 !bg-white !shadow-sm !rounded-xl overflow-hidden focus-within:ring-0 focus-within:outline-none data-[state=open]:!border-[#155dfc] data-[state=open]:!shadow-md transition-all duration-300">
                       <AccordionTrigger
                         id={`package-terms-item-${idx}-trigger`}
-                        className="!p-4 sm:!p-5 hover:!bg-[#EFF6FF]/50 transition-colors !no-underline focus:!outline-none focus-visible:!outline-none focus:!ring-0 data-[state=open]:!bg-[#EFF6FF]"
+                        className="!p-3 sm:!p-4 hover:!bg-[#EFF6FF]/50 transition-colors !no-underline focus:!outline-none focus-visible:!outline-none focus:!ring-0 data-[state=open]:!bg-[#EFF6FF]"
                       >
-                        <div className="flex items-center gap-4 text-left">
-                          <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#155dfc]/10 text-[#155dfc] font-bold text-[14px]">
+                        <div className="flex items-center gap-3 text-left">
+                          <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#155dfc]/10 text-[#155dfc] font-bold text-[13px]">
                             {idx + 1}
                           </div>
-                          <h3 style={{ fontSize: '16px', fontWeight: 700 }} className="text-[#000945] !m-0">{item.title}</h3>
+                          <h3 style={{ fontSize: '15px', fontWeight: 700 }} className="text-[#000945] !m-0">{item.title}</h3>
                         </div>
                       </AccordionTrigger>
-                      <AccordionContent className="!p-4 sm:!p-5 !pt-0 border-t border-slate-100 bg-white">
+                      <AccordionContent className="!p-3 sm:!p-4 !pt-0 border-t border-slate-100 bg-white">
                         <ul className="flex flex-col gap-3 mt-4">
                           {item.content.map((point, pIdx) => (
                             <li key={pIdx} className="flex items-start gap-3">
@@ -872,11 +872,11 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                   <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
                   <span className="relative text-[15px] font-bold text-white tracking-wide uppercase">Package Starting From</span>
                 </div>
-                <div className="p-5">
-                  <div className="mb-4 flex flex-col items-center justify-center gap-1 border-b border-slate-100 pb-5">
+                <div className="p-4">
+                  <div className="mb-3 flex flex-col items-center justify-center gap-1 border-b border-slate-100 pb-3">
                     <div className="flex items-baseline gap-2">
-                      <span className="text-[40px] leading-none font-medium tracking-tight text-[#155dfc]">{formatPrice(packageData.price)}</span>
-                      <span className="text-[14px] text-slate-500">per {packageData.priceType === 'per_couple' ? 'couple' : 'person'}</span>
+                      <span className="text-[32px] leading-none font-medium tracking-tight text-[#155dfc]">{formatPrice(packageData.price)}</span>
+                      <span className="text-[13px] text-slate-500">per {packageData.priceType === 'per_couple' ? 'couple' : 'person'}</span>
                     </div>
                     {discount > 0 && (
                       <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700 mt-2">
