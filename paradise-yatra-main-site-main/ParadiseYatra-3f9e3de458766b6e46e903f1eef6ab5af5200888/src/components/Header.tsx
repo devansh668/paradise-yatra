@@ -407,7 +407,7 @@ const Header = ({
         {/* Main header */}
         <div className="bg-transparent">
           <div className="max-w-6xl mx-auto px-4 md:px-6">
-            <div className={`flex items-center justify-between transition-all duration-300 ${isHome ? 'py-5' : 'py-2.5'}`}>
+            <div className={`flex items-center justify-between transition-all duration-300 ${isHome ? 'py-3' : 'py-1.5'}`}>
               {/* Logo - Left side */}
               <div className="flex items-center gap-3">
                 <button
