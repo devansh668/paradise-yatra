@@ -136,7 +136,7 @@ export default function FAQSection({ destination, tourType, faqs: faqsOverride }
     };
 
     return (
-        <section className="bg-gradient-to-b from-white to-slate-50 pt-4 pb-4 md:pt-4 md:pb-6 px-4 md:px-8 relative overflow-hidden">
+        <section className="bg-gradient-to-b from-white to-slate-50 pt-4 pb-0 md:pt-4 md:pb-0 px-4 md:px-8 relative overflow-hidden">
             {/* Background Decorative Elements */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#155dfc]/5 rounded-full blur-3xl"></div>
