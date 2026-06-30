@@ -671,7 +671,7 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                 {(dynamicDescription || packageData.description) && (
                   <div className="bg-white rounded-[6px] border border-[#dfe1df] p-5 shadow-none">
                     <h3 style={{ fontWeight: 700 }} className="text-[20px] text-[#000945] mb-4 flex items-center gap-2">
-                      <span className="text-[#ff4e00] text-xl">Tour Overview</span>
+                      <span className="text-[#155dfc] text-xl">Tour Overview</span>
                     </h3>
                     <div className={cn("text-justify transition-all duration-300", !isOverviewExpanded && "line-clamp-3 overflow-hidden")}>
                       <div
@@ -682,7 +682,7 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                     </div>
                     <button
                       onClick={() => setIsOverviewExpanded(!isOverviewExpanded)}
-                      className="mt-3 text-[14px] font-bold text-[#ff4e00] hover:underline"
+                      className="mt-3 text-[14px] font-bold text-[#155dfc] hover:underline"
                     >
                       {isOverviewExpanded ? "See Less" : "See More"}
                     </button>
@@ -1028,7 +1028,7 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                       <Button
                         onClick={handleSubmitEnquiry}
                         disabled={isSubmittingEnquiry}
-                        className="flex-1 flex h-10 items-center justify-center rounded-[6px] bg-gradient-to-r from-[#ff4e00] to-[#ff7e00] text-[15px] font-bold text-white shadow-lg shadow-[#ff4e00]/20 transition-all hover:shadow-[#ff4e00]/40 hover:-translate-y-0.5 border-none disabled:opacity-70"
+                        className="flex-1 flex h-10 items-center justify-center rounded-[6px] bg-gradient-to-r from-[#155dfc] to-[#000945] text-[15px] font-bold text-white shadow-lg shadow-[#155dfc]/20 transition-all hover:shadow-[#155dfc]/40 hover:-translate-y-0.5 border-none disabled:opacity-70"
                       >
                         {isSubmittingEnquiry ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                         {isSubmittingEnquiry ? 'Sending...' : 'Send Enquiry'}
