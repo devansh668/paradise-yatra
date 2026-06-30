@@ -863,8 +863,8 @@ const Header = ({
       </header >
       {!isHome && !disableOffset && (
         <div
-          className="relative w-full transition-all duration-300 md:mb-[5px]"
-          style={{ height: '92px' }}
+          className="relative w-full transition-all duration-300"
+          style={{ height: '58px' }}
         />
       )}
     </>
