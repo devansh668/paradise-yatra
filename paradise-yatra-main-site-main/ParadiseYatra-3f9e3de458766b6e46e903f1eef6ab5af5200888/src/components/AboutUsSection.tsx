@@ -5,7 +5,6 @@ import { Check } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export default function AboutUsSection() {
-    const scrollRef = useRef<HTMLDivElement>(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     const images = [
@@ -14,45 +13,6 @@ export default function AboutUsSection() {
         "/About/Life At Paradise Yatra/Image 2.jpg",
         "/About/Life At Paradise Yatra/Image 3.jpg"
     ];
-
-    useEffect(() => {
-        const el = scrollRef.current;
-        if (!el) return;
-        
-        let animationFrameId: number;
-        let isHovered = false;
-
-        const scroll = () => {
-            if (!isHovered && el) {
-                el.scrollTop += 0.5; // Auto-scroll speed
-                if (el.scrollTop >= el.scrollHeight - el.clientHeight) {
-                    // Slight delay before snapping back to top, or just snap
-                    el.scrollTop = 0; 
-                }
-            }
-            animationFrameId = requestAnimationFrame(scroll);
-        };
-
-        const handleMouseEnter = () => (isHovered = true);
-        const handleMouseLeave = () => (isHovered = false);
-        const handleTouchStart = () => (isHovered = true);
-        const handleTouchEnd = () => (isHovered = false);
-
-        el.addEventListener("mouseenter", handleMouseEnter);
-        el.addEventListener("mouseleave", handleMouseLeave);
-        el.addEventListener("touchstart", handleTouchStart);
-        el.addEventListener("touchend", handleTouchEnd);
-
-        animationFrameId = requestAnimationFrame(scroll);
-
-        return () => {
-            cancelAnimationFrame(animationFrameId);
-            el.removeEventListener("mouseenter", handleMouseEnter);
-            el.removeEventListener("mouseleave", handleMouseLeave);
-            el.removeEventListener("touchstart", handleTouchStart);
-            el.removeEventListener("touchend", handleTouchEnd);
-        };
-    }, []);
 
     return (
         <section className="bg-white py-16 md:py-24 px-4 sm:px-6">
@@ -154,7 +114,6 @@ export default function AboutUsSection() {
                         
                         {/* Auto-scrolling SEO Content Container */}
                         <div 
-                            ref={scrollRef}
                             className="flex-1 overflow-y-auto pr-4 space-y-4 text-black leading-relaxed text-[14px] sm:text-[15px] mb-8 font-medium scrollbar-thin scrollbar-thumb-slate-200 hover:scrollbar-thumb-slate-300"
                             style={{ scrollBehavior: 'auto' }}
                         >
