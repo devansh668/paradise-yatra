@@ -704,7 +704,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="bg-gradient-to-b from-white to-slate-50 px-4 py-12 text-gray-900 md:px-8 relative z-20 border-t border-slate-100"
+                        className="bg-gradient-to-b from-white to-slate-50 px-4 pt-4 pb-12 md:pt-6 md:pb-12 text-gray-900 md:px-8 relative z-20 border-t border-slate-100"
                     >
                         <div className="mx-auto flex max-w-6xl flex-col gap-6 relative z-10">
                             <div className="flex flex-col gap-2 md:flex-row md:items-end md:justify-between mb-2">
