@@ -556,7 +556,7 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
             <div className="bg-white rounded-[6px] border border-[#dfe1df] shadow-none">
               <div className="p-5 border-b border-[#dfe1df]">
                 <h3 style={{ fontWeight: 700 }} className="text-[20px] text-[#000945] flex items-center gap-2">
-                  <span className="text-[#ff4e00] text-xl">Tour Gallery</span>
+                  <span className="text-[#155dfc] text-xl">Tour Gallery</span>
                 </h3>
               </div>
               
@@ -594,37 +594,45 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                 </div>
 
                 {/* Quick Facts */}
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="flex flex-col items-center text-center p-4 rounded-xl bg-gradient-to-br from-white to-slate-50/50 border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300">
-                    <div className="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center mb-3">
-                      <MapPin className="h-5 w-5 text-[#ff4e00]" />
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="flex items-center gap-3 p-3 sm:p-4 rounded-xl bg-white border border-[#e8f1fc] shadow-[0_4px_20px_rgba(0,9,69,0.03)] hover:shadow-[0_8px_30px_rgba(0,9,69,0.06)] transition-all duration-300 group">
+                    <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-[#EFF6FF] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                      <MapPin className="h-5 w-5 text-[#155dfc]" />
                     </div>
-                    <p className="text-[11px] font-bold text-black uppercase tracking-wider mb-1">Tour Name</p>
-                    <p className="text-[13px] font-bold text-black leading-tight line-clamp-2">{packageData.title}</p>
+                    <div className="text-left">
+                      <p className="text-[10px] sm:text-[11px] font-black text-slate-500 uppercase tracking-wider mb-0.5">Tour Name</p>
+                      <p className="text-[12px] sm:text-[13px] font-bold text-[#000945] leading-tight line-clamp-2">{packageData.title}</p>
+                    </div>
                   </div>
 
-                  <div className="flex flex-col items-center text-center p-4 rounded-xl bg-gradient-to-br from-white to-slate-50/50 border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300">
-                    <div className="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center mb-3">
-                      <Clock className="h-5 w-5 text-[#ff4e00]" />
+                  <div className="flex items-center gap-3 p-3 sm:p-4 rounded-xl bg-white border border-[#e8f1fc] shadow-[0_4px_20px_rgba(0,9,69,0.03)] hover:shadow-[0_8px_30px_rgba(0,9,69,0.06)] transition-all duration-300 group">
+                    <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-[#EFF6FF] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                      <Clock className="h-5 w-5 text-[#155dfc]" />
                     </div>
-                    <p className="text-[11px] font-bold text-black uppercase tracking-wider mb-1">Duration</p>
-                    <p className="text-[13px] font-bold text-black leading-tight">{packageData.duration}</p>
+                    <div className="text-left">
+                      <p className="text-[10px] sm:text-[11px] font-black text-slate-500 uppercase tracking-wider mb-0.5">Duration</p>
+                      <p className="text-[12px] sm:text-[13px] font-bold text-[#000945] leading-tight line-clamp-2">{packageData.duration}</p>
+                    </div>
                   </div>
 
-                  <div className="flex flex-col items-center text-center p-4 rounded-xl bg-gradient-to-br from-white to-slate-50/50 border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300">
-                    <div className="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center mb-3">
-                      <Plane className="h-5 w-5 text-[#ff4e00]" />
+                  <div className="flex items-center gap-3 p-3 sm:p-4 rounded-xl bg-white border border-[#e8f1fc] shadow-[0_4px_20px_rgba(0,9,69,0.03)] hover:shadow-[0_8px_30px_rgba(0,9,69,0.06)] transition-all duration-300 group">
+                    <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-[#EFF6FF] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                      <Plane className="h-5 w-5 text-[#155dfc]" />
                     </div>
-                    <p className="text-[11px] font-bold text-black uppercase tracking-wider mb-1">Vehicle Type</p>
-                    <p className="text-[13px] font-bold text-black leading-tight">Sedan / SUV / Traveller</p>
+                    <div className="text-left">
+                      <p className="text-[10px] sm:text-[11px] font-black text-slate-500 uppercase tracking-wider mb-0.5">Vehicle Type</p>
+                      <p className="text-[12px] sm:text-[13px] font-bold text-[#000945] leading-tight line-clamp-2">Sedan / SUV / Traveller</p>
+                    </div>
                   </div>
 
-                  <div className="flex flex-col items-center text-center p-4 rounded-xl bg-gradient-to-br from-white to-slate-50/50 border border-slate-100 shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:-translate-y-1 hover:shadow-[0_8px_30px_rgba(0,0,0,0.06)] transition-all duration-300">
-                    <div className="h-10 w-10 rounded-full bg-orange-50 flex items-center justify-center mb-3">
-                      <MapPin className="h-5 w-5 text-[#ff4e00]" />
+                  <div className="flex items-center gap-3 p-3 sm:p-4 rounded-xl bg-white border border-[#e8f1fc] shadow-[0_4px_20px_rgba(0,9,69,0.03)] hover:shadow-[0_8px_30px_rgba(0,9,69,0.06)] transition-all duration-300 group">
+                    <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-[#EFF6FF] flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform duration-300">
+                      <MapPin className="h-5 w-5 text-[#155dfc]" />
                     </div>
-                    <p className="text-[11px] font-bold text-black uppercase tracking-wider mb-1">Start & End</p>
-                    <p className="text-[13px] font-bold text-black leading-tight">{packageData.destination?.split(',')[0].trim() || 'Not specified'}</p>
+                    <div className="text-left">
+                      <p className="text-[10px] sm:text-[11px] font-black text-slate-500 uppercase tracking-wider mb-0.5">Start & End</p>
+                      <p className="text-[12px] sm:text-[13px] font-bold text-[#000945] leading-tight line-clamp-2">{packageData.destination?.split(',')[0].trim() || 'Not specified'}</p>
+                    </div>
                   </div>
                 </div>
               </div>
