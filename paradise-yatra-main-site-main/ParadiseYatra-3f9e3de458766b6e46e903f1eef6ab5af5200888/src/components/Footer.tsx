@@ -237,11 +237,11 @@ const Footer = () => {
   const whatsappCallHref = `tel:${companyInfo.whatsapp.replace(/[^+\d]/g, "")}`;
 
   return (
-    <footer ref={footerRef} className="bg-black text-white font-['Plus_Jakarta_Sans',sans-serif] pt-6 pb-6 border-t border-white/10">
+    <footer ref={footerRef} className="bg-black text-white font-['Plus_Jakarta_Sans',sans-serif] pt-4 pb-4 border-t border-white/10">
       <div className="mx-auto max-w-6xl px-4 md:px-6">
 
         {/* Partner Logos + Registrations */}
-        <div className="mb-6 grid gap-4 md:grid-cols-2 md:items-center">
+        <div className="mb-4 grid gap-4 md:grid-cols-2 md:items-center">
           <div className="flex items-center justify-center md:justify-start">
             <div
               className="footer-partner-logo"
@@ -249,22 +249,22 @@ const Footer = () => {
               aria-label="Uttarakhand Tourism"
             />
           </div>
-          <div className="footer-registration space-y-[6px] text-left md:text-right text-white">
-            <span className="block text-[14px] text-white font-normal">GSTIN: 05IYCPS1101L2ZG</span>
-            <span className="block text-[14px] text-white font-normal">Udhyam: UDYAM-UK-05-0046271</span>
-            <span className="block text-[14px] text-white font-normal">Uttarakhand Tourism: UTTR/DEHRADUN/08-2021/004728</span>
+          <div className="footer-registration space-y-[4px] text-left md:text-right text-white">
+            <span className="block text-[13px] text-white font-normal">GSTIN: 05IYCPS1101L2ZG</span>
+            <span className="block text-[13px] text-white font-normal">Udhyam: UDYAM-UK-05-0046271</span>
+            <span className="block text-[13px] text-white font-normal">Uttarakhand Tourism: UTTR/DEHRADUN/08-2021/004728</span>
           </div>
         </div>
 
 
 
         {/* Section 3 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-4">
 
           {/* Col 1 */}
           <div>
-            <h3 className="text-[#a1a1aa] !text-[25px] !font-semibold mb-4 tracking-wide" style={{ fontSize: "25px", fontWeight: 600 }}>{companyInfo.name}</h3>
-            <div className="flex flex-col space-y-[10px]">
+            <h3 className="text-[#a1a1aa] !text-[20px] !font-semibold mb-3 tracking-wide" style={{ fontSize: "20px", fontWeight: 600 }}>{companyInfo.name}</h3>
+            <div className="flex flex-col space-y-[6px]">
               {companyLinks.map((link) => (
                 <Link key={link.name} href={link.href} className="text-[14px] text-white hover:text-[#60a5fa] transition-colors">{link.name}</Link>
               ))}
@@ -273,8 +273,8 @@ const Footer = () => {
 
           {/* Col 2 */}
           <div>
-            <h3 className="text-[#a1a1aa] !text-[25px] !font-semibold mb-4 tracking-wide" style={{ fontSize: "25px", fontWeight: 600 }}>Policy</h3>
-            <div className="flex flex-col space-y-[10px]">
+            <h3 className="text-[#a1a1aa] !text-[20px] !font-semibold mb-3 tracking-wide" style={{ fontSize: "20px", fontWeight: 600 }}>Policy</h3>
+            <div className="flex flex-col space-y-[6px]">
               {policyLinks.map((link) => (
                 <Link key={link.name} href={link.href} className="text-[14px] text-white hover:text-[#60a5fa] transition-colors">{link.name}</Link>
               ))}
@@ -283,8 +283,8 @@ const Footer = () => {
 
           {/* Col 3 */}
           <div>
-            <h3 className="text-[#a1a1aa] !text-[25px] !font-semibold mb-4 tracking-wide" style={{ fontSize: "25px", fontWeight: 600 }}>Talk to us</h3>
-            <div className="flex flex-col space-y-3">
+            <h3 className="text-[#a1a1aa] !text-[20px] !font-semibold mb-3 tracking-wide" style={{ fontSize: "20px", fontWeight: 600 }}>Talk to us</h3>
+            <div className="flex flex-col space-y-2">
               <a href={`mailto:${companyInfo.email}`} className="flex items-center text-[14px] text-white hover:text-[#60a5fa] transition-colors group">
                 <Mail className="w-5 h-5 mr-3 text-white group-hover:text-[#60a5fa]" strokeWidth={1.5} /> {companyInfo.email}
               </a>
@@ -307,8 +307,8 @@ const Footer = () => {
           {/* Col 4 */}
           <div className="flex flex-col h-full">
             <div className="flex-1">
-              <h3 className="text-[#a1a1aa] !text-[25px] !font-semibold mb-4 tracking-wide" style={{ fontSize: "25px", fontWeight: 600 }}>Social</h3>
-              <div className="flex flex-col space-y-[10px]">
+              <h3 className="text-[#a1a1aa] !text-[20px] !font-semibold mb-3 tracking-wide" style={{ fontSize: "20px", fontWeight: 600 }}>Social</h3>
+              <div className="flex flex-col space-y-[6px]">
                 <a href="https://www.facebook.com/paradiseyatra/" target="_blank" rel="noopener noreferrer" className="flex items-center text-[14px] text-white hover:text-[#60a5fa] transition-colors group">
                   <Facebook className="w-5 h-5 mr-3 text-white group-hover:text-[#60a5fa]" strokeWidth={1.5} /> Facebook
                 </a>
@@ -329,19 +329,19 @@ const Footer = () => {
 
         </div>
 
-        <div className="border-t border-white/10 my-5"></div>
+        <div className="border-t border-white/10 my-4"></div>
 
         {/* Section 4: Map & Address */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6 items-start">
           <div>
-            <h3 className="text-[#a1a1aa] !text-[25px] !font-semibold mb-4 tracking-wide" style={{ fontSize: "25px", fontWeight: 600 }}>
+            <h3 className="text-[#a1a1aa] !text-[20px] !font-semibold mb-3 tracking-wide" style={{ fontSize: "20px", fontWeight: 600 }}>
               Find Us
             </h3>
             <div className="rounded-[6px] overflow-hidden border border-white/15">
               <iframe
                 title="Paradise Yatra Office Location"
                 src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1388.6582464962262!2d78.03477118988253!3d30.327473883386677!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39092a19318db8c3%3A0xd8c55020cab7d0c4!2sParadise%20Yatra!5e0!3m2!1sen!2sin!4v1772634410746!5m2!1sen!2sin"
-                className="w-full h-[180px]"
+                className="w-full h-[140px]"
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
@@ -350,7 +350,7 @@ const Footer = () => {
           </div>
 
           <div>
-            <h3 className="text-[#a1a1aa] !text-[25px] !font-semibold mb-4 tracking-wide" style={{ fontSize: "25px", fontWeight: 600 }}>
+            <h3 className="text-[#a1a1aa] !text-[20px] !font-semibold mb-3 tracking-wide" style={{ fontSize: "20px", fontWeight: 600 }}>
               Address
             </h3>
             <p className="text-[14px] text-white leading-relaxed">
