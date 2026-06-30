@@ -237,11 +237,11 @@ const Footer = () => {
   const whatsappCallHref = `tel:${companyInfo.whatsapp.replace(/[^+\d]/g, "")}`;
 
   return (
-    <footer ref={footerRef} className="bg-black text-white font-['Plus_Jakarta_Sans',sans-serif] pt-10 pb-10 border-t border-white/10">
+    <footer ref={footerRef} className="bg-black text-white font-['Plus_Jakarta_Sans',sans-serif] pt-6 pb-6 border-t border-white/10">
       <div className="mx-auto max-w-6xl px-4 md:px-6">
 
         {/* Partner Logos + Registrations */}
-        <div className="mb-10 grid gap-6 md:grid-cols-2 md:items-center">
+        <div className="mb-6 grid gap-4 md:grid-cols-2 md:items-center">
           <div className="flex items-center justify-center md:justify-start">
             <div
               className="footer-partner-logo"
@@ -249,7 +249,7 @@ const Footer = () => {
               aria-label="Uttarakhand Tourism"
             />
           </div>
-          <div className="footer-registration space-y-[10px] text-left md:text-right text-white">
+          <div className="footer-registration space-y-[6px] text-left md:text-right text-white">
             <span className="block text-[14px] text-white font-normal">GSTIN: 05IYCPS1101L2ZG</span>
             <span className="block text-[14px] text-white font-normal">Udhyam: UDYAM-UK-05-0046271</span>
             <span className="block text-[14px] text-white font-normal">Uttarakhand Tourism: UTTR/DEHRADUN/08-2021/004728</span>
@@ -259,7 +259,7 @@ const Footer = () => {
 
 
         {/* Section 3 */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-6 gap-y-6">
 
           {/* Col 1 */}
           <div>
@@ -329,7 +329,7 @@ const Footer = () => {
 
         </div>
 
-        <div className="border-t border-white/10 my-7"></div>
+        <div className="border-t border-white/10 my-5"></div>
 
         {/* Section 4: Map & Address */}
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-6 items-start">
@@ -341,7 +341,7 @@ const Footer = () => {
               <iframe
                 title="Paradise Yatra Office Location"
                 src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1388.6582464962262!2d78.03477118988253!3d30.327473883386677!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x39092a19318db8c3%3A0xd8c55020cab7d0c4!2sParadise%20Yatra!5e0!3m2!1sen!2sin!4v1772634410746!5m2!1sen!2sin"
-                className="w-full h-[250px]"
+                className="w-full h-[180px]"
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
