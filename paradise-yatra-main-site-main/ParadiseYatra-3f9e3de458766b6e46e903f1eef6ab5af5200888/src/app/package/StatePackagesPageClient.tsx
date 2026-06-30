@@ -559,7 +559,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                 </section>
 
                 {/* Main Content Area */}
-                <section className="pt-4 pb-8 md:pt-6 md:pb-12 px-4 md:px-8 bg-gradient-to-br from-[#e8f1fc] via-[#f4f7fc] to-[#eef2f9] relative">
+                <section className="pt-4 pb-4 md:pt-6 md:pb-6 px-4 md:px-8 bg-gradient-to-br from-[#e8f1fc] via-[#f4f7fc] to-[#eef2f9] relative">
                     {/* Premium Dot Pattern Background */}
                     <div className="absolute inset-0 bg-[radial-gradient(#b8c9e0_1px,transparent_1px)] [background-size:24px_24px] opacity-40 pointer-events-none"></div>
                     
