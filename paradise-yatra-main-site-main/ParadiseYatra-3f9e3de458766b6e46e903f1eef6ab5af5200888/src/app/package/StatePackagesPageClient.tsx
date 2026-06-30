@@ -391,7 +391,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                         className="md:hidden w-full px-4 pt-6 pb-2 bg-white text-left z-10 flex-shrink-0"
                     >
                         <h1 className="!text-[32px] !font-black text-slate-900 font-plus-jakarta-sans tracking-tight leading-tight">
-                            {tourTypeLabel} Packages in <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#155dfc] to-[#000945]">{formattedLocation}</span>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#155dfc] to-[#000945]">{formattedLocation}</span>
                         </h1>
                     </motion.div>
 
@@ -532,7 +532,7 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                         >
                             {/* Desktop Heading */}
                             <h2 className="hidden md:block !text-xl md:!text-[64px] !font-black text-white text-center font-plus-jakarta-sans tracking-tight leading-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
-                                {tourTypeLabel} Packages in <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] to-[#818cf8] filter drop-shadow-[0_0_15px_rgba(56,189,248,0.5)]">{formattedLocation}</span>
+                                <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] to-[#818cf8] filter drop-shadow-[0_0_15px_rgba(56,189,248,0.5)]">{formattedLocation}</span>
                             </h2>
 
                             <div className="hidden md:flex flex-wrap items-center justify-center gap-4 lg:gap-6 w-full pb-8">

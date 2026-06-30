@@ -332,7 +332,7 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                 ? 'Luxury Tour Packages'
             : slug.includes('trending')
                 ? 'Trending Tour Packages'
-            : `${tourTypeLabel} Packages in ${formattedLocation}`);
+            : `${formattedLocation}`);
 
     return (
         <div className="min-h-screen bg-slate-50 flex flex-col font-plus-jakarta-sans">
