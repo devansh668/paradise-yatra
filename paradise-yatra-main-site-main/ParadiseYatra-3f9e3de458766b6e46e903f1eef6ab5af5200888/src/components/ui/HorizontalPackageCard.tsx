@@ -242,20 +242,24 @@ const HorizontalPackageCard: React.FC<HorizontalPackageCardProps> = ({
                         </div>
                     )}
 
-                    <div className="flex items-center space-x-4 mb-2">
-                        <div className="flex items-center text-[#000945] transition-colors" title="Hotel Included">
-                            <Hotel className="w-4 h-4" />
+                    <div className="flex items-center flex-wrap gap-x-4 gap-y-2 mb-2">
+                        <div className="flex items-center gap-1.5 text-[#000945] transition-colors" title="Hotel Included">
+                            <Hotel className="w-4 h-4 shrink-0" />
+                            <span className="text-[11px] font-semibold leading-none">Hotels</span>
                         </div>
-                        <div className="flex items-center text-[#000945] transition-colors" title="Meals Included">
-                            <Utensils className="w-4 h-4" />
+                        <div className="flex items-center gap-1.5 text-[#000945] transition-colors" title="Meals Included">
+                            <Utensils className="w-4 h-4 shrink-0" />
+                            <span className="text-[11px] font-semibold leading-none">Meals</span>
                         </div>
-                        <div className="flex items-center text-[#000945] transition-colors" title="Transfers Included">
-                            <Car className="w-4 h-4" />
+                        <div className="flex items-center gap-1.5 text-[#000945] transition-colors" title="Transfers Included">
+                            <Car className="w-4 h-4 shrink-0" />
+                            <span className="text-[11px] font-semibold leading-none">Transport</span>
                         </div>
-                        <div className="flex items-center text-[#000945] transition-colors" title="Sightseeing Included">
-                            <Camera className="w-4 h-4" />
+                        <div className="flex items-center gap-1.5 text-[#000945] transition-colors" title="Sightseeing Included">
+                            <Camera className="w-4 h-4 shrink-0" />
+                            <span className="text-[11px] font-semibold leading-none">Sightseeing</span>
                         </div>
-                        <span className="text-[10px] text-[#000945] font-medium border-l border-slate-200 pl-3">+2 more</span>
+                        <span className="text-[11px] text-[#000945] font-semibold border-l border-slate-200 pl-3 leading-none">+2 more</span>
                     </div>
                 </div>
 
