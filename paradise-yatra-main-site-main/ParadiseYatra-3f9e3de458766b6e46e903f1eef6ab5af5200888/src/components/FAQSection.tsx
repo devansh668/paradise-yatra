@@ -136,19 +136,19 @@ export default function FAQSection({ destination, tourType, faqs: faqsOverride }
     };
 
     return (
-        <section className="bg-gradient-to-b from-white to-slate-50 py-16 md:py-24 px-4 md:px-8 relative overflow-hidden">
+        <section className="bg-gradient-to-b from-white to-slate-50 py-8 md:py-12 px-4 md:px-8 relative overflow-hidden">
             {/* Background Decorative Elements */}
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
                 <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#155dfc]/5 rounded-full blur-3xl"></div>
                 <div className="absolute top-40 -left-40 w-96 h-96 bg-[#000945]/5 rounded-full blur-3xl"></div>
             </div>
 
-            <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-12 lg:gap-20 items-center relative z-10">
+            <div className="max-w-7xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 items-center relative z-10">
                 {/* Left Column: FAQ Content */}
                 <div className="w-full lg:w-1/2">
-                    <div className="mb-10 text-center lg:text-left">
-                        <span className="inline-block py-1 px-3 rounded-full bg-[#EFF6FF] text-[#155dfc] text-sm font-bold tracking-wider uppercase mb-4 border border-[#155dfc]/10">
-                            Clear Your Doubts
+                    <div className="mb-6 text-center lg:text-left">
+                        <span className="inline-block py-1 px-3 rounded-full bg-[#EFF6FF] text-[#155dfc] text-sm font-bold tracking-wider uppercase mb-2 border border-[#155dfc]/10">
+                            FAQs
                         </span>
                         <h2 className="text-[32px] md:text-[46px] font-extrabold text-[#000945] leading-[1.15] mb-4 tracking-tight">
                             Got Questions? We Have Answers.
