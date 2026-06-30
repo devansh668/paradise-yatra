@@ -76,8 +76,8 @@ const HomePageClient = memo(() => {
       <div className="home-nonhero-radius">
         {renderBelowFold ? (
           <>
-            <LazyHoneymoonPackages />
             <LazyTrendingPackagesSection />
+            <LazyHoneymoonPackages />
             <LazyWhyChooseParadiseYatra />
             <LazyIndiaTourPackagesSection />
             <LazyInternationalTourPackagesSection />
