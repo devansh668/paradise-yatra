@@ -404,10 +404,10 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                     <div className="max-w-6xl mx-auto">
                         {/* Theme Overview Section */}
                         <div className="mb-6 text-left bg-white/80 backdrop-blur-md p-6 md:p-8 rounded-[20px] shadow-sm border border-slate-100/50">
-                            <h2 className="!text-[24px] md:!text-[32px] !font-bold text-[#000945] mb-4">
+                            <h2 className="!text-[20px] md:!text-[26px] !font-bold text-[#000945] mb-3">
                                 {finalTitle}
                             </h2>
-                            <p className="!text-black text-base md:text-lg leading-relaxed font-medium">
+                            <p className="!text-slate-800 text-sm md:text-base leading-relaxed font-normal">
                                 {overviewDescription}
                             </p>
                         </div>
