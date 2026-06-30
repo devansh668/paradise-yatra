@@ -523,41 +523,37 @@ export default function DedicatedPackagesPageClient({ tourType, state, country }
                     </motion.div>
 
                     {/* Centered Hub (Hidden on mobile since highlights are hidden) */}
-                    <div className="hidden md:block max-w-6xl w-full mx-auto px-4 md:px-8 relative z-30">
+                    <div className="hidden md:block max-w-6xl w-full mx-auto px-4 md:px-8 relative z-30 pt-10">
                         <motion.div 
                             initial={{ opacity: 0, y: 30 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.6, delay: 0.2 }}
-                            className="flex flex-col items-center max-w-5xl mx-auto w-full"
+                            className="flex flex-col items-center max-w-5xl mx-auto w-full gap-8"
                         >
-                            <Card className="bg-white/80 backdrop-blur-xl rounded-[20px] shadow-2xl border border-white/40 overflow-hidden w-full md:min-h-[160px] flex items-center transition-all duration-300 hover:shadow-[0_20px_40px_-15px_rgba(0,9,69,0.3)] hover:bg-white/90">
-                                <CardContent className="p-0 md:p-8 w-full h-full flex flex-col justify-center items-center">
-                                    {/* Desktop Heading */}
-                                    <h2 className="hidden md:block !text-xl md:!text-[48px] !font-black text-slate-900 mb-6 text-center font-plus-jakarta-sans tracking-tight leading-tight drop-shadow-sm">
-                                        {tourTypeLabel} Packages in <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#155dfc] to-[#000945]">{formattedLocation}</span>
-                                    </h2>
+                            {/* Desktop Heading */}
+                            <h2 className="hidden md:block !text-xl md:!text-[64px] !font-black text-white text-center font-plus-jakarta-sans tracking-tight leading-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
+                                {tourTypeLabel} Packages in <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#38bdf8] to-[#818cf8] filter drop-shadow-[0_0_15px_rgba(56,189,248,0.5)]">{formattedLocation}</span>
+                            </h2>
 
-                                    <div className="hidden md:flex flex-nowrap items-center justify-center gap-x-6 lg:gap-x-12 w-full px-2 md:px-4 py-4 overflow-x-auto no-scrollbar">
-                                        {[
-                                            { text: 'Best pricing' },
-                                            { text: 'Private cab included' },
-                                            { text: 'Handpicked hotels' },
-                                            { text: 'Local expert support' }
-                                        ].map((highlight, idx) => (
-                                            <motion.div 
-                                                key={idx}
-                                                whileHover={{ scale: 1.05 }}
-                                                className="flex items-center gap-3 group flex-shrink-0 cursor-pointer"
-                                            >
-                                                <div className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-50/80 text-[#155dfc] border border-blue-100/50 flex-shrink-0 shadow-sm transition-colors group-hover:bg-[#155dfc] group-hover:text-white">
-                                                    <Check className="w-4 h-4 stroke-[2.5]" />
-                                                </div>
-                                                <span className="text-slate-800 font-bold text-[12px] md:text-[15px] tracking-tight whitespace-nowrap group-hover:text-[#155dfc] transition-colors">{highlight.text}</span>
-                                            </motion.div>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
+                            <div className="hidden md:flex flex-wrap items-center justify-center gap-4 lg:gap-6 w-full pb-8">
+                                {[
+                                    { text: 'Best pricing' },
+                                    { text: 'Private cab included' },
+                                    { text: 'Handpicked hotels' },
+                                    { text: 'Local expert support' }
+                                ].map((highlight, idx) => (
+                                    <motion.div 
+                                        key={idx}
+                                        whileHover={{ scale: 1.05, y: -2 }}
+                                        className="flex items-center gap-2.5 bg-black/30 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 hover:border-white/50 hover:bg-black/50 transition-all duration-300 shadow-[0_8px_16px_-6px_rgba(0,0,0,0.5)]"
+                                    >
+                                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-[#38bdf8] to-[#818cf8] text-white flex-shrink-0">
+                                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                                        </div>
+                                        <span className="text-white font-bold text-[15px] tracking-wide whitespace-nowrap">{highlight.text}</span>
+                                    </motion.div>
+                                ))}
+                            </div>
                         </motion.div>
                     </div>
                 </section>

@@ -369,31 +369,32 @@ export default function ThemePackagesPageClient({ slug }: { slug: string }) {
                     </div>
 
                     {/* Centered Hub */}
-                    <div className="hidden md:block max-w-6xl w-full mx-auto px-4 md:px-8 relative z-30">
-                        <div className="flex flex-col items-center max-w-5xl mx-auto w-full">
-                            <Card className="bg-white rounded-[6px] shadow-none border border-slate-100 overflow-hidden w-full md:h-[150px] flex items-center">
-                                <CardContent className="p-0 md:p-6 w-full h-full flex flex-col justify-center items-center">
-                                    <h2 className="hidden md:block !text-xl md:!text-[44px] !font-black text-slate-800 mb-4 text-center font-plus-jakarta-sans tracking-tight leading-tight">
-                                        {heroHeading}
-                                    </h2>
+                    <div className="hidden md:block max-w-6xl w-full mx-auto px-4 md:px-8 relative z-30 pt-10">
+                        <div className="flex flex-col items-center max-w-5xl mx-auto w-full gap-8">
+                            {/* Desktop Heading */}
+                            <h2 className="hidden md:block !text-xl md:!text-[56px] !font-black text-white text-center font-plus-jakarta-sans tracking-tight leading-tight drop-shadow-[0_4px_24px_rgba(0,0,0,0.6)]">
+                                {heroHeading}
+                            </h2>
 
-                                    <div className="hidden md:flex flex-nowrap items-center justify-center gap-x-6 lg:gap-x-12 w-full px-2 md:px-4 overflow-x-auto no-scrollbar">
-                                        {[
-                                            "Best pricing",
-                                            "Private cab included",
-                                            "Handpicked hotels",
-                                            "Local expert support"
-                                        ].map((highlight, idx) => (
-                                            <div key={idx} className="flex items-center gap-3 group flex-shrink-0">
-                                                <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-50 text-blue-600 border border-blue-100 flex-shrink-0">
-                                                    <Check className="w-3.5 h-3.5 stroke-[2.5]" />
-                                                </div>
-                                                <span className="text-[#000945] font-medium text-[12px] md:text-[15px] tracking-tight whitespace-nowrap">{highlight}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                </CardContent>
-                            </Card>
+                            <div className="hidden md:flex flex-wrap items-center justify-center gap-4 lg:gap-6 w-full pb-8">
+                                {[
+                                    { text: "Best pricing" },
+                                    { text: "Private cab included" },
+                                    { text: "Handpicked hotels" },
+                                    { text: "Local expert support" }
+                                ].map((highlight, idx) => (
+                                    <motion.div 
+                                        key={idx}
+                                        whileHover={{ scale: 1.05, y: -2 }}
+                                        className="flex items-center gap-2.5 bg-black/30 backdrop-blur-md px-6 py-3 rounded-full border border-white/20 hover:border-white/50 hover:bg-black/50 transition-all duration-300 shadow-[0_8px_16px_-6px_rgba(0,0,0,0.5)]"
+                                    >
+                                        <div className="flex items-center justify-center w-6 h-6 rounded-full bg-gradient-to-br from-[#38bdf8] to-[#818cf8] text-white flex-shrink-0">
+                                            <Check className="w-3.5 h-3.5 stroke-[3]" />
+                                        </div>
+                                        <span className="text-white font-bold text-[15px] tracking-wide whitespace-nowrap">{highlight.text}</span>
+                                    </motion.div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </section>
