@@ -150,6 +150,7 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
   const [numberOfDays, setNumberOfDays] = useState<number>(1);
   const [message, setMessage] = useState('');
   const [isSubmittingEnquiry, setIsSubmittingEnquiry] = useState(false);
+  const [isEnquiryModalOpen, setIsEnquiryModalOpen] = useState(false);
   const [isHighlightsExpanded, setIsHighlightsExpanded] = useState(false);
   const [activeTab, setActiveTab] = useState<'overview' | 'itinerary' | 'includes' | 'highlights' | 'faqs' | 'guideline'>('overview');
   const [isOverviewExpanded, setIsOverviewExpanded] = useState(false);
@@ -551,7 +552,7 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
         {/* Grid Layout */}
         <div className="grid grid-cols-1 gap-3 md:gap-4 lg:grid-cols-12">
           {/* Left Column (Content) */}
-          <div className="flex flex-col gap-4 lg:col-span-8">
+          <div className="flex flex-col gap-4 lg:col-span-12 lg:max-w-5xl lg:mx-auto lg:w-full">
             {/* Tour Gallery & Quick Facts */}
             <div className="bg-white rounded-[6px] border border-[#dfe1df] shadow-none">
               <div className="p-4 border-b border-[#dfe1df]">
@@ -645,18 +646,28 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                 { id: 'itinerary', label: 'Itinerary' },
                 { id: 'includes', label: 'Includes' },
                 { id: 'highlights', label: 'Highlights' },
+                { id: 'enquiry', label: 'Enquiry' },
                 { id: 'guideline', label: 'Guideline' }
               ].map((tab) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveTab(tab.id as any)}
+                  onClick={() => {
+                    if (tab.id === 'enquiry') {
+                      setIsEnquiryModalOpen(true);
+                    } else {
+                      setActiveTab(tab.id as any);
+                    }
+                  }}
                   className={cn(
                     "relative flex items-center gap-2 px-5 py-2.5 text-[15px] font-bold rounded-full transition-all duration-300 whitespace-nowrap",
-                    activeTab === tab.id 
+                    tab.id === 'enquiry'
+                      ? "text-white bg-gradient-to-r from-[#155dfc] to-[#000945] shadow-md shadow-[#155dfc]/30 hover:-translate-y-0.5"
+                      : activeTab === tab.id 
                       ? "text-white bg-gradient-to-r from-[#000945] to-[#155dfc] shadow-md shadow-[#155dfc]/20" 
                       : "text-slate-600 bg-white border border-slate-200 hover:border-slate-300 hover:text-[#000945] hover:shadow-sm"
                   )}
                 >
+                  {tab.id === 'enquiry' && <Mail className="h-4 w-4" />}
                   {tab.label}
                 </button>
               ))}
@@ -857,232 +868,23 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
                 </Accordion>
               </div>
             )}
+
+            {/* Send Enquiry Button */}
+            <div className="flex justify-center mt-2 mb-2">
+              <button
+                onClick={() => setIsEnquiryModalOpen(true)}
+                className="group relative flex items-center gap-3 px-8 py-4 rounded-xl bg-gradient-to-r from-[#155dfc] to-[#000945] text-white font-bold text-[16px] shadow-lg shadow-[#155dfc]/30 hover:shadow-[#155dfc]/50 hover:-translate-y-0.5 transition-all duration-300 overflow-hidden cursor-pointer"
+              >
+                <span className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <Mail className="h-5 w-5 shrink-0" />
+                Send Enquiry
+                <ArrowRight className="h-5 w-5 shrink-0 group-hover:translate-x-1 transition-transform duration-300" />
+              </button>
+            </div>
             
           </div>
 
-          {/* Right Column (Sticky Sidebar) */}
-          <div className="lg:col-span-4 flex flex-col gap-6 relative z-10">
-            {/* Pricing Card */}
-            <div
-              id="booking-sidebar"
-              className="lg:sticky w-full overflow-hidden scroll-mt-[100px] rounded-2xl border border-slate-200/60 bg-white/95 backdrop-blur-xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] transition-all duration-300"
-              style={{ top: stickyTop }}
-            >
-                <div className="bg-gradient-to-r from-[#000945] via-[#0a1860] to-[#155dfc] p-4 text-center border-b border-white/10 relative overflow-hidden">
-                  <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
-                  <span className="relative text-[15px] font-bold text-white tracking-wide uppercase">Package Starting From</span>
-                </div>
-                <div className="p-4">
-                  <div className="mb-3 flex flex-col items-center justify-center gap-1 border-b border-slate-100 pb-3">
-                    <div className="flex items-baseline gap-2">
-                      <span className="text-[32px] leading-none font-medium tracking-tight text-[#155dfc]">{formatPrice(packageData.price)}</span>
-                      <span className="text-[13px] text-slate-500">per {packageData.priceType === 'per_couple' ? 'couple' : 'person'}</span>
-                    </div>
-                    {discount > 0 && (
-                      <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-700 mt-2">
-                        {discount}% OFF Early Bird
-                      </span>
-                    )}
-                  </div>
-                  <div className="flex flex-col gap-4">
-                    <div className="space-y-4">
-                      <div className="flex items-start gap-3">
-                        <User className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
-                        <div className="flex-1">
-                          <p className="text-[14px] font-bold !text-black mb-1">Full Name</p>
-                          <input
-                            type="text"
-                            placeholder="Enter your name"
-                            value={fullName}
-                            onChange={(e) => setFullName(e.target.value)}
-                            className="w-full bg-white border border-[#e5e7eb] rounded-[4px] h-9 px-3 text-[13px] !text-black shadow-none outline-none focus:border-[#155dfc] transition-colors placeholder:text-slate-400"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <Mail className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
-                        <div className="flex-1">
-                          <p className="text-[14px] font-bold !text-black mb-1">Email</p>
-                          <input
-                            type="email"
-                            placeholder="your@email.com"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="w-full bg-white border border-[#e5e7eb] rounded-[4px] h-9 px-3 text-[13px] !text-black shadow-none outline-none focus:border-[#155dfc] transition-colors placeholder:text-slate-400"
-                          />
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <Phone className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
-                        <div className="flex-1">
-                          <p className="text-[14px] font-bold !text-black mb-1">Phone Number</p>
-                          <div className="flex bg-white border border-[#e5e7eb] rounded-[4px] overflow-hidden focus-within:border-[#155dfc] transition-colors">
-                            <div className="w-[80px] shrink-0 h-9 flex items-center px-1 bg-slate-50 border-r border-[#e5e7eb]">
-                              <PhoneInput
-                                country="in"
-                                onChange={(value, data) => {
-                                  if (data && typeof data === "object" && "dialCode" in data) {
-                                    const dialCode = (data as { dialCode?: string }).dialCode;
-                                    if (dialCode) setPhoneDialCode(`+${dialCode}`);
-                                  }
-                                }}
-                                preferredCountries={["in", "ae", "us", "gb"]}
-                                enableSearch={false}
-                                disableSearchIcon
-                                inputStyle={{ display: 'none' }}
-                                buttonStyle={{
-                                  position: 'relative',
-                                  border: 'none',
-                                  background: 'transparent',
-                                  width: '100%',
-                                  height: '100%',
-                                  padding: '0 4px',
-                                  display: 'flex',
-                                  justifyContent: 'center',
-                                  alignItems: 'center'
-                                }}
-                              />
-                            </div>
-                            <input
-                              type="tel"
-                              value={phoneNumber}
-                              onChange={(e) => setPhoneNumber(e.target.value)}
-                              placeholder="Enter your number"
-                              className="flex-1 h-9 px-3 text-[13px] !text-black shadow-none outline-none placeholder:text-slate-400 bg-transparent"
-                              required
-                              autoComplete="tel"
-                            />
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <Calendar className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
-                        <div className="flex-1">
-                          <p className="text-[14px] font-bold !text-black mb-1">Travel Date</p>
-                          <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
-                            <PopoverTrigger asChild>
-                              <Button
-                                variant="outline"
-                                className={cn(
-                                  "w-full justify-start text-left font-normal bg-white !border-[#e5e7eb] !rounded-[4px] h-9 px-3 text-[13px] !text-black !shadow-none hover:bg-slate-50 hover:!text-black transition-colors",
-                                  !date && "!text-slate-400"
-                                )}
-                              >
-                                {date ? format(date, "MMM dd, yyyy") : <span>Pick a date</span>}
-                              </Button>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-auto p-0 !border-[#dfe1df] !rounded-[6px] z-[9999]" align="start">
-                              <CalendarComponent
-                                mode="single"
-                                selected={date}
-                                onSelect={(d) => { setDate(d); setTimeout(() => setCalendarOpen(false), 150); }}
-                                disabled={{ before: new Date() }}
-                              />
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <Clock className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
-                        <div className="flex-1 flex flex-col gap-2">
-                          <div className="flex items-center justify-between">
-                            <p className="text-[14px] font-bold !text-black">Number of Days</p>
-                            <div className="flex items-center bg-white border border-[#e5e7eb] rounded-[4px] overflow-hidden">
-                              <button onClick={() => setNumberOfDays(Math.max(1, numberOfDays - 1))} className="w-8 h-8 flex items-center justify-center !text-black hover:bg-slate-50 transition-colors"><Minus className="w-3.5 h-3.5" /></button>
-                              <span className="text-[13px] font-semibold !text-black w-8 flex items-center justify-center border-x border-[#e5e7eb] h-8">{numberOfDays}</span>
-                              <button onClick={() => setNumberOfDays(numberOfDays + 1)} className="w-8 h-8 flex items-center justify-center !text-black hover:bg-slate-50 transition-colors"><Plus className="w-3.5 h-3.5" /></button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <Users className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
-                        <div className="flex-1 flex flex-col gap-2">
-                          <div className="flex items-center justify-between">
-                            <p className="text-[14px] font-bold !text-black">Adults</p>
-                            <div className="flex items-center bg-white border border-[#e5e7eb] rounded-[4px] overflow-hidden">
-                              <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-8 h-8 flex items-center justify-center !text-black hover:bg-slate-50 transition-colors"><Minus className="w-3.5 h-3.5" /></button>
-                              <span className="text-[13px] font-semibold !text-black w-8 flex items-center justify-center border-x border-[#e5e7eb] h-8">{adults}</span>
-                              <button onClick={() => setAdults(adults + 1)} className="w-8 h-8 flex items-center justify-center !text-black hover:bg-slate-50 transition-colors"><Plus className="w-3.5 h-3.5" /></button>
-                            </div>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <p className="text-[14px] font-bold !text-black">Children</p>
-                            <div className="flex items-center bg-white border border-[#e5e7eb] rounded-[4px] overflow-hidden">
-                              <button onClick={() => setChildren(Math.max(0, children - 1))} className="w-8 h-8 flex items-center justify-center !text-black hover:bg-slate-50 transition-colors"><Minus className="w-3.5 h-3.5" /></button>
-                              <span className="text-[13px] font-semibold !text-black w-8 flex items-center justify-center border-x border-[#e5e7eb] h-8">{children}</span>
-                              <button onClick={() => setChildren(children + 1)} className="w-8 h-8 flex items-center justify-center !text-black hover:bg-slate-50 transition-colors"><Plus className="w-3.5 h-3.5" /></button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-3">
-                        <MessageSquare className="h-5 w-5 text-[#155dfc] shrink-0 mt-0.5" />
-                        <div className="flex-1">
-                          <p className="text-[14px] font-bold !text-black mb-1">Message</p>
-                          <textarea
-                            placeholder="Any special requests?"
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                            className="w-full bg-white border border-[#e5e7eb] rounded-[4px] px-3 py-2 text-[13px] !text-black shadow-none outline-none focus:border-[#155dfc] transition-colors placeholder:text-slate-400 min-h-[60px] resize-none leading-relaxed"
-                          />
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-2 flex gap-3">
-                      <Button
-                        onClick={handleSubmitEnquiry}
-                        disabled={isSubmittingEnquiry}
-                        className="flex-1 flex h-10 items-center justify-center rounded-[6px] bg-gradient-to-r from-[#155dfc] to-[#000945] text-[15px] font-bold text-white shadow-lg shadow-[#155dfc]/20 transition-all hover:shadow-[#155dfc]/40 hover:-translate-y-0.5 border-none disabled:opacity-70"
-                      >
-                        {isSubmittingEnquiry ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                        {isSubmittingEnquiry ? 'Sending...' : 'Send Enquiry'}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-            {/* Trust Indicators */}
-            <div className="rounded-[6px] border border-[#dfe1df] bg-white p-6 shadow-none">
-              <div className="flex flex-col gap-5">
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                    <Shield className="h-5 w-5" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-bold text-[#000945]">Best Price Guaranteed</span>
-                    <span className="text-xs text-slate-500">Unbeatable value for your journey.</span>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                    <Users className="h-5 w-5" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-bold text-[#000945]">24/7 Expert Support</span>
-                    <span className="text-xs text-slate-500">Live assistance during your trip.</span>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-50 text-blue-600">
-                    <Award className="h-5 w-5" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="text-sm font-bold text-[#000945]">Verified Reviews</span>
-                    <span className="text-xs text-slate-500">4.4/5 based on 160+ reviews.</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          {/* Right Column Removed */}
         </div>
 
         {/* Why Choose Us Section */}
@@ -1156,12 +958,7 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
         </div>
         <div className="flex items-center gap-2 flex-1 justify-end max-w-[220px]">
           <Button
-            onClick={() => {
-              const element = document.getElementById('booking-sidebar');
-              if (element) {
-                element.scrollIntoView({ behavior: 'smooth' });
-              }
-            }}
+            onClick={() => setIsEnquiryModalOpen(true)}
             className="flex-1 h-10 px-0 items-center justify-center rounded-[6px] bg-[#000945] text-[13px] font-bold text-white shadow-none hover:bg-[#000945]/90"
           >
             Enquire
@@ -1176,6 +973,189 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
           packageTitle={packageData?.title}
           packagePrice={formatPrice(packageData.price)}
         />
+      )}
+
+      {/* Enquiry Modal */}
+      {isEnquiryModalOpen && (
+        <div
+          className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
+          style={{ backdropFilter: 'blur(6px)', backgroundColor: 'rgba(0,9,69,0.55)' }}
+          onClick={() => setIsEnquiryModalOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-lg bg-white rounded-2xl shadow-2xl overflow-hidden animate-[slideUp_0.3s_ease-out]"
+            style={{ maxHeight: '92vh', overflowY: 'auto' }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="bg-gradient-to-r from-[#000945] via-[#0a1860] to-[#155dfc] p-5 flex items-center justify-between relative overflow-hidden">
+              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10" />
+              <div className="relative">
+                <p className="text-[11px] font-semibold text-blue-200 uppercase tracking-widest mb-0.5">Package Starting From</p>
+                <div className="flex items-baseline gap-2">
+                  <span className="text-[28px] font-bold text-white leading-none">{formatPrice(packageData.price)}</span>
+                  <span className="text-[13px] text-blue-200">per {packageData.priceType === 'per_couple' ? 'couple' : 'person'}</span>
+                </div>
+                <p className="text-[13px] text-blue-100 mt-1 font-medium">{packageData.title}</p>
+              </div>
+              <button
+                onClick={() => setIsEnquiryModalOpen(false)}
+                className="relative flex h-9 w-9 items-center justify-center rounded-full bg-white/15 hover:bg-white/25 transition-colors cursor-pointer shrink-0"
+              >
+                <X className="h-5 w-5 text-white" />
+              </button>
+            </div>
+
+            {/* Modal Body */}
+            <div className="p-5 flex flex-col gap-4">
+              {/* Full Name */}
+              <div className="flex items-start gap-3">
+                <User className="h-5 w-5 text-[#155dfc] shrink-0 mt-6" />
+                <div className="flex-1">
+                  <p className="text-[13px] font-bold text-black mb-1">Full Name</p>
+                  <input
+                    type="text"
+                    placeholder="Enter your name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="w-full bg-white border border-[#e5e7eb] rounded-[6px] h-10 px-3 text-[13px] text-black outline-none focus:border-[#155dfc] transition-colors placeholder:text-slate-400"
+                  />
+                </div>
+              </div>
+
+              {/* Email */}
+              <div className="flex items-start gap-3">
+                <Mail className="h-5 w-5 text-[#155dfc] shrink-0 mt-6" />
+                <div className="flex-1">
+                  <p className="text-[13px] font-bold text-black mb-1">Email</p>
+                  <input
+                    type="email"
+                    placeholder="your@email.com"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-white border border-[#e5e7eb] rounded-[6px] h-10 px-3 text-[13px] text-black outline-none focus:border-[#155dfc] transition-colors placeholder:text-slate-400"
+                  />
+                </div>
+              </div>
+
+              {/* Phone */}
+              <div className="flex items-start gap-3">
+                <Phone className="h-5 w-5 text-[#155dfc] shrink-0 mt-6" />
+                <div className="flex-1">
+                  <p className="text-[13px] font-bold text-black mb-1">Phone Number</p>
+                  <div className="flex bg-white border border-[#e5e7eb] rounded-[6px] overflow-hidden focus-within:border-[#155dfc] transition-colors">
+                    <div className="w-[80px] shrink-0 h-10 flex items-center px-1 bg-slate-50 border-r border-[#e5e7eb]">
+                      <PhoneInput
+                        country="in"
+                        onChange={(value, data) => {
+                          if (data && typeof data === 'object' && 'dialCode' in data) {
+                            const dialCode = (data as { dialCode?: string }).dialCode;
+                            if (dialCode) setPhoneDialCode(`+${dialCode}`);
+                          }
+                        }}
+                        preferredCountries={['in', 'ae', 'us', 'gb']}
+                        enableSearch={false}
+                        disableSearchIcon
+                        inputStyle={{ display: 'none' }}
+                        buttonStyle={{ position: 'relative', border: 'none', background: 'transparent', width: '100%', height: '100%', padding: '0 4px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}
+                      />
+                    </div>
+                    <input
+                      type="tel"
+                      value={phoneNumber}
+                      onChange={(e) => setPhoneNumber(e.target.value)}
+                      placeholder="Enter your number"
+                      className="flex-1 h-10 px-3 text-[13px] text-black outline-none placeholder:text-slate-400 bg-transparent"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Travel Date */}
+              <div className="flex items-start gap-3">
+                <Calendar className="h-5 w-5 text-[#155dfc] shrink-0 mt-6" />
+                <div className="flex-1">
+                  <p className="text-[13px] font-bold text-black mb-1">Travel Date</p>
+                  <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        className={cn('w-full justify-start text-left font-normal bg-white !border-[#e5e7eb] !rounded-[6px] h-10 px-3 text-[13px] !text-black !shadow-none hover:bg-slate-50 hover:!text-black transition-colors', !date && '!text-slate-400')}
+                      >
+                        {date ? format(date, 'MMM dd, yyyy') : <span>Pick a date</span>}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0 !border-[#dfe1df] !rounded-[6px] z-[99999]" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={date}
+                        onSelect={(d) => { setDate(d); setTimeout(() => setCalendarOpen(false), 150); }}
+                        disabled={{ before: new Date() }}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </div>
+              </div>
+
+              {/* Days & Travellers row */}
+              <div className="grid grid-cols-3 gap-3">
+                {/* Number of Days */}
+                <div className="flex flex-col gap-1.5">
+                  <p className="text-[13px] font-bold text-black">Days</p>
+                  <div className="flex items-center bg-white border border-[#e5e7eb] rounded-[6px] overflow-hidden">
+                    <button onClick={() => setNumberOfDays(Math.max(1, numberOfDays - 1))} className="w-8 h-9 flex items-center justify-center text-black hover:bg-slate-50 cursor-pointer"><Minus className="w-3 h-3" /></button>
+                    <span className="text-[13px] font-semibold text-black flex-1 flex items-center justify-center border-x border-[#e5e7eb] h-9">{numberOfDays}</span>
+                    <button onClick={() => setNumberOfDays(numberOfDays + 1)} className="w-8 h-9 flex items-center justify-center text-black hover:bg-slate-50 cursor-pointer"><Plus className="w-3 h-3" /></button>
+                  </div>
+                </div>
+                {/* Adults */}
+                <div className="flex flex-col gap-1.5">
+                  <p className="text-[13px] font-bold text-black">Adults</p>
+                  <div className="flex items-center bg-white border border-[#e5e7eb] rounded-[6px] overflow-hidden">
+                    <button onClick={() => setAdults(Math.max(1, adults - 1))} className="w-8 h-9 flex items-center justify-center text-black hover:bg-slate-50 cursor-pointer"><Minus className="w-3 h-3" /></button>
+                    <span className="text-[13px] font-semibold text-black flex-1 flex items-center justify-center border-x border-[#e5e7eb] h-9">{adults}</span>
+                    <button onClick={() => setAdults(adults + 1)} className="w-8 h-9 flex items-center justify-center text-black hover:bg-slate-50 cursor-pointer"><Plus className="w-3 h-3" /></button>
+                  </div>
+                </div>
+                {/* Children */}
+                <div className="flex flex-col gap-1.5">
+                  <p className="text-[13px] font-bold text-black">Children</p>
+                  <div className="flex items-center bg-white border border-[#e5e7eb] rounded-[6px] overflow-hidden">
+                    <button onClick={() => setChildren(Math.max(0, children - 1))} className="w-8 h-9 flex items-center justify-center text-black hover:bg-slate-50 cursor-pointer"><Minus className="w-3 h-3" /></button>
+                    <span className="text-[13px] font-semibold text-black flex-1 flex items-center justify-center border-x border-[#e5e7eb] h-9">{children}</span>
+                    <button onClick={() => setChildren(children + 1)} className="w-8 h-9 flex items-center justify-center text-black hover:bg-slate-50 cursor-pointer"><Plus className="w-3 h-3" /></button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Message */}
+              <div className="flex items-start gap-3">
+                <MessageSquare className="h-5 w-5 text-[#155dfc] shrink-0 mt-6" />
+                <div className="flex-1">
+                  <p className="text-[13px] font-bold text-black mb-1">Message</p>
+                  <textarea
+                    placeholder="Any special requests or questions?"
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    className="w-full bg-white border border-[#e5e7eb] rounded-[6px] px-3 py-2.5 text-[13px] text-black outline-none focus:border-[#155dfc] transition-colors placeholder:text-slate-400 min-h-[80px] resize-none leading-relaxed"
+                  />
+                </div>
+              </div>
+
+              {/* Submit */}
+              <button
+                onClick={async () => { await handleSubmitEnquiry(); if (!isSubmittingEnquiry) setIsEnquiryModalOpen(false); }}
+                disabled={isSubmittingEnquiry}
+                className="w-full flex h-12 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#155dfc] to-[#000945] text-[15px] font-bold text-white shadow-lg shadow-[#155dfc]/25 hover:shadow-[#155dfc]/45 hover:-translate-y-0.5 transition-all duration-300 disabled:opacity-70 cursor-pointer"
+              >
+                {isSubmittingEnquiry ? <Loader2 className="h-5 w-5 animate-spin" /> : <Mail className="h-5 w-5" />}
+                {isSubmittingEnquiry ? 'Sending...' : 'Send Enquiry'}
+              </button>
+
+              <p className="text-center text-[11px] text-slate-400">We'll get back to you within 24 hours</p>
+            </div>
+          </div>
+        </div>
       )}
       {isLoginModalOpen && (
         <LoginAlertModal

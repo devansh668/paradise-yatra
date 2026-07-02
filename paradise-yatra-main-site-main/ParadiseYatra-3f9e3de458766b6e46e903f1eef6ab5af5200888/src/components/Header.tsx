@@ -669,13 +669,7 @@ const Header = ({
               <div className="flex items-center gap-3">
                 {/* Desktop specific buttons */}
                 <div className="hidden md:flex items-center gap-3 text-sm font-semibold">
-                  <a
-                    href="tel:+918979269388"
-                    className="flex items-center gap-1.5 px-4 py-2 rounded-[6px] transition-all duration-300 font-bold text-white bg-blue-600 hover:bg-blue-700 shadow-sm"
-                  >
-                    <Phone className="w-4 h-4" />
-                    <span>+91 8979269388</span>
-                  </a>
+
                   <motion.button
                     onClick={() => router.push("/payment")}
                     className={`rounded-[6px] border cursor-pointer backdrop-blur-md px-4 py-2 transition shadow-none border-transparent bg-blue-600 hover:bg-blue-700 text-white`}
