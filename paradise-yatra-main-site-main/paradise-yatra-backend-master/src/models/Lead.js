@@ -48,6 +48,11 @@ const leadSchema = new mongoose.Schema({
         enum: ['new', 'contacted', 'qualified', 'lost', 'won'],
         default: 'new'
     },
+    followUpDate: {
+        type: Date,
+        required: false,
+        default: null
+    },
     timestamp: {
         type: Date,
         default: Date.now

@@ -991,19 +991,25 @@ const AdminPackages = () => {
     const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
     return (
-        <div className="space-y-6">
-            <div className="flex justify-between items-center">
-                <h1 className="!text-3xl font-bold text-gray-800">All Packages</h1>
-                <div className="flex items-center gap-2">
+        <div className="space-y-8 pb-12">
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/60 backdrop-blur-xl p-6 rounded-3xl border border-white/40 shadow-sm relative overflow-hidden">
+                <div className="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+                
+                <div>
+                    <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Packages Portfolio</h1>
+                    <p className="text-slate-500 font-medium mt-1">Manage and curate your amazing travel destinations.</p>
+                </div>
+                <div className="flex items-center gap-3 relative z-10">
                     <button
                         onClick={handleExportAll}
                         disabled={exportingAll || exportingFiltered || loading}
-                        className="bg-emerald-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-emerald-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="bg-white/80 backdrop-blur-md text-emerald-700 font-bold px-4 py-2.5 rounded-xl border border-emerald-200 shadow-sm flex items-center gap-2 hover:bg-emerald-50 hover:border-emerald-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {exportingAll ? (
                             <>
-                                <Loader2 size={18} className="animate-spin" />
-                                Exporting All...
+                                <Loader2 size={18} className="animate-spin text-emerald-500" />
+                                Exporting...
                             </>
                         ) : (
                             <>
@@ -1021,12 +1027,12 @@ const AdminPackages = () => {
                             loading ||
                             filteredPackages.length === 0
                         }
-                        className="bg-slate-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-slate-800 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="bg-white/80 backdrop-blur-md text-slate-700 font-bold px-4 py-2.5 rounded-xl border border-slate-200 shadow-sm flex items-center gap-2 hover:bg-slate-50 hover:border-slate-300 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {exportingFiltered ? (
                             <>
-                                <Loader2 size={18} className="animate-spin" />
-                                Exporting Filtered...
+                                <Loader2 size={18} className="animate-spin text-slate-500" />
+                                Exporting...
                             </>
                         ) : (
                             <>
@@ -1041,10 +1047,16 @@ const AdminPackages = () => {
                             resetForm();
                             setShowAddForm(!showAddForm);
                         }}
-                        className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-blue-700 transition"
+                        className={`text-white font-bold px-5 py-2.5 rounded-xl shadow-md flex items-center gap-2 transition-all transform hover:scale-105 ${
+                            showAddForm 
+                                ? "bg-gradient-to-r from-red-500 to-rose-600 shadow-red-500/25" 
+                                : "bg-gradient-to-r from-indigo-600 to-violet-600 shadow-indigo-500/25"
+                        }`}
                     >
                         {showAddForm ? (
-                            <>Cancel</>
+                            <>
+                                <X size={20} /> Cancel
+                            </>
                         ) : (
                             <>
                                 <Plus size={20} /> Add New Package
@@ -1056,13 +1068,15 @@ const AdminPackages = () => {
 
             {/* Filters Section */}
             {!showAddForm && (
-                <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100">
-                    <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold text-gray-800 flex items-center gap-2">
-                            <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
-                            </svg>
-                            Filters
+                <div className="bg-white/60 backdrop-blur-xl p-6 rounded-3xl shadow-sm border border-white/40">
+                    <div className="flex items-center justify-between mb-6">
+                        <h3 className="text-lg font-extrabold text-slate-800 flex items-center gap-2">
+                            <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                                </svg>
+                            </div>
+                            Filters & Search
                         </h3>
                         <button
                             onClick={() => {
@@ -1074,20 +1088,20 @@ const AdminPackages = () => {
                                 setFilterStatus("all");
                                 setCurrentPage(1);
                             }}
-                            className="text-sm text-blue-600 hover:text-blue-800 font-medium flex items-center gap-1"
+                            className="text-[13px] text-indigo-600 hover:text-indigo-800 font-bold flex items-center gap-1.5 transition-colors bg-indigo-50 px-3 py-1.5 rounded-lg"
                         >
-                            <X size={14} />
+                            <X size={14} strokeWidth={3} />
                             Clear All
                         </button>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-5">
                         {/* Search */}
-                        <div className="xl:col-span-2">
-                            <label className="block text-xs font-medium text-gray-600 mb-1.5">Search</label>
+                        <div className="xl:col-span-2 relative group">
+                            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Search</label>
                             <div className="relative">
-                                <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                                <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>
                                 <input
                                     type="text"
@@ -1096,22 +1110,22 @@ const AdminPackages = () => {
                                         setSearchTerm(e.target.value);
                                         setCurrentPage(1);
                                     }}
-                                    placeholder="Search by name, location, country..."
-                                    className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                    placeholder="Search by name, location..."
+                                    className="w-full pl-10 pr-4 py-2.5 bg-white/70 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all font-medium text-slate-700 shadow-sm"
                                 />
                             </div>
                         </div>
 
                         {/* Tag Filter */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1.5">Tags</label>
+                            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Tags</label>
                             <select
                                 value={filterTagStatus}
                                 onChange={(e) => {
                                     setFilterTagStatus(e.target.value);
                                     setCurrentPage(1);
                                 }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                className="w-full px-4 py-2.5 bg-white/70 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all font-medium text-slate-700 shadow-sm cursor-pointer appearance-none"
                             >
                                 <option value="all">All Packages</option>
                                 <option value="with-tags">With Tags</option>
@@ -1126,7 +1140,7 @@ const AdminPackages = () => {
 
                         {/* Country Filter */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1.5">Country</label>
+                            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Country</label>
                             <select
                                 value={filterCountry}
                                 onChange={(e) => {
@@ -1134,7 +1148,7 @@ const AdminPackages = () => {
                                     setFilterState("all");
                                     setCurrentPage(1);
                                 }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                className="w-full px-4 py-2.5 bg-white/70 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all font-medium text-slate-700 shadow-sm cursor-pointer appearance-none"
                             >
                                 <option value="all">All Countries</option>
                                 {uniqueCountries.map((country) => (
@@ -1147,14 +1161,14 @@ const AdminPackages = () => {
 
                         {/* State Filter */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1.5">State</label>
+                            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">State</label>
                             <select
                                 value={filterState}
                                 onChange={(e) => {
                                     setFilterState(e.target.value);
                                     setCurrentPage(1);
                                 }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                className="w-full px-4 py-2.5 bg-white/70 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all font-medium text-slate-700 shadow-sm cursor-pointer appearance-none disabled:opacity-50 disabled:bg-slate-50"
                                 disabled={uniqueStates.length === 0}
                             >
                                 <option value="all">All States</option>
@@ -1168,31 +1182,30 @@ const AdminPackages = () => {
 
                         {/* Tour Type Filter */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1.5">Tour Type</label>
+                            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Tour Type</label>
                             <select
                                 value={filterTourType}
                                 onChange={(e) => {
                                     setFilterTourType(e.target.value);
                                     setCurrentPage(1);
                                 }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                className="w-full px-4 py-2.5 bg-white/70 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all font-medium text-slate-700 shadow-sm cursor-pointer appearance-none"
                             >
                                 <option value="all">All Types</option>
                                 <option value="india">India</option>
                                 <option value="international">International</option>
                             </select>
                         </div>
-
                         {/* Status Filter */}
                         <div>
-                            <label className="block text-xs font-medium text-gray-600 mb-1.5">Status</label>
+                            <label className="block text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-2">Status</label>
                             <select
                                 value={filterStatus}
                                 onChange={(e) => {
                                     setFilterStatus(e.target.value);
                                     setCurrentPage(1);
                                 }}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none"
+                                className="w-full px-4 py-2.5 bg-white/70 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all font-medium text-slate-700 shadow-sm cursor-pointer appearance-none"
                             >
                                 <option value="all">All Status</option>
                                 <option value="active">Active</option>
@@ -1202,57 +1215,57 @@ const AdminPackages = () => {
                     </div>
 
                     {/* Results Count */}
-                    <div className="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
-                        <p className="text-sm text-gray-600">
-                            Showing <span className="font-semibold text-blue-600">{filteredPackages.length}</span> of <span className="font-semibold">{packages.length}</span> packages
+                    <div className="mt-6 pt-5 border-t border-slate-100 flex flex-col md:flex-row items-center justify-between gap-4">
+                        <p className="text-[13px] text-slate-500 font-medium bg-slate-50 px-3 py-1.5 rounded-lg border border-slate-100">
+                            Showing <span className="font-extrabold text-indigo-600">{filteredPackages.length}</span> of <span className="font-extrabold text-slate-700">{packages.length}</span> packages
                         </p>
                         {(searchTerm || filterTagStatus !== "all" || filterCountry !== "all" || filterState !== "all" || filterTourType !== "all" || filterStatus !== "all") && (
                             <div className="flex flex-wrap gap-2">
                                 {searchTerm && (
-                                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-blue-50 text-blue-700 rounded-md text-xs font-medium">
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-indigo-50 border border-indigo-100 text-indigo-700 rounded-lg text-[11px] font-bold uppercase tracking-wider">
                                         Search: "{searchTerm}"
-                                        <button onClick={() => setSearchTerm("")} className="hover:text-blue-900">
-                                            <X size={12} />
+                                        <button onClick={() => setSearchTerm("")} className="hover:text-indigo-900 ml-1">
+                                            <X size={14} strokeWidth={3} />
                                         </button>
                                     </span>
                                 )}
                                 {filterTagStatus !== "all" && (
-                                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-purple-50 text-purple-700 rounded-md text-xs font-medium">
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-purple-50 border border-purple-100 text-purple-700 rounded-lg text-[11px] font-bold uppercase tracking-wider">
                                         Tag: {filterTagStatus === "with-tags" ? "With Tags" : filterTagStatus === "without-tags" ? "Without Tags" : allTags.find(t => t._id === filterTagStatus)?.name}
-                                        <button onClick={() => setFilterTagStatus("all")} className="hover:text-purple-900">
-                                            <X size={12} />
+                                        <button onClick={() => setFilterTagStatus("all")} className="hover:text-purple-900 ml-1">
+                                            <X size={14} strokeWidth={3} />
                                         </button>
                                     </span>
                                 )}
                                 {filterCountry !== "all" && (
-                                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-green-50 text-green-700 rounded-md text-xs font-medium">
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-100 text-emerald-700 rounded-lg text-[11px] font-bold uppercase tracking-wider">
                                         Country: {filterCountry}
-                                        <button onClick={() => setFilterCountry("all")} className="hover:text-green-900">
-                                            <X size={12} />
+                                        <button onClick={() => setFilterCountry("all")} className="hover:text-emerald-900 ml-1">
+                                            <X size={14} strokeWidth={3} />
                                         </button>
                                     </span>
                                 )}
                                 {filterState !== "all" && (
-                                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-yellow-50 text-yellow-700 rounded-md text-xs font-medium">
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-yellow-50 border border-yellow-100 text-yellow-700 rounded-lg text-[11px] font-bold uppercase tracking-wider">
                                         State: {filterState}
-                                        <button onClick={() => setFilterState("all")} className="hover:text-yellow-900">
-                                            <X size={12} />
+                                        <button onClick={() => setFilterState("all")} className="hover:text-yellow-900 ml-1">
+                                            <X size={14} strokeWidth={3} />
                                         </button>
                                     </span>
                                 )}
                                 {filterTourType !== "all" && (
-                                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-indigo-50 text-indigo-700 rounded-md text-xs font-medium">
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-orange-50 border border-orange-100 text-orange-700 rounded-lg text-[11px] font-bold uppercase tracking-wider">
                                         Type: {filterTourType}
-                                        <button onClick={() => setFilterTourType("all")} className="hover:text-indigo-900">
-                                            <X size={12} />
+                                        <button onClick={() => setFilterTourType("all")} className="hover:text-orange-900 ml-1">
+                                            <X size={14} strokeWidth={3} />
                                         </button>
                                     </span>
                                 )}
                                 {filterStatus !== "all" && (
-                                    <span className="inline-flex items-center gap-1 px-2 py-1 bg-red-50 text-red-700 rounded-md text-xs font-medium">
+                                    <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-red-50 border border-red-100 text-red-700 rounded-lg text-[11px] font-bold uppercase tracking-wider">
                                         Status: {filterStatus}
-                                        <button onClick={() => setFilterStatus("all")} className="hover:text-red-900">
-                                            <X size={12} />
+                                        <button onClick={() => setFilterStatus("all")} className="hover:text-red-900 ml-1">
+                                            <X size={14} strokeWidth={3} />
                                         </button>
                                     </span>
                                 )}
@@ -1263,21 +1276,26 @@ const AdminPackages = () => {
             )}
 
             {showAddForm && (
-                <div className="bg-white p-6 rounded-xl shadow-md border border-gray-100 mb-8">
-                    <h2 className="text-xl font-semibold mb-4 text-gray-800">
-                        {editingPackage ? 'Edit Package' : 'Add New Package'}
+                <div className="bg-white/80 backdrop-blur-xl p-8 rounded-3xl shadow-xl border border-indigo-100 mb-8 relative overflow-hidden">
+                    <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-full blur-3xl pointer-events-none"></div>
+                    
+                    <h2 className="text-2xl font-extrabold mb-8 text-slate-800 flex items-center gap-3">
+                        <div className="p-2 bg-gradient-to-br from-indigo-500 to-purple-500 rounded-xl text-white shadow-lg shadow-indigo-500/20">
+                            {editingPackage ? <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg> : <Plus size={20} />}
+                        </div>
+                        {editingPackage ? 'Edit Package Details' : 'Create New Package'}
                     </h2>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 relative z-10">
                         {/* Left Column */}
-                        <div className="space-y-4">
-                            <div>
-                                <label className="block text-sm font-medium text-gray-700 mb-1">Title</label>
+                        <div className="space-y-5">
+                            <div className="group">
+                                <label className="block text-[12px] font-bold text-slate-500 uppercase tracking-wider mb-2">Package Title</label>
                                 <input
                                     type="text"
                                     value={formData.name || ""}
                                     onChange={handleTitleChange}
-                                    className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 outline-none"
+                                    className="w-full bg-white/50 border border-slate-200 rounded-xl px-4 py-3 text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500/50 focus:border-indigo-500 outline-none transition-all shadow-sm"
                                     placeholder="e.g. Majestic Shimla Tour"
                                 />
                             </div>
@@ -1718,20 +1736,20 @@ const AdminPackages = () => {
                         </div>
                     </div>
 
-                    <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-gray-100">
+                    <div className="flex justify-end gap-3 mt-8 pt-6 border-t border-slate-100 relative z-10">
                         <button
                             onClick={() => {
                                 resetForm();
                                 setShowAddForm(false);
                             }}
-                            className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition"
+                            className="px-6 py-2.5 text-slate-600 font-bold hover:bg-slate-100 rounded-xl transition-all"
                         >
                             Cancel
                         </button>
                         <button
                             onClick={editingPackage ? handleUpdatePackage : handleCreatePackage}
                             disabled={submitting}
-                            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                            className="px-8 py-2.5 bg-gradient-to-r from-indigo-600 to-violet-600 text-white font-bold rounded-xl shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-105 transition-all disabled:opacity-50 disabled:scale-100 disabled:cursor-not-allowed flex items-center gap-2"
                         >
                             {submitting ? (
                                 <>
@@ -1747,17 +1765,19 @@ const AdminPackages = () => {
             )}
 
             {/* Packages List */}
-            <div className="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100">
+            <div className="bg-white/80 backdrop-blur-xl rounded-3xl shadow-xl overflow-hidden border border-white/40">
                 <div className="overflow-x-auto">
-                    <table className="w-full">
-                        <thead className="bg-gray-50 border-b border-gray-200">
-                            <tr>
-                                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Title</th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Duration</th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Price</th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Location</th>
-                                <th className="px-6 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">Status</th>
-                                <th className="px-6 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider">Actions</th>
+                    <table className="w-full text-left border-collapse">
+                        <thead>
+                            <tr style={{ background: "#f8fafc", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
+                                {["Package Details", "Duration", "Pricing", "Location", "Status", "Actions"].map((h, i) => (
+                                    <th
+                                        key={h}
+                                        className={`px-6 py-4 text-[11px] font-extrabold text-slate-500 uppercase tracking-widest ${i === 5 ? 'text-right' : 'text-left'}`}
+                                    >
+                                        {h}
+                                    </th>
+                                ))}
                             </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200">

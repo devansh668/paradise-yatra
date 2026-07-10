@@ -777,11 +777,14 @@ const AdminBlogs = ({ initialAction, onActionComplete }: AdminBlogsProps) => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="space-y-8 pb-12">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/60 backdrop-blur-xl p-6 rounded-3xl border border-white/40 shadow-sm relative overflow-hidden">
+        <div className="absolute -right-20 -top-20 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+        
         <div>
-          <h2 className="!text-2xl !font-bold text-gray-900">Blog Management</h2>
-          <p className="text-gray-700">
+          <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">Blog Management</h1>
+          <p className="text-slate-500 font-medium mt-1">
             {activeTab === "all"
               ? `Manage blog posts and articles (${totalBlogs} blogs)`
               : editing
@@ -789,36 +792,36 @@ const AdminBlogs = ({ initialAction, onActionComplete }: AdminBlogsProps) => {
                 : "Create new blog post"}
           </p>
         </div>
-        <Button
-          onClick={() => {
-            setActiveTab("create");
-            setEditing(null);
-            resetForm();
-          }}
-          variant="admin-primary"
-          className="flex items-center gap-2"
-        >
-          <Plus className="w-4 h-4" />
-          Add New Blog
-        </Button>
+        <div className="relative z-10">
+          <Button
+            onClick={() => {
+              setActiveTab("create");
+              setEditing(null);
+              resetForm();
+            }}
+            className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:scale-105 shadow-indigo-500/25 shadow-lg text-white font-bold px-5 py-2.5 rounded-xl flex items-center gap-2 transition-all transform"
+          >
+            <Plus size={20} /> Add New Blog
+          </Button>
+        </div>
       </div>
 
       {/* Tab Navigation */}
-      <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
+      <div className="flex space-x-2 bg-white/60 backdrop-blur-md p-1.5 rounded-2xl border border-slate-200/60 shadow-sm w-fit relative z-10">
         <button
           onClick={handleShowAllBlogs}
-          className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${activeTab === "all"
-            ? "bg-white text-gray-900 shadow-sm"
-            : "text-gray-600 hover:text-gray-900"
+          className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeTab === "all"
+            ? "bg-white text-indigo-700 shadow-sm border border-slate-100"
+            : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
             }`}
         >
           All Blogs ({totalBlogs})
         </button>
         <button
           onClick={handleAddNew}
-          className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${activeTab === "create"
-            ? "bg-white text-gray-900 shadow-sm"
-            : "text-gray-600 hover:text-gray-900"
+          className={`px-6 py-2.5 rounded-xl text-sm font-bold transition-all ${activeTab === "create"
+            ? "bg-white text-indigo-700 shadow-sm border border-slate-100"
+            : "text-slate-500 hover:text-slate-700 hover:bg-slate-50"
             }`}
         >
           {editing ? "Edit Blog" : "Create Blog"}

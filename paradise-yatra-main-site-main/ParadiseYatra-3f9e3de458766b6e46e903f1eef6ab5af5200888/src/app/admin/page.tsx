@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
-  LazyAdminSidebar,
   LazyAdminDashboard,
   LazyAdminBlogs,
   LazyAdminSEO,
@@ -25,11 +24,12 @@ import {
   LazyAdminPackages,
   LazyAdminDestinationCovers,
   LazyAdminLeads,
-  LazyAdminUsers,
   LazyAdminPageContent,
 } from "@/components/lazy-admin-components";
 import AdminFAQ from "@/components/admin/AdminFAQ";
 import AdminDestinationFAQ from "@/components/admin/AdminDestinationFAQ";
+import AdminSidebar from "@/components/admin/AdminSidebar";
+import { Bell, ChevronRight } from "lucide-react";
 
 type AdminSection =
   | "dashboard"
@@ -50,8 +50,28 @@ type AdminSection =
   | "tags"
   | "all-packages"
   | "destination-covers"
-  | "leads"
-  | "users";
+  | "leads";
+
+const sectionLabels: Record<string, string> = {
+  dashboard: "Dashboard",
+  "hero-section": "Hero Section",
+  footer: "Footer",
+  testimonials: "Testimonials",
+  "cta-section": "CTA Section",
+  stats: "Statistics",
+  menu: "Menu",
+  seo: "SEO",
+  "page-content": "Page Content",
+  blogs: "Blog Management",
+  "fixed-departures": "Fixed Departures",
+  itinerary: "Itinerary Management",
+  faq: "FAQ Management",
+  "destination-faq": "Destination FAQ",
+  tags: "Tags Management",
+  "all-packages": "All Packages",
+  "destination-covers": "Destinations Covered",
+  leads: "Queries Management",
+};
 
 const AdminPage = () => {
   const [activeSection, setActiveSection] = useState<AdminSection>("dashboard");
@@ -61,7 +81,23 @@ const AdminPage = () => {
   const [blogAction, setBlogAction] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [adminName, setAdminName] = useState("Admin");
+  const [currentTime, setCurrentTime] = useState("");
   const router = useRouter();
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date();
+      setCurrentTime(
+        now.toLocaleDateString("en-IN", { weekday: "short", day: "numeric", month: "short", year: "numeric" }) +
+          " · " +
+          now.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit" })
+      );
+    };
+    updateTime();
+    const timer = setInterval(updateTime, 60000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -75,8 +111,6 @@ const AdminPage = () => {
 
       try {
         const user = JSON.parse(userStr);
-
-        // Check if user is admin
         if (user.role !== "admin") {
           localStorage.removeItem("adminToken");
           localStorage.removeItem("adminUser");
@@ -84,11 +118,10 @@ const AdminPage = () => {
           return;
         }
 
-        // Verify token with backend
+        setAdminName(user.name || "Admin");
+
         const response = await fetch("/api/auth/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` },
         });
 
         if (!response.ok) {
@@ -115,15 +148,8 @@ const AdminPage = () => {
     const handleBlogAction = (event: CustomEvent) => {
       setBlogAction(event.detail);
     };
-
     window.addEventListener("blogAction", handleBlogAction as EventListener);
-
-    return () => {
-      window.removeEventListener(
-        "blogAction",
-        handleBlogAction as EventListener
-      );
-    };
+    return () => window.removeEventListener("blogAction", handleBlogAction as EventListener);
   }, []);
 
   const toggleSection = (section: string) => {
@@ -144,25 +170,15 @@ const AdminPage = () => {
 
   const renderActiveSection = () => {
     switch (activeSection) {
-      case "dashboard":
-        return <LazyAdminDashboard />;
-      case "hero-section":
-        return <LazyAdminHeroSection />;
-      case "footer":
-        return <LazyAdminFooter />;
-
-      case "testimonials":
-        return <LazyAdminTestimonials />;
-      case "cta-section":
-        return <LazyAdminCTASection />;
-      case "stats":
-        return <LazyAdminStats />;
-      case "menu":
-        return <LazyAdminMenu />;
-      case "seo":
-        return <LazyAdminSEO />;
-      case "page-content":
-        return <LazyAdminPageContent />;
+      case "dashboard": return <LazyAdminDashboard />;
+      case "hero-section": return <LazyAdminHeroSection />;
+      case "footer": return <LazyAdminFooter />;
+      case "testimonials": return <LazyAdminTestimonials />;
+      case "cta-section": return <LazyAdminCTASection />;
+      case "stats": return <LazyAdminStats />;
+      case "menu": return <LazyAdminMenu />;
+      case "seo": return <LazyAdminSEO />;
+      case "page-content": return <LazyAdminPageContent />;
       case "blogs":
         return (
           <LazyAdminBlogs
@@ -170,57 +186,120 @@ const AdminPage = () => {
             onActionComplete={() => setBlogAction(null)}
           />
         );
-      case "fixed-departures":
-        return <LazyAdminFixedDepartures />;
-      case "itinerary":
-        return <LazyAdminItinerary />;
-      case "faq":
-        return <AdminFAQ />;
-      case "destination-faq":
-        return <AdminDestinationFAQ />;
-      case "tags":
-        return <LazyAdminTags />;
-      case "all-packages":
-        return <LazyAdminPackages />;
-      case "destination-covers":
-        return <LazyAdminDestinationCovers />;
-      case "leads":
-        return <LazyAdminLeads />;
-      case "users":
-        return <LazyAdminUsers />;
-
-      default:
-        return <LazyAdminDashboard />;
+      case "fixed-departures": return <LazyAdminFixedDepartures />;
+      case "itinerary": return <LazyAdminItinerary />;
+      case "faq": return <AdminFAQ />;
+      case "destination-faq": return <AdminDestinationFAQ />;
+      case "tags": return <LazyAdminTags />;
+      case "all-packages": return <LazyAdminPackages />;
+      case "destination-covers": return <LazyAdminDestinationCovers />;
+      case "leads": return <LazyAdminLeads />;
+      default: return <LazyAdminDashboard />;
     }
   };
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)" }}>
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
+          <div className="relative mx-auto w-16 h-16 mb-6">
+            <div className="absolute inset-0 rounded-full border-4 border-indigo-500/20" />
+            <div className="absolute inset-0 rounded-full border-4 border-t-indigo-500 animate-spin" />
+          </div>
+          <p className="text-indigo-200 text-sm font-medium">Loading Admin Portal...</p>
         </div>
       </div>
     );
   }
 
-  if (!isAuthenticated) {
-    return null; // Will redirect to login
-  }
+  if (!isAuthenticated) return null;
+
+  const initials = adminName
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <LazyAdminSidebar
-        activeSection={activeSection}
-        setActiveSection={setActiveSection as (section: string) => void}
-        expandedSections={expandedSections}
-        toggleSection={toggleSection}
-        onLogout={handleLogout}
-      />
-      <main className="flex-1 overflow-auto">
-        <div className="p-6">{renderActiveSection()}</div>
-      </main>
+    <div style={{ display: "flex", minHeight: "100vh", background: "#f1f5f9" }}>
+      {/* Sidebar — fixed width column, scrolls independently */}
+      <div
+        style={{
+          width: "256px",
+          flexShrink: 0,
+          position: "sticky",
+          top: 0,
+          height: "100vh",
+          overflowY: "auto",
+          overflowX: "hidden",
+          background: "linear-gradient(180deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)",
+        }}
+      >
+        <AdminSidebar
+          activeSection={activeSection}
+          setActiveSection={setActiveSection as (section: string) => void}
+          expandedSections={expandedSections}
+          toggleSection={toggleSection}
+          onLogout={handleLogout}
+        />
+      </div>
+
+      {/* Main content area */}
+      <div className="flex-1 flex flex-col min-w-0">
+        {/* Top Header Bar */}
+        <header
+          className="sticky top-0 z-20 flex items-center justify-between px-6 py-3 border-b"
+          style={{
+            background: "rgba(255,255,255,0.85)",
+            backdropFilter: "blur(12px)",
+            borderColor: "rgba(0,0,0,0.07)",
+            boxShadow: "0 1px 12px rgba(0,0,0,0.06)",
+          }}
+        >
+          {/* Breadcrumb */}
+          <div className="flex items-center gap-2 text-sm">
+            <span className="text-slate-400 font-medium">Admin</span>
+            <ChevronRight className="w-3.5 h-3.5 text-slate-300" />
+            <span className="font-semibold text-slate-700">
+              {sectionLabels[activeSection] || activeSection}
+            </span>
+          </div>
+
+          {/* Right: time + notifications + avatar */}
+          <div className="flex items-center gap-4">
+            <span className="text-xs text-slate-400 hidden sm:block">{currentTime}</span>
+
+            <button
+              className="relative w-8 h-8 rounded-lg flex items-center justify-center transition-colors"
+              style={{ background: "#f1f5f9" }}
+              onMouseEnter={e => ((e.currentTarget as HTMLButtonElement).style.background = "#e2e8f0")}
+              onMouseLeave={e => ((e.currentTarget as HTMLButtonElement).style.background = "#f1f5f9")}
+            >
+              <Bell className="w-4 h-4 text-slate-500" />
+              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-indigo-500 ring-1 ring-white" />
+            </button>
+
+            <div className="flex items-center gap-2.5">
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold text-white"
+                style={{ background: "linear-gradient(135deg, #6366f1, #8b5cf6)" }}
+              >
+                {initials}
+              </div>
+              <div className="hidden sm:block">
+                <p className="text-xs font-semibold text-slate-700 leading-tight">{adminName}</p>
+                <p className="text-[10px] text-slate-400">Administrator</p>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 overflow-auto">
+          <div className="p-6">{renderActiveSection()}</div>
+        </main>
+      </div>
     </div>
   );
 };

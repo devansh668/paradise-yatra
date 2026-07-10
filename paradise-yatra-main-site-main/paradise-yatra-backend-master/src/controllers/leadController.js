@@ -98,6 +98,40 @@ const updateLeadStatus = async (req, res) => {
     }
 };
 
+// Update lead follow-up date
+const updateFollowUpDate = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { followUpDate } = req.body;
+
+        const lead = await Lead.findByIdAndUpdate(
+            id,
+            { followUpDate: followUpDate ? new Date(followUpDate) : null },
+            { new: true, runValidators: true }
+        );
+
+        if (!lead) {
+            return res.status(404).json({
+                success: false,
+                message: 'Lead not found'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            message: 'Follow-up date updated successfully',
+            data: lead
+        });
+    } catch (error) {
+        console.error('Error updating follow-up date:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to update follow-up date',
+            error: error.message
+        });
+    }
+};
+
 // Delete lead
 const deleteLead = async (req, res) => {
     try {
@@ -129,5 +163,6 @@ module.exports = {
     createLead,
     getAllLeads,
     updateLeadStatus,
+    updateFollowUpDate,
     deleteLead
 };

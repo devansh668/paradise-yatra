@@ -5,20 +5,22 @@ import {
   FolderOpen,
   Settings,
   FileText,
-  Mountain,
   Calendar,
   Star,
-  Compass,
-  ChevronDown,
-  ChevronRight,
-  LogOut,
   Map,
   HelpCircle,
   Tag,
   Package,
   Users,
-  User,
-  Globe
+  Globe,
+  ChevronDown,
+  ChevronRight,
+  LogOut,
+  LayoutDashboard,
+  Image as ImageIcon,
+  Megaphone,
+  Search,
+  Menu
 } from "lucide-react";
 import Image from "next/image";
 
@@ -37,95 +39,68 @@ const AdminSidebar = ({
   toggleSection,
   onLogout
 }: AdminSidebarProps) => {
-  // Removed unused showSubMenu state
-
   const menuItems = [
     {
       id: "dashboard",
       label: "Dashboard",
-      icon: BarChart3,
+      icon: LayoutDashboard,
       hasSubmenu: false,
-      hasNotification: false,
     },
     {
       id: "leads",
       label: "Queries",
       icon: Users,
       hasSubmenu: false,
-      hasNotification: false,
     },
     {
-      id: "users",
-      label: "Users",
-      icon: User,
-      hasSubmenu: false,
-      hasNotification: false,
-    },
-    {
-      id: "addons",
-      label: "CONTENT MANAGEMENT",
-      icon: null,
-      hasSubmenu: false,
-      hasNotification: false,
       isHeader: true,
+      label: "CONTENT MANAGEMENT",
     },
     {
       id: "page-content",
       label: "Page Content",
       icon: FileText,
       hasSubmenu: false,
-      hasNotification: false,
     },
     {
       id: "hero-section",
       label: "Hero Section",
-      icon: BarChart3,
+      icon: ImageIcon,
       hasSubmenu: false,
-      hasNotification: false,
     },
     {
       id: "footer",
       label: "Footer",
       icon: Settings,
       hasSubmenu: false,
-      hasNotification: false,
     },
-
     {
       id: "testimonials",
       label: "Testimonials",
       icon: Star,
       hasSubmenu: false,
-      hasNotification: false,
     },
     {
       id: "cta-section",
       label: "CTA Section",
-      icon: Settings,
+      icon: Megaphone,
       hasSubmenu: false,
-      hasNotification: false,
     },
     {
       id: "stats",
       label: "Statistics",
       icon: BarChart3,
       hasSubmenu: false,
-      hasNotification: false,
     },
     {
-      id: "addons2",
-      label: "PACKAGE MANAGEMENT",
-      icon: null,
-      hasSubmenu: false,
-      hasNotification: false,
       isHeader: true,
+      label: "PACKAGE MANAGEMENT",
     },
     {
       id: "packages-group",
       label: "Packages",
       icon: Package,
       hasSubmenu: true,
-      hasNotification: false,
       subItems: [
         { id: "all-packages", label: "All Packages" },
         { id: "destination-covers", label: "Destinations Covered" },
@@ -136,37 +111,28 @@ const AdminSidebar = ({
       label: "Fixed Departures",
       icon: Calendar,
       hasSubmenu: false,
-      hasNotification: false,
     },
     {
       id: "itinerary",
-      label: "Itinerary Management",
+      label: "Itinerary",
       icon: Map,
       hasSubmenu: false,
-      hasNotification: false,
     },
     {
       id: "tags",
-      label: "Tags Management",
+      label: "Tags",
       icon: Tag,
       hasSubmenu: false,
-      hasNotification: false,
     },
-
     {
-      id: "addons3",
-      label: "CONTENT & SEO",
-      icon: null,
-      hasSubmenu: false,
-      hasNotification: false,
       isHeader: true,
+      label: "CONTENT & SEO",
     },
     {
       id: "blogs",
       label: "Blog",
       icon: FileText,
       hasSubmenu: true,
-      hasNotification: false,
       subItems: [
         { id: "create-blog", label: "Create Blog" },
         { id: "all-blogs", label: "All Blogs" },
@@ -175,37 +141,32 @@ const AdminSidebar = ({
     {
       id: "menu",
       label: "Menu",
-      icon: FolderOpen,
+      icon: Menu,
       hasSubmenu: false,
-      hasNotification: false,
     },
     {
       id: "seo",
       label: "SEO",
-      icon: Settings,
+      icon: Search,
       hasSubmenu: false,
-      hasNotification: false,
     },
     {
       id: "faq",
       label: "FAQ Management",
       icon: HelpCircle,
       hasSubmenu: false,
-      hasNotification: false,
     },
     {
       id: "destination-faq",
       label: "Destination FAQ",
       icon: Globe,
       hasSubmenu: false,
-      hasNotification: false,
     },
   ];
 
   const handleItemClick = (itemId: string) => {
-    if (itemId === "addons") return; // Don't do anything for header
-
-    if (menuItems.find(item => item.id === itemId)?.hasSubmenu) {
+    const item = menuItems.find(i => !i.isHeader && i.id === itemId);
+    if (item?.hasSubmenu) {
       toggleSection(itemId);
     } else {
       setActiveSection(itemId);
@@ -213,90 +174,171 @@ const AdminSidebar = ({
   };
 
   return (
-    <div className="w-64 p-2 m-2 bg-blue-900 text-white min-h-screen flex flex-col rounded-lg">
-      {/* Logo and Title */}
-      <div className="p-4 border-b border-blue-700">
-        <div className="flex items-center space-x-3">
+    <div
+      className="w-64 min-h-screen flex flex-col text-white"
+      style={{
+        background: "linear-gradient(180deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%)",
+        boxShadow: "4px 0 24px rgba(0,0,0,0.3)"
+      }}
+    >
+      {/* Logo */}
+      <div className="p-5 border-b border-white/10">
+        <div className="flex items-center gap-3">
+          <div
+            className="relative rounded-xl overflow-hidden p-1"
+            style={{ background: "rgba(255,255,255,0.12)", backdropFilter: "blur(8px)" }}
+          >
+            <Image
+              src="/headerLogo.png"
+              alt="logo"
+              width={48}
+              height={48}
+              className="rounded-lg object-contain"
+            />
+          </div>
           <div>
-            <Image src="/headerLogo.png" alt="logo" width={100} height={100} className="bg-white/50 backdrop-blur-sm rounded-full items-center justify-center object-contain w-25 h-25" />
+            <p className="font-bold text-sm leading-tight" style={{ color: "#ffffff" }}>Paradise Yatra</p>
+            <p className="text-xs mt-0.5" style={{ color: "#a5b4fc" }}>Admin Portal</p>
           </div>
         </div>
       </div>
 
-      {/* Navigation Items */}
-      <nav className="flex-1 p-4 space-y-2">
-        {menuItems.map((item) => (
-          <div key={item.id}>
-            {item.isHeader ? (
-              <div className="text-blue-300 text-sm font-semibold uppercase tracking-wider py-2">
-                {item.label}
+      {/* Navigation */}
+      <nav className="flex-1 p-3 space-y-0.5 overflow-y-auto">
+        {menuItems.map((item, idx) => {
+          if (item.isHeader) {
+            return (
+              <div key={idx} className="pt-4 pb-1 px-3">
+                <p className="text-[10px] font-bold tracking-widest uppercase" style={{ color: "#818cf8" }}>
+                  {item.label}
+                </p>
+                <div className="mt-1.5 h-px" style={{ background: "rgba(255,255,255,0.1)" }} />
               </div>
-            ) : (
-              <div>
-                <button
-                  onClick={() => handleItemClick(item.id)}
-                  className={`w-full hover:cursor-pointer flex items-center justify-between px-3 py-2 rounded-lg transition-colors ${activeSection === item.id
-                    ? "bg-blue-700 text-white"
-                    : "text-gray-300 hover:bg-blue-800 hover:text-white"
-                    }`}
-                >
-                  <div className="flex items-center space-x-3">
-                    {item.icon && <item.icon className="w-5 h-5" />}
-                    <span className="font-medium">{item.label}</span>
-                    {item.hasNotification && (
-                      <div className="w-2 h-2 bg-red-500 rounded-full"></div>
-                    )}
-                  </div>
-                  {item.hasSubmenu && (
-                    <span className="text-sm">
-                      {expandedSections.has(item.id) ? (
-                        <ChevronDown className="w-4 h-4" />
-                      ) : (
-                        <ChevronRight className="w-4 h-4" />
-                      )}
-                    </span>
-                  )}
-                </button>
+            );
+          }
 
-                {/* Submenu for Blog */}
-                {item.hasSubmenu && expandedSections.has(item.id) && (
-                  <div className="ml-8 mt-2 space-y-1">
-                    {item.subItems?.map((subItem) => (
-                      <button
-                        key={subItem.id}
-                        onClick={() => {
-                          setActiveSection("blogs");
-                          // Pass the submenu action to the parent component
-                          if (subItem.id === "create-blog") {
-                            // We'll handle this in the AdminPage component
-                            window.dispatchEvent(new CustomEvent('blogAction', { detail: 'create' }));
-                          }
-                        }}
-                        className={`w-full text-left px-3 py-2 hover:cursor-pointer rounded-lg transition-colors ${activeSection === "blogs"
-                          ? "bg-blue-700 text-white"
-                          : "text-gray-300 hover:bg-blue-800 hover:text-white"
-                          }`}
-                      >
-                        {subItem.label}
-                      </button>
-                    ))}
+          const Icon = item.icon!;
+          const isActive = activeSection === item.id ||
+            (item.hasSubmenu && item.subItems?.some(s => activeSection === s.id));
+          const isExpanded = expandedSections.has(item.id!);
+
+          return (
+            <div key={item.id}>
+              <button
+                onClick={() => handleItemClick(item.id!)}
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-200 group relative"
+                style={
+                  isActive
+                    ? {
+                        background: "linear-gradient(90deg, rgba(99,102,241,0.35), rgba(99,102,241,0.1))",
+                        boxShadow: "inset 3px 0 0 #6366f1",
+                      }
+                    : {}
+                }
+                onMouseEnter={e => {
+                  if (!isActive) {
+                    (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.07)";
+                  }
+                }}
+                onMouseLeave={e => {
+                  if (!isActive) {
+                    (e.currentTarget as HTMLButtonElement).style.background = "";
+                  }
+                }}
+              >
+                <div className="flex items-center gap-3">
+                  <div
+                    className="w-8 h-8 rounded-lg flex items-center justify-center transition-all duration-200"
+                    style={
+                      isActive
+                        ? { background: "rgba(99,102,241,0.4)" }
+                        : { background: "rgba(255,255,255,0.1)" }
+                    }
+                  >
+                    <Icon
+                      className="w-4 h-4 transition-colors"
+                      style={{ color: isActive ? "#c7d2fe" : "#a5b4fc" }}
+                    />
                   </div>
+                  <span
+                    className="text-sm font-semibold transition-colors"
+                    style={{ color: isActive ? "#ffffff" : "#e2e8f0" }}
+                  >
+                    {item.label}
+                  </span>
+                </div>
+                {item.hasSubmenu && (
+                  <span style={{ color: "#94a3b8" }}>
+                    {isExpanded ? (
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    ) : (
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    )}
+                  </span>
                 )}
-              </div>
-            )}
-          </div>
-        ))}
+              </button>
+
+              {/* Submenu */}
+              {item.hasSubmenu && isExpanded && (
+                <div className="ml-11 mt-1 space-y-0.5">
+                  {item.subItems?.map(subItem => (
+                    <button
+                      key={subItem.id}
+                      onClick={() => {
+                        setActiveSection(item.id === "blogs" ? "blogs" : subItem.id);
+                        if (subItem.id === "create-blog") {
+                          window.dispatchEvent(new CustomEvent("blogAction", { detail: "create" }));
+                        }
+                      }}
+                      className="w-full text-left px-3 py-2 rounded-lg text-sm transition-all duration-150"
+                      style={{
+                        color: activeSection === "blogs" ? "#ffffff" : "#cbd5e1",
+                        background: activeSection === "blogs" ? "rgba(99,102,241,0.15)" : "transparent",
+                      }}
+                      onMouseEnter={e => {
+                        (e.currentTarget as HTMLButtonElement).style.background = "rgba(255,255,255,0.06)";
+                        (e.currentTarget as HTMLButtonElement).style.color = "#ffffff";
+                      }}
+                      onMouseLeave={e => {
+                        (e.currentTarget as HTMLButtonElement).style.background =
+                          activeSection === "blogs" ? "rgba(99,102,241,0.15)" : "transparent";
+                        (e.currentTarget as HTMLButtonElement).style.color =
+                          activeSection === "blogs" ? "#ffffff" : "#cbd5e1";
+                      }}
+                    >
+                      · {subItem.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          );
+        })}
       </nav>
 
-      {/* Logout Button */}
+      {/* Logout */}
       {onLogout && (
-        <div className="p-4 border-t border-blue-700">
+        <div className="p-3 border-t border-white/10">
           <button
             onClick={onLogout}
-            className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors text-gray-300 hover:cursor-pointer hover:bg-red-500 hover:text-white"
+            className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-all duration-200 group"
+            style={{ color: "#94a3b8" }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLButtonElement).style.background = "rgba(239,68,68,0.15)";
+              (e.currentTarget as HTMLButtonElement).style.color = "#fca5a5";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLButtonElement).style.background = "transparent";
+              (e.currentTarget as HTMLButtonElement).style.color = "#94a3b8";
+            }}
           >
-            <LogOut className="w-5 h-5" />
-            <span className="font-medium">Logout</span>
+            <div
+              className="w-8 h-8 rounded-lg flex items-center justify-center"
+              style={{ background: "rgba(239,68,68,0.12)" }}
+            >
+              <LogOut className="w-4 h-4 text-red-400" />
+            </div>
+            <span className="text-sm font-medium">Logout</span>
           </button>
         </div>
       )}
@@ -304,4 +346,4 @@ const AdminSidebar = ({
   );
 };
 
-export default AdminSidebar; 
+export default AdminSidebar;
