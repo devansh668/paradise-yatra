@@ -9,7 +9,7 @@ async function resetAdmin() {
     console.log('Connected to DB');
 
     const email = 'admin@paradiseyatra.com';
-    const newPassword = 'admin123'; // simple password
+    const newPassword = 'Fluzion11@'; // simple password
 
     let adminUser = await User.findOne({ email });
     if (!adminUser) {
