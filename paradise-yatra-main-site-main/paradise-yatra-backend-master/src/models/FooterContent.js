@@ -30,7 +30,7 @@ const footerContentSchema = new mongoose.Schema({
     whatsapp: {
       type: String,
       required: true,
-      default: "+91 8979269388"
+      default: "+91 9873391733"
     }
   },
   links: {
@@ -107,7 +107,7 @@ footerContentSchema.statics.getDefaultContent = function() {
       address: "48, General Mahadev Singh Rd, Dehradun, Uttarakhand 248001",
       phone: "+91 8979396413",
       email: "info@paradiseyatra.com",
-      whatsapp: "+91 8979269388"
+      whatsapp: "+91 9873391733"
     },
     links: {
       international: [
