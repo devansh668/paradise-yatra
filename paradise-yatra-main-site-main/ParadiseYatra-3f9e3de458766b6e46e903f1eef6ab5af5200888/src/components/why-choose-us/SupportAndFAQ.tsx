@@ -115,7 +115,7 @@ export default function SupportAndFAQ() {
             </div>
             
             <a 
-              href="https://wa.me/918979269388" 
+              href="https://wa.me/9873391733" 
               target="_blank"
               rel="noopener noreferrer"
               className="mt-3 inline-flex items-center justify-center gap-2 bg-[#155dfc] hover:bg-[#0f4bce] text-white font-bold text-[14px] px-5 py-2.5 rounded-full !shadow-none transition-colors"
