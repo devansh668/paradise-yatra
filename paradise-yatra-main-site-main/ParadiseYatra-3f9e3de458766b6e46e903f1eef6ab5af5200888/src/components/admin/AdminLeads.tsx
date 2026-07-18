@@ -58,6 +58,7 @@ const AdminLeads = () => {
       const token = localStorage.getItem("adminToken");
       const response = await fetch("/api/leads", {
         headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
       });
       const data = await response.json();
       if (data.success) {
@@ -283,11 +284,11 @@ const AdminLeads = () => {
           <table className="min-w-full">
             <thead>
               <tr style={{ background: "#f8fafc", borderBottom: "1px solid rgba(0,0,0,0.06)" }}>
-                {["Contact Info", "Requirements", "Package Interest", "Lead Picked Date", "Follow-Up Date", "Status"].map((h) => (
+                {["Contact Info", "Requirements", "Package Interest", "Lead Picked Date", "Follow-Up Date", "Status"].map((h, idx) => (
                   <th
                     key={h}
-                    className="px-5 py-3.5 text-left text-[11px] font-bold uppercase tracking-widest"
-                    style={{ color: "#475569" }}
+                    className={`px-5 py-3.5 text-left text-[11px] font-bold uppercase tracking-widest ${idx === 0 ? "sticky left-0 z-20 shadow-[1px_0_0_rgba(0,0,0,0.06)]" : ""}`}
+                    style={{ color: "#475569", background: idx === 0 ? "#f8fafc" : "transparent" }}
                   >
                     {h}
                   </th>
@@ -297,7 +298,7 @@ const AdminLeads = () => {
             <tbody>
               {filteredLeads.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="px-5 py-16 text-center">
+                  <td colSpan={6} className="px-5 py-16 text-center">
                     <div className="flex flex-col items-center gap-3">
                       <Filter className="w-10 h-10 text-slate-200" />
                       <p className="text-slate-600 font-medium">No queries match your filters</p>
@@ -323,7 +324,7 @@ const AdminLeads = () => {
                       onMouseLeave={e => ((e.currentTarget as HTMLTableRowElement).style.background = i % 2 === 0 ? "#fff" : "#fafafa")}
                     >
                       {/* Contact */}
-                      <td className="px-5 py-4">
+                      <td className="px-5 py-4 sticky left-0 z-10 shadow-[1px_0_0_rgba(0,0,0,0.04)]" style={{ background: "inherit", minWidth: "250px" }}>
                         <div className="flex items-start gap-3">
                           <div
                             className="w-9 h-9 rounded-xl flex items-center justify-center text-sm font-bold flex-shrink-0 text-white"
