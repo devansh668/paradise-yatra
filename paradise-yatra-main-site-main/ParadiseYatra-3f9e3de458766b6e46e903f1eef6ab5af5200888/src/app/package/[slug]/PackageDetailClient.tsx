@@ -235,8 +235,8 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
   }, []);
 
   const handleSubmitEnquiry = async () => {
-    if (!fullName || !email || !phoneNumber || !message) {
-      toast.error('Please fill in your name, email, phone number, and message.');
+    if (!fullName || !email || !phoneNumber) {
+      toast.error('Please fill in your name, email, and phone number.');
       return;
     }
 
@@ -1132,7 +1132,7 @@ const ItineraryPageClient = ({ packageData, slug }: ItineraryPageClientProps) =>
               <div className="flex items-start gap-3">
                 <MessageSquare className="h-5 w-5 text-[#155dfc] shrink-0 mt-6" />
                 <div className="flex-1">
-                  <p className="text-[13px] font-bold text-black mb-1">Message</p>
+                  <p className="text-[13px] font-bold text-black mb-1">Message <span className="text-slate-400 font-normal">(Optional)</span></p>
                   <textarea
                     placeholder="Any special requests or questions?"
                     value={message}
